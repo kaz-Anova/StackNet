@@ -140,7 +140,7 @@ Command | Explanation
 --- | ---
 sparse  | True if the data to be imported are in sparse format (libsvm) or dense (false) 
 has_head   | True if train_file and test_file have headers else false
-model : name of the output model file. 
+model | name of the output model file. 
 pred_file | name of the output prediction file. 
 train_file | name of the training file. 
 test_file | name f tohe test file. 
@@ -184,11 +184,15 @@ LogisticRegression verbose:false
 For **dense** input data, the file needs to start with the target variable followed by comma, separated variables like:
 
 1,0,0,2,3,2.4
+
 0,1,1,0,0,12
 
 For **sparse** format , it is the same as libsvm (same example as above)  :
-1 2:2 3:3 4:2.4 
+
+1 2:2 3:3 4:2.4
+
 0 0:1 1:1 4:12
+
 **warning** : Some algorithms (mostly tree-based) may not be very fast with this format)
 
 If test_target is false then the test data may not have a target and start directly from the variables.
@@ -219,9 +223,10 @@ If we wanted to build a 3-level stacknet on a binary target with desne data, we 
 
 Which is then followed by the a 2 dimensional String array with the list of models in each layer along with their hyper parameters in the form of as in "_estimator [space delimited hyper parameters]_"
 
+```java	
 String models_per_level[][]=new String[][]; 
 
-```java				
+			
 {//First Level
 {"LogisticRegression C:0.5 maxim_Iteration:100 verbose:true", 
 "RandomForestClassifier bootsrap:false estimators:100 threads:25 offset:0.00001 cut_off_subsample:1.0 feature_subselection:1.0 max_depth:15 max_features:0.3 max_tree_size:-1 min_leaf:2.0 min_split:5.0 Objective:ENTROPY row_subsample:0.95", 
