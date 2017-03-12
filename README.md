@@ -68,11 +68,14 @@ The typical neural networks are most commonly trained with a form of back propag
 
 However splitting the data in just 2 parts would mean that in each new layer the second part needs to be further dichotomized increasing the bias of overfitting even more as each algorithm will have to be trained and validated on increasingly less data. To overcome this drawback the algorithm utilises a k-fold cross validation (where k is a hyper parameter) so that all the original training data is scored in different k batches thereby outputting n shape training predictions where n is the size of the samples in the training data. Therefore the training process is consisted of 2 parts: 
 
-1.	Split the data k times and run k models to output predictions for each k part and then bring the k parts back together to the original order so that the output predictions can be used in later stages of the model. This process is illustrated below: 
+1. Split the data k times and run k models to output predictions for each k part and then bring the k parts back together to the original order so that the output predictions can be used in later stages of the model.
+
+2. Rerun the algorithm on the whole training data to be used later on for scoring the external test data. There is no reason to limit the ability of the model to learn using 100% of the training data since the output scoring is already unbiased (given that it is always scored as a holdout set). 
+
+The K-fold process is illustrated below: 
 
 ![Alt text](/images/kfold_training.png?raw=true "Training StackNet with K-fold")
 
-2.	Rerun the algorithm on the whole training data to be used later on for scoring the external test data. There is no reason to limit the ability of the model to learn using 100% of the training data since the output scoring is already unbiased (given that it is always scored as a holdout set). 
 
 It should be noted that (1) is only applied during training to create unbiased predictions for the second layerss model to fit one. During scoring time (and after model training is complete) only (2) is in effect.
 
@@ -292,3 +295,5 @@ double preds [][]=StackNet.predict_proba(X_test);
 ## Reference
 
 For now you may use this :
+
+Marios Michailidis (2017), StackNet, StackNet Meta Modelling Framework, url https://github.com/kaz-Anova/StackNet
