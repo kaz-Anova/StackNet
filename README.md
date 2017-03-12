@@ -140,19 +140,19 @@ Command | Explanation
 --- | ---
 sparse  | True if the data to be imported are in sparse format (libsvm) or dense (false) 
 has_head   | True if train_file and test_file have headers else false
-model | name of the output model file. 
-pred_file | name of the output prediction file. 
-train_file | name of the training file. 
-test_file | name f tohe test file. 
-output_name | prefix of the models to be printed per iteration. This is to allow the Meta features of each iteration to be printed. Defaults to nothing.
-test_target | true if the test file has a target variable in the beginning (left) else false (only predictors in the file).
-params | parameter file where each line is a model. empty lines correspond to the creation of new levels 
+model | Name of the output model file. 
+pred_file | Name of the output prediction file. 
+train_file | Name of the training file. 
+test_file | Name f tohe test file. 
+output_name | Prefix of the models to be printed per iteration. This is to allow the Meta features of each iteration to be printed. Defaults to nothing.
+test_target | True if the test file has a target variable in the beginning (left) else false (only predictors in the file).
+params | Parameter file where each line is a model. empty lines correspond to the creation of new levels 
 verbose | True if we need StackNet to output its progress else false 
-Threads | number of models to run in parallel. This is independent of any extra threads allocated from the selected algorithms. e.g. it is possible to run 4 models in parallel where one is a randomforest that runs on 10 threads (it selected). 
+Threads | Number of models to run in parallel. This is independent of any extra threads allocated from the selected algorithms. e.g. it is possible to run 4 models in parallel where one is a randomforest that runs on 10 threads (it selected). 
 metric | Metric to output in cross validation for each model-neuron. can be logloss, accuracy or auc (for binary only) 
 stackdata | True for restacking else false
-seed | integer for randomised procedures 
-folds | number of folds for re-usable kfold
+seed | Integer for randomised procedures 
+folds | Number of folds for re-usable kfold
 
 ### Parameters' File
 
