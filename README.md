@@ -206,9 +206,13 @@ A **predict** method needs at least a **test_file** and a **model_file**.
 
 ### Training example:
 
+## general
 Java –jar stacknet.jar **_train_** **sparse**=false **has_head**=true **model**=model **pred_file**=pred.csv **train_file**=sample_train.csv **test_file**= sample_test.csv **test_target**=true **params**=params.txt **verbose**=true **threads**=7 **metric**=logloss **stackdata**=false **seed**=1 **folds**=5
 
 Note that you can have train and test at the same time. In that case after training, it scores the test data. 
+
+## Other
+[Kaggle-TwoSigma](/example/twosigma_kaggle/)
 
 ### Predict example:
 
