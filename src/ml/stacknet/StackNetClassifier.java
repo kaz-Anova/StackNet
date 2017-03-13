@@ -74,25 +74,25 @@ import exceptions.LessThanMinimum;
  *<p>Given some input data , a neural network normally applies a perceptron along with a transformation function like relu or sigmoid, tanh or others. The equation is often expressed as
  *<p> f<sub>1</sub> (x<sub>i</sub> )=∑<sup>H</sup><sub>(h=1)</sub>( g<sub>1</sub> ((x<sub>i</sub> ) ̂)beta<sub>1h</sub>+bias<sub>1h</sub>) </p>
  *<p> The STACKNET model assumes that this function can take the form of any supervised machine learning algorithm - or in other words:
- *<p> f<sub>1</sub> (x<sub>i</sub>,s)=∑<sup>H</sup><sub>(h=1)</sub>( g<sub>1</sub> s<sub>h</sub> ((x<sub>i</sub> )̂ )) 
- * <p> where s expresses this machine learning model. 
+ *<p> f<sub>1</sub> (x<sub>i</sub>)=∑<sup>H</sup><sub>(h=1)</sub>( g<sub>1</sub> s<sub>h</sub> ((x<sub>i</sub> )̂ )) 
+ * <p> where s expresses this machine learning model and g is a linear function.
  * <p> Logically the outputs of each neuron , can be fed onto next layers. For instance in teh second layer the equation will be :
- * <p> f<sub>2</sub> (x<sub>i</sub>,m)=∑<sup>H2</sup><sub>(h2=1)</sub>( (f<sub>1</sub> ((x<sub>i</sub> ) ̂,s))m)
+ * <p> f<sub>2</sub> (x<sub>i</sub>)=∑<sup>H2</sup><sub>(h2=1)</sub>( (f<sub>1</sub> ((x<sub>i</sub> )̂))a<sub>h2</sub>)
  * <p> Where m is one of the H2 algorithms included in the second layer and can be any estimator, classifier or regressor</p>
  * <p> The aforementioned formula could be generalised as follows for any layer:
- * <p> f<sub>n</sub> (x<sub>i</sub>,a)=∑<sup>H</sup><sub>(h=1)</sub>( (f<sub>(n-1)</sub> ((x<sub>i</sub> ) ̂ )) a<sub>n</sub>)
+ * <p> f<sub>n</sub> (x<sub>i</sub>)=∑<sup>H</sup><sub>(h=1)</sub>( (f<sub>(n-1)</sub> ((x<sub>i</sub>)̂ )) a<sub>h</sub>)
  * <p> Where a is the jth algorithm out of Hn in the nth hidden model layer and f_(n-1) the previous model’s raw score prediction in respect to the target variable.
  * <p> To create an output prediction score for any number of unique categories of the response variable, all selected algorithms in the last layer need to have output’s dimensionality equal to the number those unique classes
  * In case where there are many such classifiers, the results is the scaled average of all these output predictions and can be written as:
- * <p> f<sub>n</sub> (x<sub>i</sub>,a)=1/C ∑<sup>C</sup><sub>(c=1)</sub>∑<sup>H</sup><sub>(h=1)</sub>( (f<sub>(n-1)</sub> ((x<sub>i</sub> ) ̂ )) a<sub>n</sub>)
+ * <p> f<sub>n</sub> (x<sub>i</sub>)=1/C ∑<sup>C</sup><sub>(c=1)</sub>∑<sup>H</sup><sub>(h=1)</sub>( (f<sub>(n-1)</sub> ((x<sub>i</sub>)̂ )) a<sub>h</sub>)
  * <p> Where C is the number of unique classifiers in the last layer. In case of just 1 classifier in the output layer this would resemble the softmax activation function of a typical neural network used for classification. 
  * <H2> THE MODES </H2>
  * <p>The <em>stacking</em> element of the StackNet model could be run with 2 different modes. The first mode (e.g. the default) is the one already mentioned and assumes that in each layer uses the predictions (or output scores) of the direct previous one similar with a typical feedforward neural network or equivalently:
  * <p><b> Normal stacking mode</b> 
- * <p>f<sub>n</sub> (x<sub>i</sub>,a)=∑<sup>H</sup><sub>(h=1)</sub>(f<sub>(n-1)</sub> ((x<sub>i</sub> )̂ )) a<sub>n</sub>
+ * <p>f<sub>n</sub> (x<sub>i</sub>)=∑<sup>H</sup><sub>(h=1)</sub>(f<sub>(n-1)</sub> ((x<sub>i</sub> )̂ )) a<sub>h</sub>
  * <p>The second mode (also called restacking) assumes that each layer uses previous neurons activations as well as all previous layers’ neurons (including the input layer). Therefore the previous formula can be re-written as:
  * <p><b> Restacking mode</b> 
- * <p> f<sub>n</sub> (x<sub>i</sub>,a)=∑<sup>H</sup><sub>(h=1)</sub>∑<sub>(k=1)</sub><sup>(k=n-1)</sup>(f<sub>k</sub> ((x<sub>i</sub> )̂ )) a<sub>k</sub>
+ * <p> f<sub>n</sub> (x<sub>i</sub>)=∑<sup>H</sup><sub>(h=1)</sub>∑<sub>(k=1)</sub><sup>(K=n-1)</sup>(f<sub>k</sub> ((x<sub>i</sub>)̂ )) a<sub>k</sub>
  * <p> Assuming the algorithm is located in layer n>1, to activate each neuron h in that layer, all outputs from all neurons from the previous n-1
  *  (or k) layers need to be accumulated (or stacked .The intuition behind this mode is drive from the fact that the higher level algorithm have extracted information from the input data, but rescanning the input space may yield new information not obvious from the first passes. This is also driven from the forward training methodology discussed below and assumes that convergence needs to happen within one model iteration
  * <H2> K-FOLD TRAINING</H2>
@@ -101,9 +101,8 @@ import exceptions.LessThanMinimum;
 To overcome this drawback the algorithm utilises a k-fold cross validation (where k is a hyper parameter) so that all the original training data is scored in different k batches thereby outputting n shape training predictions where n is the size of the samples in the training data. Therefore the training process is consisted of 2 parts:
 <p> 1. Split the data k times and run k models to output predictions for each k part and then bring the k parts back together to the original order so that the output predictions can be used in later stages of the model. This process is illustrated below : 
 <p> 2. Rerun the algorithm on the whole training data to be used later on for scoring the external test data. There is no reason to limit the ability of the model to learn using 100% of the training data since the output scoring is already unbiased (given that it is always scored as a holdout set).
-<p> It should be noted that (1) is only applied during training to create unbiased predictions for the second layers’s model to fit one. During scoring time (and after model training is complete) only (2) is in effect. In other words the training process could be written as:
-<p> f<sub>n</sub> (x,a)=∑<sup>H</sup><sub>(h=1)</sub>∑<sup>K</sup><sub>(k=1)</sub>(f<sub>(n-1)</sub> ((x<sub>k</sub> )̂ )) a<sub>n</sub>
-<p>Where k refers to the k-fold and (x_k ) ̂ the k part of the training data to score (as in set to hold out). All models must be run sequentially based on the layers, but the order of the models within the layer does not matter. In other words all models of layer one need to be trained in order to proceed to layer two but all models within the layer can be run asynchronously and in parallel to save time.  
+<p> It should be noted that (1) is only applied during training to create unbiased predictions for the second layers’s model to fit one. During scoring time (and after model training is complete) only (2) is in effect.
+<p>. All models must be run sequentially based on the layers, but the order of the models within the layer does not matter. In other words all models of layer one need to be trained in order to proceed to layer two but all models within the layer can be run asynchronously and in parallel to save time.  
  The k-fold may also be viewed as a form of regularization where smaller number of folds (but higher than 1) ensure that the validation data is big enough to demonstrate how well a single model could generalize. On the other hand higher k means that the models come closer to running with 100% of the training and may yield more unexplained information. The best values could be found through cross validation. 
 Another possible way to implement this could be to save all the k models and use the average of their predicting to score the unobserved test data, but this have all the models never trained with 100% of the training data and may be suboptimal. 
  * <H3> Final Notes</H3>
