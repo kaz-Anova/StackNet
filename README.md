@@ -128,7 +128,10 @@ Not fully developed
 
 ## Algorithms’s Tunning parameters
 
-Will add later
+For the common models, have a look at :
+
+[parameters](/example/twosigma_kaggle/parameters.MD)
+
 
 ## Run StackNet 
 
