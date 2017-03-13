@@ -1,6 +1,8 @@
 # StackNet
 
-This repository contains StackNet Meta modelling methodology (and software) which is part of my work as a PhD Student in the computer science department at [UCL](http://www.cs.ucl.ac.uk/home/)
+This repository contains StackNet Meta modelling methodology (and software) which is part of my work as a PhD Student in the computer science department at [UCL](http://www.cs.ucl.ac.uk/home/) .  My PhD was sponsored by my company [dunnhumby](http://www.dunnhumby.com/) .
+
+
 
 ## What is StackNet
 
