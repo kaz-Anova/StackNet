@@ -151,7 +151,7 @@ output_name | Prefix of the models to be printed per iteration. This is to allow
 test_target | True if the test file has a target variable in the beginning (left) else false (only predictors in the file).
 params | Parameter file where each line is a model. empty lines correspond to the creation of new levels 
 verbose | True if we need StackNet to output its progress else false 
-Threads | Number of models to run in parallel. This is independent of any extra threads allocated from the selected algorithms. e.g. it is possible to run 4 models in parallel where one is a randomforest that runs on 10 threads (it selected). 
+threads | Number of models to run in parallel. This is independent of any extra threads allocated from the selected algorithms. e.g. it is possible to run 4 models in parallel where one is a randomforest that runs on 10 threads (it selected). 
 metric | Metric to output in cross validation for each model-neuron. can be logloss, accuracy or auc (for binary only) 
 stackdata | True for restacking else false
 seed | Integer for randomised procedures 
