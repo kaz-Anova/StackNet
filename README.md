@@ -298,7 +298,6 @@ double preds [][]=StackNet.predict_proba(X_test);
 
 - Add StackNetRegressor
 - increase coverage with well-known and well-performing ml tools
-- add preprocessing steps, feature engineering , feature selections
 
 ## Reference
 
