@@ -305,7 +305,7 @@ Marios Michailidis (2017), StackNet, StackNet Meta Modelling Framework, url http
 
 ## News
 
-StackNet model will be discussed at [infiniteconf 2017]( https://skillsmatter.com/conferences/7983-infiniteconf-2017-the-conference-on-big-data-data-science-and-engineering#program ) [6th-7th July]
+StackNet model will be presented at [infiniteconf 2017]( https://skillsmatter.com/conferences/7983-infiniteconf-2017-the-conference-on-big-data-data-science-and-engineering#program ) [6th-7th July]
 
 ## Special Thanks
 
