@@ -140,7 +140,7 @@ shuffle | True to train on random rows.
 
 ### Softmaxnnclassifier
 
-This is a neural network with 2 hidden layers. It is heavily based on the equivalent one in the [kaggler]( href="https://pypi.python.org/pypi/Kaggler) python package.
+This is a neural network with 2 hidden layers. It is heavily based on the equivalent one in the [kaggler](https://pypi.python.org/pypi/Kaggler) python package.
 
 Parameter | Explanation
 --- | ---
@@ -294,7 +294,7 @@ shuffle | True to train on random rows.
 
 ### Multinnregressor
 
-This is a neural network with 2 hidden layers. It is heavily based on the equivalent one in the [kaggler]( href="https://pypi.python.org/pypi/Kaggler) python package.
+This is a neural network with 2 hidden layers. It is heavily based on the equivalent one in the [kaggler](https://pypi.python.org/pypi/Kaggler) python package.
 
 Parameter | Explanation
 --- | ---
