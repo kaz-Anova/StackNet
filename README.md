@@ -72,7 +72,7 @@ However splitting the data in just 2 parts would mean that in each new layer the
 
 2. Rerun the algorithm on the whole training data to be used later on for scoring the external test data. There is no reason to limit the ability of the model to learn using 100% of the training data since the output scoring is already unbiased (given that it is always scored as a holdout set). 
 
-The K-fold process is illustrated below: 
+The K-fold train/predict process is illustrated below: 
 
 ![Alt text](/images/kfold_training.png?raw=true "Training StackNet with K-fold")
 
