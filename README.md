@@ -212,7 +212,8 @@ Java –jar stacknet.jar **_train_** **sparse**=false **has_head**=true **model*
 Note that you can have train and test at the same time. In that case after training, it scores the test data. 
 
 ## Other
-[Kaggle-TwoSigma](/example/twosigma_kaggle/)
+
+- [Kaggle-TwoSigma](/example/twosigma_kaggle/EXAMPLE.MD)
 
 ### Predict example:
 
