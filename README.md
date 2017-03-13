@@ -20,7 +20,7 @@ The StackNet model assumes that this function can take the form of any supervise
 
 ![Alt text](/images/generic_connection.png?raw=true "Generic input to hidden") 
 
-where *s* expresses that machine learning model. 
+where *s* expresses that machine learning model and *g* (normally) a linear activation function or identity
 
 Logically the outputs of each neuron, can be fed onto next layers. For instance in the second layer the equation will be : 
 
@@ -302,3 +302,15 @@ double preds [][]=StackNet.predict_proba(X_test);
 For now you may use this :
 
 Marios Michailidis (2017), StackNet, StackNet Meta Modelling Framework, url https://github.com/kaz-Anova/StackNet
+
+## News
+
+StackNet model will be discussed at [infiniteconf 2017]( https://skillsmatter.com/conferences/7983-infiniteconf-2017-the-conference-on-big-data-data-science-and-engineering#program ) [6th-7th July]
+
+## Special Thanks
+
+To my co-supervisors:
+
+- [Giles Pavey] (https://www.linkedin.com/in/giles-pavey-924426/)
+- [Prof. Philip Treleaven] (http://www0.cs.ucl.ac.uk/staff/P.Treleaven/) 
+
