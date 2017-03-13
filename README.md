@@ -136,8 +136,9 @@ You can do so directly from the jar file, using Java higher than 1.6 . You need 
 
 The basic format is:
 
+```
 Java –jar stacknet.jar [train or predict] [parameter = value]
-
+```
 
 ### Command Line Paramneters
 
