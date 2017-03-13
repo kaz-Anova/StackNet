@@ -130,7 +130,7 @@ Not fully developed
 
 For the common models, have a look at :
 
-[parameters](/example/twosigma_kaggle/parameters.MD)
+[parameters](/parameters.MD)
 
 
 ## Run StackNet 
