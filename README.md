@@ -130,7 +130,7 @@ Not fully developed
 
 For the common models, have a look at :
 
-[parameters](/parameters/parameters.MD)
+[parameters](/parameters/PARAMETERS.MD)
 
 
 ## Run StackNet 
