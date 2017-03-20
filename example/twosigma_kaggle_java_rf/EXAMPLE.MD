@@ -1,6 +1,6 @@
 # Example based on twosigma competition
 
-This example use RandomForestClassifier directly from Java
+This example use **RandomForestClassifier** directly from Java
 This example assumes you are familiar with adding external Jars to your Java projects and generally you have experience with Java
 
 The first 6 steps are the same as in the [StackNet twosigma example](https://github.com/kaz-Anova/StackNet/blob/master/example/twosigma_kaggle/EXAMPLE.MD)
