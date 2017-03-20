@@ -32,7 +32,7 @@ public class rf_stacknet {
 		String file=directory + "train_stacknetv1.csv";		
 		io.input in = new io.input(); //open a reader-type of class
 		in.delimeter=","; // set delimiter
-        in.HasHeader=false; // it does not have headers
+        	in.HasHeader=false; // it does not have headers
 		in.targets_columns= new int[] {0}; // the first column is the target
 		in.start=1; //we load the predictors from (1,onward). so we set for the main data everything apart from the target (column 0)
 		in.end=5000;
@@ -44,12 +44,12 @@ public class rf_stacknet {
 		file=directory + "test_stacknetv1.csv";		
 		in = new io.input();
 		in.delimeter=",";
-        in.HasHeader=false;
-        in.idint=0; // the first column is the id and we set it as string, this has to be int, not array
+        	in.HasHeader=false;
+       		in.idint=0; // the first column is the id and we set it as int, this has to be int value, not array
 		in.start=1;
 		in.end=5000;
 		fsmatrix X_test=in.Readfmatrix(file); // we read the data as fixed-size matrix
-		int[] id=in.GetIntid();// we retrieve the id as STring array
+		int[] id=in.GetIntid();// we retrieve the id as int array
 			
 		System.out.println("Loaded test data with " + X_test.GetRowDimension() + " and columns " + X_test.GetColumnDimension() );
 		
@@ -111,7 +111,7 @@ public class rf_stacknet {
 
 		System.out.println(" Finsihed predictions for test");
 
-	System.out.println(" PRINTING ");
+		System.out.println(" PRINTING ");
 		
 		try{  // Catch errors in I/O if necessary.
 			  // Open a file to write to.
