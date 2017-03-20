@@ -1,7 +1,7 @@
 # Example based on twosigma competition
 
 This example use RandomForestClassifier directly from Java
-This example assumes you are familiear with adding external Jars to your work and you have experience in Java
+This example assumes you are familiar with adding external Jars to your Java projects and generally you have experience with Java
 
 The first 6 steps are the same as in the [StackNet twosigma example](https://github.com/kaz-Anova/StackNet/blob/master/example/twosigma_kaggle/EXAMPLE.MD)
 
@@ -16,8 +16,20 @@ To run follow the next steps:
 
 The rest in new:
 
-7.If you use an IDE (like eclispe) , create a project and then add the **Stackent_source.jar** file from the Git
-8.Ensure your Java compiler level is 1.6 or more
-9 Import the **rf_stacknet.java**
-10.Make changes to the path/directry names if you have to
+7. If you use an IDE (like eclispe) , create a project and then add the **Stackent_source.jar** file from the Git
+8. Ensure your Java compiler level is 1.6 or more
+9. Import the **rf_stacknet.java**
+10. Make changes to the path/directry names if you have to
 11. the output file named as rf_Submission_0. etc scores x on LB . It scores **0.53789**
+
+It should print something like this :
+
+```java		
+ cv fold: 1/5  training size: 39482 test size: 9870 logloss-----> ( 0.5329) 
+ cv fold: 2/5  training size: 39482 test size: 9870 logloss-----> ( 0.5338) 
+ cv fold: 3/5  training size: 39482 test size: 9870 logloss-----> ( 0.5296) 
+ cv fold: 4/5  training size: 39482 test size: 9870 logloss-----> ( 0.5317) 
+ cv fold: 5/5  training size: 39480 test size: 9872 logloss-----> ( 0.5340) 
+ Final logloss-----> 0.5324 <-----
+
+```
