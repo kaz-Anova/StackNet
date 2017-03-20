@@ -220,7 +220,7 @@ Note that you can have train and test at the same time. In that case after train
 ## Other
 
 - [Kaggle-TwoSigma](/example/twosigma_kaggle/EXAMPLE.MD)
-- [Kaggle-TwoSigma Random Forest using the Library ] (/example/twosigma_kaggle_java_rf)
+- [Kaggle-TwoSigma Random Forest using the Library](/example/twosigma_kaggle_java_rf/EXAMPLE.MD)
 ### Predict example:
 
 Java –jar stacknet.jar **_predict_** **sparse**=false **has_head**=true **model**=model **pred_file**=pred.csv **test_file**=sample_test.csv **test_target**=true **verbose**=true  **metric**=logloss
