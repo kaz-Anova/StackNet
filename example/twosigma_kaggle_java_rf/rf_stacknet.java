@@ -21,7 +21,7 @@ public class rf_stacknet {
 	public static void main(String[] args) {
 		
 		// The Directory where the files are
-		String directory="C:/Users/mariosm/kaggle/sigmatwo/";
+		String directory="";
 		// output name (prefix) for the submission file
 		String outputname="rf";
 		//model parameters for an RandomForestClassifier models
