@@ -316,6 +316,6 @@ StackNet model will be presented at [infiniteconf 2017]( https://skillsmatter.co
 
 To my co-supervisors:
 
-- [Giles Pavey] (https://www.linkedin.com/in/giles-pavey-924426/)
-- [Prof. Philip Treleaven] (http://www0.cs.ucl.ac.uk/staff/P.Treleaven/) 
+- [Giles Pavey](https://www.linkedin.com/in/giles-pavey-924426/)
+- [Prof. Philip Treleaven](http://www0.cs.ucl.ac.uk/staff/P.Treleaven/) 
 
