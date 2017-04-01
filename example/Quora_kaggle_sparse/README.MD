@@ -7,7 +7,7 @@ To run follow the next steps:
 1. Download the **train.csv** and **test.csv** files from [here](https://www.kaggle.com/c/quora-question-pairs/data)
 2. Download the **StackNet.jar** file from the Git
 3. Ensure you have **Python** installed 
-4. Make certain you have **Java** higher than 1.6 installed and that Java is in your **PATH**. Have a look at [this] (https://www.java.com/en/download/help/path.xml) if you encounter trouble.
+4. Make certain you have **Java** higher than 1.6 installed and that Java is in your **PATH**. Have a look at [this](https://www.java.com/en/download/help/path.xml) if you encounter trouble.
 5. Run the ** main_querry_v1.py** script (also in the example section of the git). This is based on this [script]( https://www.kaggle.com/thedarkl0rd/quora-question-pairs/xgbstarter-340/code) . It creates the same basic data as in the script plus a simple **tf-idf** on question1 and question2 merged as the main purpose was to test high-cardinality sparse data. Then it prints the **train.sparse** and **test.sparse** in Libsvm format in the same folder where the file is executed. 
 6. **Run in the command line**. You may need to look at the [parameters’](https://github.com/kaz-Anova/StackNet) section on GitHub to understand more about the available models and they hyper paramaters. CD to the folder where all the files are and press: 
 *java -Xmx4048m -jar StackNet.jar train train_file=train.sparse test_file=test.sparse params=paramsv1.txt sparse=True pred_file=querry_pred.csv test_target=false verbose=true Threads=3 stackdata=false folds=5 indices_name=indx seed=1 metric=logloss*
