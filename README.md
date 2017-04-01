@@ -154,6 +154,7 @@ pred_file | Name of the output prediction file.
 train_file | Name of the training file. 
 test_file | Name of the test file. 
 output_name | Prefix of the models to be printed per iteration. This is to allow the Meta features of each iteration to be printed. Defaults to nothing.
+indices_name | (**NEW**) A prefix. When given any value it prints a .csv file for each fold with the corresponding train(0) and valiation(1) indices stacked vertically .The format is “row_index,[0 if train else 1 for validation]”. First it prints the train indices and then the validation indices in exactly the same order as they appear when modelling inside StackNet.
 test_target | True if the test file has a target variable in the beginning (left) else false (only predictors in the file).
 params | Parameter file where each line is a model. empty lines correspond to the creation of new levels 
 verbose | True if we need StackNet to output its progress else false 
@@ -219,6 +220,7 @@ Note that you can have train and test at the same time. In that case after train
 
 ## Other
 
+- [Kaggle-Quora-sparse](/example/Quora_kaggle_sparse/README.MD)
 - [Kaggle-TwoSigma](/example/twosigma_kaggle/EXAMPLE.MD)
 - [Kaggle-TwoSigma Random Forest using the Library](/example/twosigma_kaggle_java_rf/EXAMPLE.MD)
 ### Predict example:
