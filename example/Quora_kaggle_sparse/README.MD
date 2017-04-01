@@ -1,6 +1,6 @@
 # Example with Sparse data based on Quora Question Pairs
 
-This example uses [StackNet](https://github.com/kaz-Anova/StackNet) along with some preparation with python to score 0.3250 (logloss or better after merging with another [kernel submission](https://www.kaggle.com/woters/quora-question-pairs/xgb-starter-12357/output) ) for the [twosigma](https://www.kaggle.com/c/quora-question-pairs) challenge on [kaggle](https://www.kaggle.com/) 
+This example uses [StackNet](https://github.com/kaz-Anova/StackNet) along with some preparation with python to score 0.3250 (logloss or better after merging with another [kernel submission](https://www.kaggle.com/woters/quora-question-pairs/xgb-starter-12357/output) ) for the [Quora Question Pairs](https://www.kaggle.com/c/quora-question-pairs) challenge on [kaggle](https://www.kaggle.com/) 
 
 To run follow the next steps:
 
