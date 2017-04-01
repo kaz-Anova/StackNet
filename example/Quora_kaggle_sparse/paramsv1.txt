@@ -1,0 +1,13 @@
+LogisticRegression Type:Liblinear C:0.8 threads:1 usescale:True maxim_Iteration:100 seed:1 verbose:false
+RandomForestClassifier estimators:100 threads:1 rounding:3 cut_off_subsample:0.15 max_depth:7 max_features:0.7 min_leaf:3.0 min_split:5.0 Objective:ENTROPY row_subsample:0.95 seed:1 verbose:false
+LogisticRegression Type:SGD C:0.00001 threads:1 learn_rate:0.1 usescale:True maxim_Iteration:20 seed:1 verbose:false
+LSVC Type:Liblinear threads:1 usescale:True C:3.0 maxim_Iteration:100 seed:1 verbose:false copy:false
+LSVC Type:SGD C:0.00001 threads:1 learn_rate:0.1 usescale:True maxim_Iteration:20 seed:1 verbose:false copy:false
+RandomForestClassifier estimators:100 threads:1 rounding:3 cut_off_subsample:1.0 max_depth:5 max_features:0.7 min_leaf:3.0 min_split:5.0 Objective:ENTROPY row_subsample:0.95 seed:1 verbose:false
+softmaxnnclassifier usescale:True seed:1 Type:SGD maxim_Iteration:30 C:0.00001 shuffle:false learn_rate:0.001 smooth:0.1 h1:20 h2:30 connection_nonlinearity:Relu init_values:0.01 verbose:false copy:false
+LibFmClassifier maxim_Iteration:100 C:0.000001 C2:0.02 lfeatures:3 seed:1 usescale:True init_values:0.001 learn_rate:0.04 smooth:0.0001 threads:1 verbose:false
+GradientBoostingForestClassifier rounding:3 estimators:1000 shrinkage:0.1 threads:1 offset:0.00001 max_depth:8 max_features:0.4 min_leaf:4.0 min_split:8.0 Objective:RMSE row_subsample:0.7 seed:1 verbose:false
+LibFmRegressor maxim_Iteration:100 C:0.000001 C2:0.02 lfeatures:3 seed:1 usescale:True init_values:0.001 learn_rate:0.04 smooth:0.0001 threads:1 verbose:false
+GradientBoostingForestRegressor rounding:3 estimators:100 shrinkage:0.2 threads:1 cut_off_subsample:0.8 offset:0.00001 max_depth:9 max_features:0.4 min_leaf:4.0 min_split:8.0 Objective:RMSE row_subsample:0.7 seed:1 verbose:false
+
+RandomForestClassifier estimators:300 threads:3 rounding:3.0 max_depth:12 max_features:0.4 min_leaf:3.0 min_split:5.0 Objective:ENTROPY row_subsample:0.9 seed:1 verbose:false
