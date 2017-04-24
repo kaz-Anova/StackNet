@@ -2,7 +2,7 @@
 
 This example uses 2 StackNet models to achieve a top 11 score withn 2 hours (on 1 thread) in the popular kaggle challenge.
 
-![Alt text](/images/top_11_score.png?raw=true "top 11 score") 
+![Alt text](/example/example_amazon/images/top_11_score.png?raw=true "top 11 score") 
 
 * Amazon.com - Employee Access Challenge was a popular Kaggle competition (around 1700 teams).
 * This code will get you around top10 within a few hours (including data preparation and modelling) via using 2 StackNet models.
@@ -34,7 +34,7 @@ LSVC_L1   | 0.871
 
 RoC of best Logistic model:
 
-![Alt text](/images/best_linear_model.png?raw=true "best linear model") 
+![Alt text](/example/example_amazon/images/best_linear_model.png?raw=true "best linear model") 
 
 The second part will use the data per fold 
 5. Execute from the command line : *java -Xmx3048m -jar StackNet.jar train data_prefix=amazon_counts test_file=amazon_counts_test.txt  pred_file=amazon_count_pred.csv  verbose=true Threads=1 folds=5 seed=1 metric=auc*
@@ -53,7 +53,7 @@ LinearRegression  | 0.901
 
 RoC of best (GBM)  model:
 
-![Alt text](/images/best_count_model.png?raw=true "best count model") 
+![Alt text](/example/example_amazon/images/best_count_model.png?raw=true "best count model") 
 
 6. run the **blend_script.py** to blend the results of the two StackNets
 7. submit
