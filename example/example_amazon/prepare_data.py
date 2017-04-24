@@ -4,10 +4,10 @@ Created 22/4/2017
 
 @author: Marios Michailidis
 
-Script that prepares 2 data sets to get a top 10 position in the Amazon Classification Challenge:
+Script that prepares 2 data sets to get a top 11 position in the Amazon Classification Challenge:
 Link:https://www.kaggle.com/c/amazon-employee-access-challenge
 
-First source of data is via selecting the best up for up to 5-way interractions fo all
+First source of data is via selecting the best up for up to 4-way interractions fo all
 categorical variables ysing a linear model. Then the results are printes as sparse files
 
 The scource are counts and likelihood features created per fold for up to 3way interractions 
@@ -172,7 +172,7 @@ def fromsparsetofile(filename, array, deli1=" ", deli2=":",ytarget=None):
     f.close()  
     
 """
-Load training and test data. Then create in a brute force way to cerate all possible 5-way 
+Load training and test data. Then create in a brute force way to cerate all possible 4-way 
 categorical interractions and test whether auc improves when adding them. 
 Once it finds the best interractions, it prints them as sparse data
 as:
@@ -180,7 +180,7 @@ as:
     test.sparse
 """
   
-def create_5way_interractions(path=""):
+def create_4way_interractions(path=""):
     
     train_df=pd.read_csv(path + "train.csv")
     test_df=pd.read_csv(path + "test.csv")
@@ -429,13 +429,13 @@ def create_5way_interractions(path=""):
 
 """
 Computes all possible 3-way interractions
-and computes the counts of each category
+and finds the counts of each category
 Then it perfoms k-fold and produces likelihood (woe)
 values for all features and stacks them next to the counts. Then
 it prints them in dense format as  :
     amazon_counts_train" + str(fold_number) + ".txt"
     amazon_counts_cv" + str(fold_number) + ".txt"
-It also produces a amazon_counts_train.txt and amazon_counts_test.txt file too.
+It also produces an amazon_counts_train.txt and amazon_counts_test.txt file too.
 (so 12 in total - 5 pairs of train/cv and a final train and test file)
 The aim is to prepare StackNet to run stacking with our own folds.
 
@@ -621,7 +621,7 @@ def create_likelihoods_with_counts(path=""):
 
 ############ code runs here############
     
-create_5way_interractions() # compute 5way interractions
+create_4way_interractions() # compute 4way interractions
 create_likelihoods_with_counts()  # compute likelihoods and counts per fold and print 5 pairs of train/cv files 
     
     
