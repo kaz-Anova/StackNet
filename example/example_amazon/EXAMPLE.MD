@@ -36,6 +36,8 @@ RoC of best Logistic model:
 
 ![Alt text](/example/example_amazon/images/best_linear_model.png?raw=true "best linear model") 
 
+The RandomForest Meta Classifier in level 2 had **AUC of 0.901** which is about **0.008 gain** from the top performing model.
+
 The second part will use the data per fold 
 5. Execute from the command line : *java -Xmx3048m -jar StackNet.jar train data_prefix=amazon_counts test_file=amazon_counts_test.txt  pred_file=amazon_count_pred.csv  verbose=true Threads=1 folds=5 seed=1 metric=auc*
 
@@ -54,6 +56,8 @@ LinearRegression  | 0.901
 RoC of best (GBM)  model:
 
 ![Alt text](/example/example_amazon/images/best_count_model.png?raw=true "best count model") 
+
+The RandomForest Meta Classifier in level 2 had **AUC of 0.904** which is about **0.004 gain** from the top performing model (less than the linear blend).
 
 6. run the **blend_script.py** to blend the results of the two StackNets
 7. submit
