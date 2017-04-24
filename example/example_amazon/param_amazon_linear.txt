@@ -1,0 +1,12 @@
+LogisticRegression Type:Liblinear C:1. threads:1 usescale:True maxim_Iteration:100 seed:1 verbose:false
+LogisticRegression Type:SGD C:0.001 usescale:True threads:1 learn_rate:0.01 maxim_Iteration:60 seed:1 verbose:false
+LSVC Type:Liblinear threads:1 usescale:True C:0.01 maxim_Iteration:100 seed:1 verbose:false
+LinearRegression Type:FTRL C:20. l1C:0.1 usescale:True threads:1 learn_rate:0.1 maxim_Iteration:10 smooth:20.
+LibFmClassifier maxim_Iteration:50 C:0.000001 C2:10. lfeatures:2 seed:1 usescale:True init_values:0.00001 learn_rate:0.55 smooth:1000. threads:1 verbose:false
+softmaxnnclassifier usescale:True seed:1 Type:SGD maxim_Iteration:30 C:0.00001 shuffle:false learn_rate:0.001 smooth:0.1 h1:30 h2:30 connection_nonlinearity:Relu init_values:0.025 verbose:false
+GradientBoostingForestClassifier shrinkage:0.16 row_subsample:0.8 estimators:300 max_depth:7 max_features:0.6 min_leaf:2.0 min_split:3.0 seed:1 verbose:false
+LogisticRegression Type:Liblinear C:0.5 RegularizationType:L1 threads:1 usescale:True maxim_Iteration:20 seed:1 verbose:false
+LSVC Type:Liblinear RegularizationType:L1  threads:1 usescale:True C:0.5 maxim_Iteration:100 seed:1 verbose:false
+
+RandomForestClassifier estimators:1500 rounding:12 threads:1 max_depth:7 max_features:0.15 min_leaf:1.0 min_split:2.0 Objective:ENTROPY seed:1 verbose:false
+
