@@ -9,7 +9,7 @@ This example uses 2 StackNet models to achieve a top 11 score withn 2 hours (on 
 * The interesting about this competition is it has only 8 Variables (and 1 duplicate)! 
 * All categorical with high cardinality
 * The purpose is to build a model, learned using historical data, that will determine an employee's access needs 
-* First StackNet model is based on a dataset that finds the top 5way interractions of all the features, which then is binarized using onehot encoding. Therfore the input data is **sparse**.
+* First StackNet model is based on a dataset that finds the top 4way interractions of all the features, which then is binarized using onehot encoding. Therfore the input data is **sparse**.
 * The second model makes use of the new **data_prefix** command which tells StackNet to expect different pairs of train and validation data to run stacking on. In other words the User supplies the data per fold. This schema is used because likelihood features and counts are created within cross-validation.
 * The metric to optimize is Area Under The Roc Curve or simply AUC
 
