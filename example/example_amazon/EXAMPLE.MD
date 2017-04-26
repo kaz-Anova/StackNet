@@ -63,3 +63,5 @@ The RandomForest Meta Classifier in level 2 had **AUC of 0.904** which is about 
 7. submit
 8. Try your own things - add your own models! There is room for improvement :)  
 
+There is also another example done in the past with python for the same data that displays and compares different ensemble techniques, including stacking [here](https://github.com/kaz-Anova/ensemble_amazon)
+
