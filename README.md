@@ -117,8 +117,6 @@ StackNet is made available now with a handful of classifiers and regressors. The
 -    LinearRegression
 -    LibFmRegressor
 -    LibFmClassifier
--    XgboostRegressor(**New**)
--    XgboostClassifier(**New**)
 
 Not fully developed
 
@@ -126,6 +124,10 @@ Not fully developed
 -    knnRegressor 
 -    KernelmodelClassifier 
 -    KernelmodelRegressor
+
+Wrappers
+-    XgboostRegressor(**New**)
+-    XgboostClassifier(**New**)
 
 
 ## Algorithm's Tuning parameters
