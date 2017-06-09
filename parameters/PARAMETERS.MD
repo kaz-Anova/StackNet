@@ -337,6 +337,7 @@ lambda |controls overfitting (double).
 Same parameters with regression apart from Objective. The user does not need to set anything - the algorithm decideds automatically based on the number of classes in the target variable.
 
 --- | ---
+Objective | No need to set
 scale_pos_weight | used for imbalanced classes(double)
 
 
