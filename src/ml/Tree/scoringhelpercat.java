@@ -76,10 +76,21 @@ public class scoringhelpercat implements Runnable {
 	 */
 	private smatrix sdataset;	
 	
-	
-	
+	/**
+	 * rounding to apply to predictions
+	 */
+	private double rounding=3.0;
+	/**
+	 * 
+	 * @param data : data to score
+	 * @param predictions : placement of predictions
+	 * @param st : start of the loop for threads
+	 * @param ed : end of the loop for threads
+	 * @param tree_body : the nodes
+	 * @param rounding : rounding applied to that model.
+	 */
 	public scoringhelpercat(double data [][], double predictions [][],  int st, int ed ,
-			Node [] tree_body){
+			Node [] tree_body, double rounding){
 		
 		if (tree_body==null || tree_body.length==0){
 			throw new IllegalStateException(" Tree body is empty (e.g depth=0)" );
@@ -106,11 +117,22 @@ public class scoringhelpercat implements Runnable {
 		this.start_array=st;
 		this.end_array=ed;
 		dataset=data;	
+		this.rounding=rounding;
 		this.predictions=predictions;
 		;
 	}
+	/**
+	 * 
+	 * @param data : data to score
+	 * @param predictions : placement of predictions
+	 * @param st : start of the loop for threads
+	 * @param ed : end of the loop for threads
+	 * @param tree_body : the nodes
+	 * @param Classes : distinct classes
+	 * @param rounding : rounding applied to that model.
+	 */
 	public scoringhelpercat(double data [][], double predictions [],  int st, int ed,
-			Node [] tree_body, String Classes []){
+			Node [] tree_body, String Classes [], double rounding){
 		
 		if (tree_body==null || tree_body.length==0){
 			throw new IllegalStateException(" Tree body is empty (e.g depth=0)" );
@@ -137,13 +159,23 @@ public class scoringhelpercat implements Runnable {
 		this.start_array=st;
 		this.end_array=ed;
 		dataset=data;	
+		this.rounding=rounding;
 		this.single_predictions=predictions;
 		this.classes=Classes;
 		;
 	}
+	/**
+	 * 
+	 * @param data : data to score
+	 * @param predictions : placement of predictions
+	 * @param st : start of the loop for threads
+	 * @param ed : end of the loop for threads
+	 * @param tree_body : the nodes
+	 * @param rounding : rounding applied to that model.
+	 */
 	public scoringhelpercat(fsmatrix data, double predictions [][], int st, int ed,
 			
-			Node [] tree_body){
+			Node [] tree_body, double rounding){
 		
 		if (tree_body==null || tree_body.length==0){
 			throw new IllegalStateException(" Tree body is empty (e.g depth=0)" );
@@ -171,12 +203,22 @@ public class scoringhelpercat implements Runnable {
 		this.end_array=ed;
 		this.predictions=predictions;
 		;
+		this.rounding=rounding;
 		fsdataset=data;
 	}
-	
+	/**
+	 * 
+	 * @param data : data to score
+	 * @param predictions : placement of predictions
+	 * @param st : start of the loop for threads
+	 * @param ed : end of the loop for threads
+	 * @param tree_body : the nodes
+	 * @param Classes : distinct classes
+	 * @param rounding : rounding applied to that model.
+	 */
 	public scoringhelpercat(fsmatrix data, double predictions [], int st, int ed,
 			
-			DecisionTreeClassifier.Node [] tree_body, String Classes []){
+			DecisionTreeClassifier.Node [] tree_body, String Classes [], double rounding){
 		
 		if (tree_body==null || tree_body.length==0){
 			throw new IllegalStateException(" Tree body is empty (e.g depth=0)" );
@@ -205,9 +247,19 @@ public class scoringhelpercat implements Runnable {
 		this.single_predictions=predictions;
 		this.classes=Classes;
 		fsdataset=data;
+		this.rounding=rounding;
 	}
+	/**
+	 * 
+	 * @param data : data to score
+	 * @param predictions : placement of predictions
+	 * @param st : start of the loop for threads
+	 * @param ed : end of the loop for threads
+	 * @param tree_body : the nodes
+	 * @param rounding : rounding applied to that model.
+	 */
 	public scoringhelpercat(smatrix data, double predictions [][],  int st, int ed,	
-			DecisionTreeClassifier.Node [] tree_body){
+			DecisionTreeClassifier.Node [] tree_body, double rounding){
 		
 		if (tree_body==null || tree_body.length==0){
 			throw new IllegalStateException(" Tree body is empty (e.g depth=0)" );
@@ -236,13 +288,22 @@ public class scoringhelpercat implements Runnable {
 		this.tree_body=tree_body;
 		this.predictions=predictions;
 		;
-
+		this.rounding=rounding;
 		
 		sdataset=data;
 		}
-	
+	/**
+	 * 
+	 * @param data : data to score
+	 * @param predictions : placement of predictions
+	 * @param st : start of the loop for threads
+	 * @param ed : end of the loop for threads
+	 * @param tree_body : the nodes
+	 * @param Classes : distinct classes
+	 * @param rounding : rounding applied to that model.
+	 */
 	public scoringhelpercat(smatrix data, double predictions [],  int st, int ed,	
-			DecisionTreeClassifier.Node [] tree_body, String Classes []){
+			DecisionTreeClassifier.Node [] tree_body, String Classes [], double rounding){
 		
 		if (tree_body==null || tree_body.length==0){
 			throw new IllegalStateException(" Tree body is empty (e.g depth=0)" );
@@ -271,10 +332,7 @@ public class scoringhelpercat implements Runnable {
 		this.tree_body=tree_body;
 		this.single_predictions=predictions;
 		this.classes=Classes;
-
-		if (data.indexer==null){
-			data.buildmap();
-		}
+		this.rounding=rounding;
 		sdataset=data;
 		}	
 
@@ -299,7 +357,7 @@ public class scoringhelpercat implements Runnable {
 						Node new_Node=this.tree_body[THE_id];
 						int split_var=new_Node.Variable;
 						double cutt_off=new_Node.cutoffval;
-						double value=dataset[i][split_var];
+						double value= Math.round( dataset[i][split_var]* 10.0 * rounding) / (10.0 * rounding) ;
 						previous_id=THE_id;
 						// left split
 						if (value <=cutt_off) {
@@ -333,7 +391,7 @@ public class scoringhelpercat implements Runnable {
 						Node new_Node=this.tree_body[THE_id];
 						int split_var=new_Node.Variable;
 						double cutt_off=new_Node.cutoffval;
-						double value=dataset[i][split_var];
+						double value= Math.round ( dataset[i][split_var]* 10.0 * rounding) / (10.0 * rounding) ;
 						previous_id=THE_id;
 						// left split
 						if (value <=cutt_off) {
@@ -388,7 +446,7 @@ public class scoringhelpercat implements Runnable {
 						}
 						 split_var=new_Node.Variable;
 						 cutt_off=new_Node.cutoffval;
-						 value=fsdataset.GetElement(i,split_var);	
+						 value= Math.round( fsdataset.GetElement(i,split_var)* 10.0 * rounding) / (10.0 * rounding) ; 	
 						previous_id=THE_id;
 						// left split
 						if (value <=cutt_off) {
@@ -423,7 +481,7 @@ public class scoringhelpercat implements Runnable {
 						Node new_Node=this.tree_body[THE_id];
 						int split_var=new_Node.Variable;
 						double cutt_off=new_Node.cutoffval;
-						double value=fsdataset.GetElement(i,split_var);
+						double value=Math.round( fsdataset.GetElement(i,split_var)* 10.0 * rounding) / (10.0 * rounding) ; 	
 						previous_id=THE_id;
 						// left split
 						if (value <=cutt_off) {
@@ -469,7 +527,20 @@ public class scoringhelpercat implements Runnable {
 						Node new_Node=this.tree_body[THE_id];
 						int split_var=new_Node.Variable;
 						double cutt_off=new_Node.cutoffval;
-						double value=sdataset.GetElement(i, split_var);
+						double value=0.0;
+						for (int j=sdataset.indexpile[i];j<sdataset.indexpile[i+1];j++){
+							int check_feature=sdataset.mainelementpile[j];
+							if (check_feature<split_var){ // we found our feature
+								continue;// next row - here the feature has zero value
+							}
+							else if (check_feature>split_var){ // we found our feature
+								break;// next row - here the feature has zero value
+							}					
+							else { // we found our feature
+								value=Math.round(sdataset.valuespile[j] * 10.0 * rounding) / (10.0 * rounding) ;
+								break;//found it! no longer need to keep on looping
+							}
+						}	 
 						previous_id=THE_id;
 						// left split
 						if (value <=cutt_off) {
@@ -499,7 +570,20 @@ public class scoringhelpercat implements Runnable {
 						Node new_Node=this.tree_body[THE_id];
 						int split_var=new_Node.Variable;
 						double cutt_off=new_Node.cutoffval;
-						double value=sdataset.GetElement(i, split_var);
+						double value=0.0;
+						for (int j=sdataset.indexpile[i];j<sdataset.indexpile[i+1];j++){
+							int check_feature=sdataset.mainelementpile[j];
+							if (check_feature<split_var){ // we found our feature
+								continue;// next row - here the feature has zero value
+							}
+							else if (check_feature>split_var){ // we found our feature
+								break;// next row - here the feature has zero value
+							}					
+							else { // we found our feature
+								value=Math.round(sdataset.valuespile[j] * 10.0 * rounding) / (10.0 * rounding) ;
+								break;//found it! no longer need to keep on looping
+							}
+						} 
 						previous_id=THE_id;
 						// left split
 						if (value <=cutt_off) {

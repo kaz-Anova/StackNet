@@ -310,4 +310,36 @@ Objective | Can be one of “RMSE”, “MAE” or ”QUANTILE”.
 tau | Tau value for QUANTILE (double).
 Type | Only “SGD”. 
 UseConstant | If true it uses an intercept.
-shuffle | True to train on random rows. 
+shuffle | True to train on random rows.
+
+### XgboostRegressor(**NEW**)
+
+The original parameters can be found [here](https://github.com/dmlc/xgboost/blob/master/doc/parameter.md) 
+
+Parameter | Explanation
+--- | ---
+num_round | Number of estimators to build (int) .
+max_leaves |Maximum leaves in a tree (int).
+eta | Penalty applied to each estimator. Needs to be between 0 and 1 (double). **This is important**.
+max_depth | Maximum depth of the tree (int). **This is important**.
+Objective | Can be one of ['reg:linear','count:poisson','reg:gamma' ,'rank:pairwise','reg:tweedie']. Note that rank:pairwise is not a regressor but its output was more convenient for a regerssion method.  
+subsample | Proportion of observations to consider (double). **This is important**.
+colsample_bylevel | Proportion of columns (features) to consider in each level (double).
+colsample_bytree |  Proportion of columns (features) to consider in each Tree (double) **This is important**.
+max_delta_step | controls optimization step (double).
+gamma | controls minimum change requirements in loss to allow for a split (double).
+booster | 'gbtree' or 'gblinear'.
+alpha |controls overfitting (double). 
+lambda |controls overfitting (double). 
+
+### XgboostClassifier(**NEW**)
+
+Same parameters with regression apart from Objective. The user does not need to set anything - the algorithm decideds automatically based on the number of classes in the target variable.
+--- | ---
+scale_pos_weight | used for imbalanced classes(double).
+
+						
+					
+
+			
+				

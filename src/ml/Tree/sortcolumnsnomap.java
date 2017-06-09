@@ -32,24 +32,15 @@ public class sortcolumnsnomap implements Runnable {
 	/**
 	 * rows to include
 	 */
-	
 	public int [] subset_of_rows;
 	/**
-	 * The feature to find best split from
-	 */
-	public int feature=-1;
-	/**
-	 * The object that holds the modelling data in double form in cases the user chooses this form
-	 */
-	private double dataset[][];
-	/**
-	 * The object that holds the modelling data in fsmatrix form cases the user chooses this form
-	 */
-	private fsmatrix fsdataset;
-	/**
-	 * The object that holds the modelling data in smatrix form cases the user chooses this form
-	 */
+	 * The object that holds the modelling data in smatrix form 	 */
 	private smatrix sdataset;	
+	
+	/**
+	 * The object that holds the modelling data in fsmatrix form 
+	 */
+	private fsmatrix fsdataset;	
 	/**
 	 * Indices to keep and sort
 	 */
@@ -57,20 +48,31 @@ public class sortcolumnsnomap implements Runnable {
 	/**
 	 * to set initial capacity correctly
 	 */
-	public int row_size;
+	public int rank_holder;
 	/**
 	 * Digits to round
 	 */
-	int rounding=30;
-	/**
-	 * Holds the maximum rank for each feature - very useful for bucket sort
-	 */
-	private int rank_holder []; 
+	double rounding=30;
 	/**
 	 * Holds the rank of the 'zero' (e.g. sparse) elements
 	 */
 	private int zero_rank_holder []; 
-
+	/**
+	 * int target values
+	 */
+	public int target_vales []=null;
+	/**
+	 * fixes size target values
+	 */
+	public fsmatrix fstarget=null;
+	/**
+	 * target proportion change to require a 
+	 */
+	public double merge_thresold=0.0;
+	/**
+	 * whether to print stuff or not
+	 */
+	public boolean verbose=false;
 	/**
 	 * 
 	 * @param data : The data to Extract the column from
@@ -78,362 +80,795 @@ public class sortcolumnsnomap implements Runnable {
 	 * @param indice_holder : where to put the indices
 	 * @param featuren : the feature to extract (e.g. find best split) from
 	 * @param rankholder : array to stored the sorted indices
-	 * @param capacity : row size
 	 * @param round : rounding to decrease potential size
 	 */
-	public sortcolumnsnomap(double data [][], int [] rows, int [][]  indice_holder,
-			int featuren, int rankholder [] , int capacity, int round){
-		if (data==null || data.length<=0){
-			throw new IllegalStateException(" There is nothing to score" );
-		}
-		if (rows==null || rows.length<=0){
-			throw new IllegalStateException(" There are no rows!" );
-		}
-		if (indice_holder==null ){
-			throw new IllegalStateException(" Problem with the state of the indice's holder" );
-		}	
-		if (featuren<0){
-			throw new IllegalStateException("The feature cannot be negative" );	
-		}
-		if (indice_holder.length!=rankholder.length){
-			throw new IllegalStateException(" Indice holder and rank holde need to have the same length");
-		}
-		this.feature=featuren;
-		dataset=data;	
-		subset_of_rows=rows;
-		this.indice_holder=indice_holder;
-		this.rank_holder=rankholder;
-		this.row_size=capacity;
-		this.rounding=round;
-
-	}
-	/**
-	 * 
-	 * @param data : The data to Extract the column from
-	 * @param rows : sub-selection of rows to use
-	 * @param indice_holder : where to put the indices
-	 * @param featuren : the feature to extract (e.g. find best split) from
-	 * @param rankholder : array to stored the sorted indices
-	 * @param capacity : row size
-	 * @param round : rounding to decrease potential size
-	 */
- 
-	public sortcolumnsnomap(fsmatrix data, int []rows, int [][]  indice_holder,
-			int featuren, int rankholder [] , int capacity, int round){
+	public sortcolumnsnomap(smatrix data, int [] rows, int [][]  indice_holder
+			, int [] zero_rank_holder, double round){
 		
 		if (data==null || data.GetRowDimension()<=0){
 			throw new IllegalStateException(" There is nothing to score" );
 		}
 		if (rows==null || rows.length<=0){
-			throw new IllegalStateException(" There are no rows!" );
+			subset_of_rows= new int [data.GetRowDimension()];
+			for (int i=0; i < subset_of_rows.length;i++){
+				subset_of_rows[i]=i;
+			}
+		} else {
+			subset_of_rows=rows;
 		}
 		
 		if (indice_holder==null ){
 			throw new IllegalStateException(" Problem with the state of the indice's holder" );
 		}	
-		
-		if (featuren<0){
-			throw new IllegalStateException("The feature cannot be negative" );	
-		}
-		if (indice_holder.length!=rankholder.length){
-			throw new IllegalStateException(" Indice holder and rank holde need to have the same length");
-		}
-		this.feature=featuren;
-		
-		this.rounding=round;
-		subset_of_rows=rows;
-		fsdataset=data;
-		this.indice_holder=indice_holder;
-		this.rank_holder=rankholder;
-		this.row_size=capacity;
-	}
 
-	/**
-	 * 
-	 * @param data : The data to Extract the column from
-	 * @param rows : sub-selection of rows to use
-	 * @param indice_holder : where to put the indices
-	 * @param featuren : the feature to extract (e.g. find best split) from
-	 * @param rankholder : array to stored the sorted indices
-	 * @param capacity : row size
-	 * @param round : rounding to decrease potential size
-	 */
-	public sortcolumnsnomap(smatrix data, int [] rows, int [][]  indice_holder,
-			int featuren, int rankholder [] , int [] zero_rank_holder, int capacity, int round){
-		
-		if (data==null || data.GetRowDimension()<=0){
-			throw new IllegalStateException(" There is nothing to score" );
-		}
-		if (rows==null || rows.length<=0){
-			throw new IllegalStateException(" There are no rows!" );
-		}
-		
-		if (indice_holder==null ){
-			throw new IllegalStateException(" Problem with the state of the indice's holder" );
-		}	
-		
-		if (featuren<0){
-			throw new IllegalStateException("The feature cannot be negative" );	
-		}
-		if (indice_holder.length!=rankholder.length){
-			throw new IllegalStateException(" Indice holder and rank holde need to have the same length");
-		}
 		this.rounding=round;
-		this.feature=featuren;
-		subset_of_rows=rows;
+	
 		this.indice_holder=indice_holder;
 		sdataset=data;
-		this.rank_holder=rankholder;
 		this.zero_rank_holder=zero_rank_holder;
-		this.row_size=capacity;
 		}
-	
-	
-
-//	/**
-//	 * 
-//	 * @return the betas
-//	 */
-//	public double [] Getbetas(){
-//		if (betas==null || betas.length<=0){
-//			throw new IllegalStateException(" estimator needs to be fitted first" );
-//		}
-//		return manipulate.copies.copies.Copy(betas);
-//	}
-	
-
-	private void fit(double[][] data) {
-		// make sensible checks
-
-			//compromise memory at the gain of speed...initialise arrays at full row length
-			// code block form when weights are provided
-			double variable []= new double [subset_of_rows.length];
-			int rows_this_fetaure[]= new int [subset_of_rows.length];
-			int non_zero_counter=0;
-			
-			// check all value rows
-			for (int i:subset_of_rows){
-				variable[non_zero_counter]=Math.round(data[i][this.feature]* 10.0 * this.rounding) / (10.0 * this.rounding); 
-				rows_this_fetaure[non_zero_counter]= i;
-				non_zero_counter+=1; //increment counter of nonzero fetaures
-			}// end of rows loop	
-	
-				// we need to sort this array up to no_zero_countr, that is important
-			manipulate.sort.quicksort.Quicksortasc(variable, rows_this_fetaure , 0,variable.length-1);			
-			int [] map= new int [this.row_size];		
-			double val=Double.NEGATIVE_INFINITY;
-			int rank=0;
-			for (int i=0; i < variable.length; i++){
-				double vs=variable[i];
-				if (vs!=val){
-					rank++;
-					val=vs;
-				}
-				map[rows_this_fetaure[i]]=rank;
-				//map.put(rows_this_fetaure[i], rank);
-			}
-			
-			indice_holder[this.feature]	=map;
-			this.rank_holder[this.feature]	=rank;
-			rows_this_fetaure=null;
-			variable=null;
-
-	}
-
-
-	private void fit(fsmatrix data) {
-
-		//compromise memory at the gain of speed...initialise arrays at full row length
-		// code block form when weights are provided
-		double variable []= new double [subset_of_rows.length];
-		int rows_this_fetaure[]= new int [subset_of_rows.length];
-		int non_zero_counter=0;
+	/**
+	 * 
+	 * @param data : The data to Extract the column from
+	 * @param rows : sub-selection of rows to use
+	 * @param indice_holder : where to put the indices
+	 * @param featuren : the feature to extract (e.g. find best split) from
+	 * @param rankholder : array to stored the sorted indices
+	 * @param round : rounding to decrease potential size
+	 */
+	public sortcolumnsnomap(fsmatrix data, int [] rows, int [][]  indice_holder
+			, int [] zero_rank_holder, double round){
 		
-		// check all value rows
-		for (int i:subset_of_rows){
-			variable[non_zero_counter]=Math.round(data.GetElement(i, this.feature)* 10.0 * this.rounding) / (10.0 * this.rounding); 
-			rows_this_fetaure[non_zero_counter]= i;
-			non_zero_counter+=1; //increment counter of nonzero fetaures
-		}// end of rows loop	
-
-			// we need to sort this array up to no_zero_countr, that is important
-		manipulate.sort.quicksort.Quicksortasc(variable, rows_this_fetaure , 0,variable.length-1);
-		int [] map= new int [this.row_size];
-		double val=Double.NEGATIVE_INFINITY;
-		int rank=0;
-		for (int i=0; i < variable.length; i++){
-			double vs=variable[i];
-			if (vs!=val){
-				rank++;
-				val=vs;
+		if (data==null || data.GetRowDimension()<=0){
+			throw new IllegalStateException(" There is nothing to score" );
+		}
+		if (rows==null || rows.length<=0){
+			subset_of_rows= new int [data.GetRowDimension()];
+			for (int i=0; i < subset_of_rows.length;i++){
+				subset_of_rows[i]=i;
 			}
-			map[rows_this_fetaure[i]]=rank;
-			//map.put(rows_this_fetaure[i], rank);
+		} else {
+			subset_of_rows=rows;
 		}
 		
-		indice_holder[this.feature]	=map;
-		this.rank_holder[this.feature]	=rank;
-		rows_this_fetaure=null;
-		variable=null;
+		if (indice_holder==null ){
+			throw new IllegalStateException(" Problem with the state of the indice's holder" );
+		}	
 
-			// end of SGD
-
+		this.rounding=round;
+	
+		this.indice_holder=indice_holder;
+		fsdataset=data;
+		this.zero_rank_holder=zero_rank_holder;
+		}
+	/**
+	 * @return maximum rank plus 1
+	 */
+	public int getmaxrank(){
+		return this.rank_holder;
 	}
-
+	/**
+	 * 
+	 * @param data create rank indices for the feature set
+	 */
 	private void fit(smatrix data) {
-
+	
 			//compromise memory at the gain of speed...initialise arrays at full row length
 			// code block form when weights are provided
-			double variable_nonzero []= new double [subset_of_rows.length];
-			int rows_this_fetaure []= new int [subset_of_rows.length];
+		
+		for (int j=0; j <data.GetColumnDimension(); j++){
+			this.zero_rank_holder[j]=-1;
+		}
 
-			// find the sum of the nonzero elements
-			int non_zero_counter=0;
-			
-			// check all value rows
+			//estimate potential initial length
+			int startinglength=0;
 			for (int i:subset_of_rows){
-				double vals=Math.round(data.GetElement(i, this.feature)* 10.0 * this.rounding) / (10.0 * this.rounding); 
-				if (vals!=0.0){
-					variable_nonzero[non_zero_counter]=vals;
-					rows_this_fetaure[non_zero_counter]= i;
-					non_zero_counter+=1; 
-				}
-				//increment counter of nonzero fetaures
-				/*
-				for (int j=data.indexpile[i]; j < data.indexpile[i+1];j++ ){
-					int check_feature=data.mainelementpile[j];
-					
-					if (check_feature<this.feature){ // we found our feature
-						continue;// next row - here the feature has zero value
-					}
-					if (check_feature>this.feature){ // we found our feature
-						break;// next row - here the feature has zero value
-					}					
-					if (check_feature==this.feature && data.valuespile[j]!=0.0){ // we found our feature
-						
-						variable_nonzero[non_zero_counter]=data.valuespile[j];
-						rows_this_fetaure[non_zero_counter]= i;
+				startinglength+=data.indexpile[i+1]-data.indexpile[i];
 
-						non_zero_counter+=1; //increment counter of nonzero fetaures
-						break;//found it! no longer need to keep on looping
-					} // end of check_feature if statement
-					
-					
-				}// end of columns loop	
-				*/
+
+			}
+			// create new elements and prepare to sort
 			
-			}// end of rows loop	
+			int elements[]=new int[startinglength];
+			int columns[]=new int[startinglength];
+			double values[]=new double[startinglength];
+			if (target_vales==null && this.fstarget==null){
 			
+				int non_zero=0;
+				for (int i:subset_of_rows){
+					for (int J=data.indexpile[i]; J<data.indexpile[i+1]; J++){
 
-				// we need to sort this array up to no_zero_countr, that is important
-				if  (non_zero_counter>=2){
-					manipulate.sort.quicksort.Quicksortasc(variable_nonzero,  rows_this_fetaure, 0,non_zero_counter-1);
+								values[ non_zero ]=Math.round( data.valuespile[J]* 10.0 * rounding) / (10.0 * rounding);
+								columns[ non_zero ]=data.mainelementpile[J];				
+								elements[ non_zero ]=J;
+								non_zero++;			
+					}
 				}
 				
-				if (non_zero_counter<=variable_nonzero.length/2) { // use sparse format
-					//System.out.println(" sparse column: " + this.feature);
-					
-				int [] map= new int [non_zero_counter*2];
-				boolean zero_is_Not_inserted=true;
+				//Quicksortasc(double numbers [], int B [],  int C [],int low, int high);
+				manipulate.sort.quicksort.Quicksortasc(values,  columns,elements, 0,non_zero-1);
 				
-				double val=Double.NEGATIVE_INFINITY;
-				int rank=0;
-				int k=0;
-				for (int i=0; i < non_zero_counter;i++){
-					double vs=variable_nonzero[i];
-					
-					if ( zero_is_Not_inserted  &&  vs>0.0) {
-						rank++;
-						this.zero_rank_holder[this.feature]=rank;
-						zero_is_Not_inserted=false;
-					}
-					if (vs!=val){
-						rank++;
-						val=vs;
-					}
-					
-					map[k++]=rows_this_fetaure[i];
-					map[k++]=rank;
-					//System.out.println(map[k-2] + " : " + map[k-1]);
-					//map.put(rows_this_fetaure[i], rank);
-				}
-
-				if ( zero_is_Not_inserted ) {
-					rank++;
-					this.zero_rank_holder[this.feature]=rank;
-					zero_is_Not_inserted=false;
-				}	
-				indice_holder[this.feature]	=map;
-				this.rank_holder[this.feature]	=rank;
+				int [] holder_of_elements_to_ranks=new int [data.GeLength()];
+				int [] holder_of_ranks_elements=new int [non_zero +data.GetColumnDimension()];
+				int [] holder_of_rank_to_columns=new int [non_zero+data.GetColumnDimension()];
 				
-				} else if(non_zero_counter>variable_nonzero.length/2) {
+				
+				int rank=-1;
+				int column_indice=-1;
+				double previous_value=Double.NEGATIVE_INFINITY;
+				
+				for (int i=0; i <non_zero ; i++){
 					
+					int col=columns[i];
+					double value=values[i];
 					
-					boolean zero_is_Not_inserted=true;
-					// find the zero rank
-					int rank=0;
-					double val=Double.NEGATIVE_INFINITY;
-					for (int i=0; i < non_zero_counter;i++){
-						double vs=variable_nonzero[i];
+					//if same column as before
+					
+					if (col==column_indice){
 						
-						if ( zero_is_Not_inserted  &&  vs>0.0) {
-							rank++;
-							this.zero_rank_holder[this.feature]=rank;
-							zero_is_Not_inserted=false;
-							break;
-						}
-						if (vs!=val){
-							rank++;
-							val=vs;
-						}
+						// we check if the value is the same as before
 						
-					}
-
-					if ( zero_is_Not_inserted && non_zero_counter<variable_nonzero.length) {
-						rank++;
-						this.zero_rank_holder[this.feature]=rank;
-					}	
-					
-					int [] map= new int [this.row_size];
-					for (int i=0; i < map.length; i++){
-						map[i]=this.zero_rank_holder[this.feature];
-					}
-					
-					val=Double.NEGATIVE_INFINITY;
-					rank=0;
-					for (int i=0; i < variable_nonzero.length; i++){
-						double vs=variable_nonzero[i];
-						if (vs!=val){
-							rank++;
-							if (rank==this.zero_rank_holder[this.feature]){
+						if (value==previous_value){
+							holder_of_elements_to_ranks[elements[i] ]=rank;
+							//holder_of_elements_to_columns[elements[i]]=columns[i];
+							// if value is larger
+						} else if (value>previous_value){
+							previous_value=value;
+							// we check id larger than zero and whether zero has been inserted
+							
+							if (value>0.0 && zero_rank_holder[col]==-1){
+								
+								//we add the zero value
 								rank++;
+								zero_rank_holder[col]=rank;
+								holder_of_rank_to_columns[rank]=col;
+								holder_of_ranks_elements[rank]=-1;
 							}
-							val=vs;
+							rank++;
+							holder_of_elements_to_ranks[elements[i]]=rank;
+							//holder_of_elements_to_columns[elements[i]]=columns[i];	
+							holder_of_rank_to_columns[rank]=col;
+							holder_of_ranks_elements[rank]=elements[i];
+						} else {
+							throw new IllegalStateException(" Error in sorting the idices for tree-based methods. ");
 						}
-						map[rows_this_fetaure[i]]=rank;
-						//map.put(rows_this_fetaure[i], rank);
+						
+						// if the new column is higher than the previous one
+						
+					} else if (col>column_indice){
+						
+						column_indice=col;
+						
+						if (value>0.0 && zero_rank_holder[col]==-1){
+							//we add the zero value
+							rank++;
+							zero_rank_holder[col]=rank;
+							holder_of_rank_to_columns[rank]=col;
+							holder_of_ranks_elements[rank]=-1;
+						}
+						previous_value=value;
+						rank++;
+						holder_of_elements_to_ranks[elements[i]]=rank;
+						//holder_of_elements_to_columns[elements[i]]=columns[i];	
+						holder_of_rank_to_columns[rank]=col;
+						holder_of_ranks_elements[rank]=elements[i];
+						
+						
+					} else {
+						throw new IllegalStateException(" Error in sorting the columns for tree-based methods. ");
 					}
-					
-					indice_holder[this.feature]	=map;
-					this.rank_holder[this.feature]	=Math.max(rank, this.zero_rank_holder[this.feature]);
-					this.zero_rank_holder[this.feature]=-1;
+	
+					//this.zero_rank_holder[this.feature]=rank;
+	
 				}
 				
-				else {
-					throw new IllegalStateException(" Error when processing the nonzero rows of the sparse matrix");
+				// check if last imported variable has a zero rank if not, we add it.
+				if (zero_rank_holder[column_indice]==-1){
+					rank++;
+					zero_rank_holder[column_indice]=rank;
+					holder_of_rank_to_columns[rank]=column_indice;
+					holder_of_ranks_elements[rank]=-1;
+				}
+				//set maximum rank
+				this.rank_holder =rank+1;
+				int holder_of_ranks_elements_v2 []= new int[this.rank_holder];
+				int holder_of_rank_to_columns_v2 []= new int[this.rank_holder];
+				for (int i=0; i < holder_of_ranks_elements_v2.length; i++){
+					holder_of_ranks_elements_v2[i]=holder_of_ranks_elements[i];
+					holder_of_rank_to_columns_v2[i]=holder_of_rank_to_columns[i];			
+				}
+				if (this.verbose){
+					System.out.println(" Total ranks : " + this.rank_holder );
+					System.out.println(" percentage of unique ranks versus elements size: " + ((double)this.rank_holder/(double)data.GeLength())*100 +"%") ;
 				}
 				
+				indice_holder[0]=holder_of_elements_to_ranks;
+				//indice_holder[1]=holder_of_elements_to_columns;	
+				indice_holder[1]=holder_of_ranks_elements_v2;
+				indice_holder[2]=holder_of_rank_to_columns_v2;			
+				//System.out.println("");
+				holder_of_ranks_elements=null;
+				holder_of_rank_to_columns=null;
+				elements=null;
+				columns=null;
+				values=null;
+			
+			
+			} else{
+				int non_zero=0;				
+				double target_values[]=new double[startinglength];
 				
+					if (this.target_vales!=null){
+					for (int i:subset_of_rows){
+						
+						for (int J=data.indexpile[i]; J<data.indexpile[i+1]; J++){
+							/*
+								if ( data.valuespile[J]==0.0){
+									System.out.println("zero");
+								}
+								*/
+									values[ non_zero ]=Math.round( data.valuespile[J]* 10.0 * rounding) / (10.0 * rounding);
+									columns[ non_zero ]=data.mainelementpile[J];				
+									elements[ non_zero ]=J;
+									target_values[ non_zero ]=target_vales[i];
+									non_zero++;			
+						}
+					}
+				} else {
 
-				rows_this_fetaure=null;
-				variable_nonzero=null;
+					for (int i:subset_of_rows){
+						
+						for (int J=data.indexpile[i]; J<data.indexpile[i+1]; J++){
+									values[ non_zero ]=Math.round( data.valuespile[J]* 10.0 * rounding) / (10.0 * rounding);
+									columns[ non_zero ]=data.mainelementpile[J];				
+									elements[ non_zero ]=J;
+									for (int j=0; j <this.fstarget.GetColumnDimension();j++){
+									target_values[ non_zero ]+=fstarget.GetElement(i, j);
+									}
+									non_zero++;			
+						}
+					}
+				}
+					
+				//Quicksortasc(double numbers [], int B [],  int C [],int low, int high);
+				manipulate.sort.quicksort.Quicksortasc(values,  columns, elements,target_values, 0,non_zero-1);
 				
+				int [] holder_of_ranks_counts=new int [non_zero +data.GetColumnDimension()];
+				double [] holder_of_rank_to_sums=new double [non_zero+data.GetColumnDimension()];				
+				int temp_zero_holder[]= new int [data.GetColumnDimension()];
+				int rank=-1;
+				int column_indice=-1;
+				double previous_value=Double.NEGATIVE_INFINITY;
 				
+				for (int i=0; i <non_zero ; i++){
+					
+					int col=columns[i];
+					double value=values[i];
+					
+					//if same column as before
+					
+					if (col==column_indice){
+						
+						// we check if the value is the same as before
+						if (value==previous_value){
+							holder_of_ranks_counts[rank]+=1;
+							holder_of_rank_to_sums[rank]+=target_values[ i ];	
+							//holder_of_elements_to_columns[elements[i]]=columns[i];
+							// if value is larger
+						} else if (value>previous_value){
+							
+							previous_value=value;
+							// we check id larger than zero and whether zero has been inserted
+							
+							if (value>0.0 && temp_zero_holder[col]!=1){
+								
+								//we add the zero value
+								rank++;
+								temp_zero_holder[col]=1;
+							}
+							rank++;
+							// to counts and target
+							holder_of_ranks_counts[rank]+=1;
+							holder_of_rank_to_sums[rank]+=target_values[ i ];							
+
+						} else {
+							throw new IllegalStateException(" Error in sorting the idices for tree-based methods. ");
+						}
+						
+						// if the new column is higher than the previous one
+						
+					} else if (col>column_indice){
+						
+						column_indice=col;
+						
+						if (value>0.0 && temp_zero_holder[col]!=1){
+							//we add the zero value
+							rank++;
+							temp_zero_holder[col]=1;
+						}
+						
+						previous_value=value;
+						rank++;
+						holder_of_ranks_counts[rank]+=1;
+						holder_of_rank_to_sums[rank]+=target_values[ i ];		
+						
+						
+						
+					} else {
+						throw new IllegalStateException(" Error in sorting the columns for tree-based methods. ");
+					}
+	
+					//this.zero_rank_holder[this.feature]=rank;
+	
+				}
+				
+				// check if last imported variable has a zero rank if not, we add it.
+				if (temp_zero_holder[column_indice]!=1){
+					rank++;
+					temp_zero_holder[column_indice]=1;
+				}
+				//set maximum rank
+				int old_ranks=rank+1;
+				if (this.verbose){
+					System.out.println(" Total ranks before target inclusion: " + old_ranks );
+					System.out.println(" percentage of unique ranks versus elements size: " + ((double)old_ranks/(double)data.GeLength())*100 +"%") ;
+				}
+				temp_zero_holder=null;
+				
+				// start again, this time with focus on merging similar ranks (based on target)
+				
+				int [] holder_of_elements_to_ranks=new int [data.GeLength()];
+				int [] holder_of_ranks_elements=new int [old_ranks];
+				int [] holder_of_rank_to_columns=new int [old_ranks];
+				boolean last_was_zero=false;
+				rank=-1;
+				int newrank=-1;
+				column_indice=-1;
+				previous_value=Double.NEGATIVE_INFINITY;
+				
+				for (int i=0; i <non_zero ; i++){
+					
+					int col=columns[i];
+					double value=values[i];
+					
+					//if same column as before
+					if (col==column_indice){
+						
+						// we check if the value is the same as before	
+						if (value==previous_value){
+							holder_of_elements_to_ranks[elements[i] ]=newrank;
+							
+							//holder_of_elements_to_columns[elements[i]]=columns[i];
+							// if value is larger
+						} else if (value>previous_value){
+							previous_value=value;
+							
+							// we check id larger than zero and whether zero has been inserted
+							if (value>0.0 && zero_rank_holder[col]==-1){
+								
+								//we add the zero value
+								newrank++;
+								rank++;
+								zero_rank_holder[col]=newrank;
+								holder_of_rank_to_columns[newrank]=col;
+								holder_of_ranks_elements[newrank]=-1;
+								last_was_zero=true;
+							}
+							
+							if (last_was_zero==false){// && holder_of_ranks_counts[rank]>2 && holder_of_ranks_counts[rank+1]>2 ){
+								double current_rank=holder_of_rank_to_sums[rank]/(double)holder_of_ranks_counts[rank];
+								double current_rank_tobe=holder_of_rank_to_sums[rank+1]/(double)holder_of_ranks_counts[rank+1];
+								double diff=Math.abs(current_rank_tobe-current_rank);
+								
+								if (diff>this.merge_thresold ){
+									newrank++;
+								}
+								
+							} else {
+								newrank++;
+							}
+						
+							rank++;
+							holder_of_elements_to_ranks[elements[i]]=newrank;
+							//holder_of_elements_to_columns[elements[i]]=columns[i];	
+							holder_of_rank_to_columns[newrank]=col;
+							holder_of_ranks_elements[newrank]=elements[i];
+							last_was_zero=false;
+						} else {
+							throw new IllegalStateException(" Error in sorting the idices for tree-based methods. ");
+						}
+						
+						// if the new column is higher than the previous one
+						
+					} else if (col>column_indice){
+						
+						column_indice=col;
+						
+						if (value>0.0 && zero_rank_holder[col]==-1){
+							//we add the zero value
+							newrank++;
+							rank++;
+							zero_rank_holder[col]=newrank;
+							holder_of_rank_to_columns[newrank]=col;
+							holder_of_ranks_elements[newrank]=-1;
+							last_was_zero=true;
+						}
+						previous_value=value;
+						newrank++;
+						rank++;
+						holder_of_elements_to_ranks[elements[i]]=newrank;
+						//holder_of_elements_to_columns[elements[i]]=columns[i];	
+						holder_of_rank_to_columns[newrank]=col;
+						holder_of_ranks_elements[newrank]=elements[i];
+						last_was_zero=false;
+						
+						
+					} else {
+						throw new IllegalStateException(" Error in sorting the columns for tree-based methods. ");
+					}
+	
+					//this.zero_rank_holder[this.feature]=rank;
+	
+				}
+				
+				// check if last imported variable has a zero rank if not, we add it.
+				if (zero_rank_holder[column_indice]==-1){
+					newrank++;
+					rank++;
+					zero_rank_holder[column_indice]=newrank;
+					holder_of_rank_to_columns[newrank]=column_indice;
+					holder_of_ranks_elements[newrank]=-1;
+				}
+				//set maximum rank
+				this.rank_holder =newrank+1;
+				int holder_of_ranks_elements_v2 []= new int[this.rank_holder];
+				int holder_of_rank_to_columns_v2 []= new int[this.rank_holder];
+				for (int i=0; i < holder_of_ranks_elements_v2.length; i++){
+					holder_of_ranks_elements_v2[i]=holder_of_ranks_elements[i];
+					holder_of_rank_to_columns_v2[i]=holder_of_rank_to_columns[i];			
+				}
+				
+				if (this.verbose){
+					System.out.println(" Total ranks after target inclusion: " + this.rank_holder );
+					System.out.println(" Gain from before : " + (old_ranks-this.rank_holder) );
+					System.out.println(" percentage of unique ranks versus elements size: " + ((double)this.rank_holder/(double)data.GeLength())*100 + "%" );
+					System.out.println(" Gain of percentage of unique ranks versus elements size: " + ((double)old_ranks/(double)data.GeLength() -(double)this.rank_holder/(double)data.GeLength())*100 + "%"  );
+				}
+				
+				indice_holder[0]=holder_of_elements_to_ranks;
+				//indice_holder[1]=holder_of_elements_to_columns;	
+				indice_holder[1]=holder_of_ranks_elements_v2;
+				indice_holder[2]=holder_of_rank_to_columns_v2;			
+				//System.out.println("");
+				holder_of_ranks_elements=null;
+				holder_of_rank_to_columns=null;
+				holder_of_rank_to_columns=null;
+				holder_of_rank_to_sums=null;
+				elements=null;
+				columns=null;
+				values=null;
+			
+
+			}
+			
+			
+			System.gc();
+			
 			// end of SGD
 
 	}
 
+	/**
+	 * 
+	 * @param data create rank indices for the feature set in desne format
+	 */
+	private void fit(fsmatrix data) {
+	
+			//compromise memory at the gain of speed...initialise arrays at full row length
+			// code block form when weights are provided
+		zero_rank_holder=null;
 
+			//estimate potential initial length
+			int startinglength=subset_of_rows.length*data.GetColumnDimension();
+
+			// create new elements and prepare to sort
+			
+			int elements[]=new int[startinglength];
+			int columns[]=new int[startinglength];
+			double values[]=new double[startinglength];
+			if (target_vales==null && this.fstarget==null){
+			
+				int non_zero=0;
+				for (int i:subset_of_rows){
+					
+					for (int j=0; j < data.GetColumnDimension();j++){
+								values[ non_zero ]=Math.round( data.GetElement(i, j) * 10.0 * rounding) / (10.0 * rounding);
+								columns[ non_zero ]= j;				
+								elements[ non_zero ]=i*data.GetColumnDimension() + j;
+								non_zero++;			
+					}
+				}
+				//Quicksortasc(double numbers [], int B [],  int C [],int low, int high);
+				manipulate.sort.quicksort.Quicksortasc(values,  columns,elements, 0,non_zero-1);
+				
+				int [] holder_of_elements_to_ranks=new int [startinglength];
+				int [] holder_of_ranks_elements=new int [startinglength ];
+
+				int rank=-1;
+				int column_indice=-1;
+				double previous_value=Double.NEGATIVE_INFINITY;
+				
+				for (int i=0; i <non_zero ; i++){
+					
+					int col=columns[i];
+					double value=values[i];
+					
+					//if same column as before
+					
+					if (col==column_indice){
+						
+						// we check if the value is the same as before
+						
+						if (value==previous_value){
+							holder_of_elements_to_ranks[elements[i] ]=rank;
+							//holder_of_elements_to_columns[elements[i]]=columns[i];
+							// if value is larger
+						} else if (value>previous_value){
+							previous_value=value;
+							// we check id larger than zero and whether zero has been inserted
+							
+							rank++;
+							holder_of_elements_to_ranks[elements[i]]=rank;
+							//holder_of_elements_to_columns[elements[i]]=columns[i];	
+							holder_of_ranks_elements[rank]=elements[i];
+						} else {
+							throw new IllegalStateException(" Error in sorting the idices for tree-based methods. ");
+						}
+						
+						// if the new column is higher than the previous one
+						
+					} else if (col>column_indice){
+						
+						column_indice=col;
+						
+
+						previous_value=value;
+						rank++;
+						holder_of_elements_to_ranks[elements[i]]=rank;
+						//holder_of_elements_to_columns[elements[i]]=columns[i];	
+						holder_of_ranks_elements[rank]=elements[i];
+						
+						
+					} else {
+						throw new IllegalStateException(" Error in sorting the columns for tree-based methods. ");
+					}
+	
+					//this.zero_rank_holder[this.feature]=rank;
+	
+				}
+				
+				// check if last imported variable has a zero rank if not, we add it.
+
+				//set maximum rank
+				this.rank_holder =rank+1;
+				int holder_of_ranks_elements_v2 []= new int[this.rank_holder];
+				for (int i=0; i < holder_of_ranks_elements_v2.length; i++){
+					holder_of_ranks_elements_v2[i]=holder_of_ranks_elements[i];			
+				}
+				if (this.verbose){
+					System.out.println(" Total ranks : " + this.rank_holder );
+					System.out.println(" percentage of unique ranks versus elements size: " + ((double)this.rank_holder/(double)startinglength)*100 +"%") ;
+				}
+				
+				indice_holder[0]=holder_of_elements_to_ranks;
+				//indice_holder[1]=holder_of_elements_to_columns;	
+				indice_holder[1]=holder_of_ranks_elements_v2;		
+				//System.out.println("");
+				holder_of_ranks_elements=null;
+				elements=null;
+				columns=null;
+				values=null;
+			
+			
+			} else{
+				int non_zero=0;				
+				double target_values[]=new double[startinglength];
+				
+					if (this.target_vales!=null){
+						
+					for (int i:subset_of_rows){
+						
+						for (int j=0; j < data.GetColumnDimension();j++){
+									values[ non_zero ]=Math.round( data.GetElement(i, j)* 10.0 * rounding) / (10.0 * rounding);
+									columns[ non_zero ]=j;				
+									elements[ non_zero ]=i*data.GetColumnDimension() + j;
+									target_values[ non_zero ]=target_vales[i];
+									non_zero++;			
+						}
+					}
+				} else {
+
+					for (int i:subset_of_rows){
+						
+						for (int j=0; j < data.GetColumnDimension();j++){
+									values[ non_zero ]=Math.round( data.GetElement(i, j)* 10.0 * rounding) / (10.0 * rounding);
+									columns[ non_zero ]=j;				
+									elements[ non_zero ]=i*data.GetColumnDimension() + j;
+									for (int s=0; s <this.fstarget.GetColumnDimension();s++){
+									target_values[ non_zero ]+=fstarget.GetElement(i, s);
+									}
+									non_zero++;			
+						}
+					}
+				}
+					
+				//Quicksortasc(double numbers [], int B [],  int C [],int low, int high);
+				manipulate.sort.quicksort.Quicksortasc(values,  columns, elements,target_values, 0,non_zero-1);
+				
+				int [] holder_of_ranks_counts=new int [non_zero];
+				double [] holder_of_rank_to_sums=new double [non_zero];				
+				int rank=-1;
+				int column_indice=-1;
+				double previous_value=Double.NEGATIVE_INFINITY;
+				
+				for (int i=0; i <non_zero ; i++){
+					
+					int col=columns[i];
+					double value=values[i];
+					
+					//if same column as before
+					
+					if (col==column_indice){
+						
+						// we check if the value is the same as before
+						if (value==previous_value){
+							holder_of_ranks_counts[rank]+=1;
+							holder_of_rank_to_sums[rank]+=target_values[ i ];	
+							//holder_of_elements_to_columns[elements[i]]=columns[i];
+							// if value is larger
+						} else if (value>previous_value){
+							
+							previous_value=value;
+							// we check id larger than zero and whether zero has been inserted
+							
+
+							rank++;
+							// to counts and target
+							holder_of_ranks_counts[rank]+=1;
+							holder_of_rank_to_sums[rank]+=target_values[ i ];							
+
+						} else {
+							throw new IllegalStateException(" Error in sorting the idices for tree-based methods. ");
+						}
+						
+						// if the new column is higher than the previous one
+						
+					} else if (col>column_indice){
+						
+						column_indice=col;
+						
+						
+						previous_value=value;
+						rank++;
+						holder_of_ranks_counts[rank]+=1;
+						holder_of_rank_to_sums[rank]+=target_values[ i ];		
+						
+						
+						
+					} else {
+						throw new IllegalStateException(" Error in sorting the columns for tree-based methods. ");
+					}
+	
+					//this.zero_rank_holder[this.feature]=rank;
+	
+				}
+				
+				//set maximum rank
+				int old_ranks=rank+1;
+				if (this.verbose){
+					System.out.println(" Total ranks before target inclusion: " + old_ranks );
+					System.out.println(" percentage of unique ranks versus elements size: " + ((double)old_ranks/(double)startinglength)*100 +"%") ;
+				}
+				
+				// start again, this time with focus on merging similar ranks (based on target)
+				
+				int [] holder_of_elements_to_ranks=new int [startinglength];
+				int [] holder_of_ranks_elements=new int [old_ranks];
+				rank=-1;
+				int newrank=-1;
+				column_indice=-1;
+				previous_value=Double.NEGATIVE_INFINITY;
+				
+				for (int i=0; i <non_zero ; i++){
+					
+					int col=columns[i];
+					double value=values[i];
+					
+					//if same column as before
+					if (col==column_indice){
+						
+						// we check if the value is the same as before	
+						if (value==previous_value){
+							holder_of_elements_to_ranks[elements[i] ]=newrank;
+							
+							//holder_of_elements_to_columns[elements[i]]=columns[i];
+							// if value is larger
+						} else if (value>previous_value){
+							previous_value=value;
+							
+							// we check id larger than zero and whether zero has been inserted
+							
+							double current_rank=holder_of_rank_to_sums[rank]/(double)holder_of_ranks_counts[rank];
+							double current_rank_tobe=holder_of_rank_to_sums[rank+1]/(double)holder_of_ranks_counts[rank+1];
+							double diff=Math.abs(current_rank_tobe-current_rank);
+							
+							if (diff>this.merge_thresold ){
+								newrank++;
+							}
+							rank++;
+							holder_of_elements_to_ranks[elements[i]]=newrank;
+							//holder_of_elements_to_columns[elements[i]]=columns[i];	
+							holder_of_ranks_elements[newrank]=elements[i];
+						} else {
+							throw new IllegalStateException(" Error in sorting the idices for tree-based methods. ");
+						}
+						
+						// if the new column is higher than the previous one
+						
+					} else if (col>column_indice){
+						
+						column_indice=col;
+						
+						previous_value=value;
+						newrank++;
+						rank++;
+						holder_of_elements_to_ranks[elements[i]]=newrank;
+						//holder_of_elements_to_columns[elements[i]]=columns[i];	
+						holder_of_ranks_elements[newrank]=elements[i];
+						
+						
+					} else {
+						throw new IllegalStateException(" Error in sorting the columns for tree-based methods. ");
+					}
+	
+					//this.zero_rank_holder[this.feature]=rank;
+	
+				}
+				
+
+				//set maximum rank
+				this.rank_holder =newrank+1;
+				int holder_of_ranks_elements_v2 []= new int[this.rank_holder];
+				for (int i=0; i < holder_of_ranks_elements_v2.length; i++){
+					holder_of_ranks_elements_v2[i]=holder_of_ranks_elements[i];		
+				}
+				
+				if (this.verbose){
+					System.out.println(" Total ranks after target inclusion: " + this.rank_holder );
+					System.out.println(" Gain from before : " + (old_ranks-this.rank_holder) );
+					System.out.println(" percentage of unique ranks versus elements size: " + ((double)this.rank_holder/(double)startinglength)*100 + "%" );
+					System.out.println(" Gain of percentage of unique ranks versus elements size: " + ((double)old_ranks/(double)startinglength -(double)this.rank_holder/(double)startinglength)*100 + "%"  );
+				}
+				
+				indice_holder[0]=holder_of_elements_to_ranks;
+				//indice_holder[1]=holder_of_elements_to_columns;	
+				indice_holder[1]=holder_of_ranks_elements_v2;		
+				//System.out.println("");
+				holder_of_ranks_elements=null;
+				holder_of_rank_to_sums=null;
+				elements=null;
+				columns=null;
+				values=null;
+			
+
+			}
+			
+			
+			System.gc();
+			
+			// end of SGD
+
+	}
 
 //	public boolean isfitted() {
 //		if (betas!=null || betas.length>0){
@@ -447,12 +882,10 @@ public class sortcolumnsnomap implements Runnable {
 	@Override
 	public void run() {
 		// check which object was chosen to train on
-		if (dataset!=null){
-			this.fit(dataset);
-		} else if (fsdataset!=null){
-			this.fit(fsdataset);	
-		} else if (sdataset!=null){
+		if (sdataset!=null){
 			this.fit(sdataset);	
+		}else if (fsdataset!=null){
+				this.fit(fsdataset);				
 		} else {
 			throw new IllegalStateException(" No data structure specifed in the constructor" );			
 		}	

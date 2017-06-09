@@ -1781,7 +1781,10 @@ public class binaryLSVC implements estimator,classifier,Runnable {
 			
 			// end of FTRL
 		}
-
+		sdataset=null;
+		fsdataset=null;
+		dataset=null;
+		System.gc();
 	}
 	@Override
 	public void fit(fsmatrix data) {
@@ -2761,7 +2764,10 @@ public class binaryLSVC implements estimator,classifier,Runnable {
 			
 			// end of FTRL
 		}
-
+		sdataset=null;
+		fsdataset=null;
+		dataset=null;
+		System.gc();
 	}
 	
 	@Override
@@ -3672,7 +3678,10 @@ public class binaryLSVC implements estimator,classifier,Runnable {
 			
 			// end of FTRL
 		}
-
+		sdataset=null;
+		fsdataset=null;
+		dataset=null;
+		System.gc();
 	}
 	@Override
 	public String GetType() {
@@ -3802,15 +3811,15 @@ public class binaryLSVC implements estimator,classifier,Runnable {
 				else if (metric.equals("Type")) {this.Type=value;}
 				else if (metric.equals("RegularizationType")) {this.RegularizationType=value;}
 				else if (metric.equals("threads")) {this.threads=Integer.parseInt(value);}
-				else if (metric.equals("UseConstant")) {this.UseConstant=(value.equals("True")?true:false)   ;}
+				else if (metric.equals("UseConstant")) {this.UseConstant=(value.toLowerCase().equals("true")?true:false)   ;}
 				else if (metric.equals("maxim_Iteration")) {this.maxim_Iteration=Integer.parseInt(value);}
-				else if (metric.equals("usescale")) {this.usescale=(value.equals("True")?true:false);}
-				else if (metric.equals("shuffle")) {this.shuffle=(value.equals("True")?true:false);}
+				else if (metric.equals("usescale")) {this.usescale=(value.toLowerCase().equals("true")?true:false);}
+				else if (metric.equals("shuffle")) {this.shuffle=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("learn_rate")) {this.learn_rate=Double.parseDouble(value);}
-				else if (metric.equals("copy")) {this.copy=(value.equals("True")?true:false);}
+				else if (metric.equals("copy")) {this.copy=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("seed")) {this.seed=Integer.parseInt(value);}
 				else if (metric.equals("tolerance ")) {this.tolerance =Double.parseDouble(value);}
-				else if (metric.equals("verbose")) {this.verbose=(value.equals("True")?true:false)   ;}
+				else if (metric.equals("verbose")) {this.verbose=(value.toLowerCase().equals("true")?true:false)   ;}
 				
 			}
 			

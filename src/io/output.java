@@ -22,6 +22,7 @@ package io;
 
 import java.io.FileWriter;
 
+import exceptions.DimensionMismatchException;
 import matrix.fsmatrix;
 import matrix.smatrix;
 
@@ -1067,17 +1068,7 @@ public class output {
     		throw new IllegalStateException(" failed to write at the writting stage");
     	}
 	}	
-	/**
-	 * 
-	 * @param f : Sparse matrix to print
-	 * @param name : the name of the file
-      <p> second delimiter is ":" </p>
-	 */
-	
-	public void printsmatrix(smatrix f, String name){
-		printsmatrix( f,  name, ":");
-		
-	}
+
 	
 	/**
 	 * 
@@ -1140,5 +1131,123 @@ public class output {
 		
 	}
 	
+	/**
+	 * 
+	 * @param f : Sparse matrix to print
+	 * @param name : the name of the file
+	 */
 	
+	public void printsmatrix(smatrix f, String name){
+		
+		// first check all the objects that are available such as id-columns, targets etc
+
+		 String second_delimiter=":";
+        
+        if (f.GeLength()<=0){
+        	throw new IllegalStateException(" It seemes there is nothing to print");	        
+        }
+        //check if matrix sorted by row
+        if(!f.IsSortedByRow()){
+        	//if not sort it
+        	f.convert_type();
+        }
+
+		// printing time!
+		
+		try{  // Catch errors in I/O if necessary.
+		  // Open a file to write to.
+			String saveFile = name;
+			
+
+
+		    
+			FileWriter writer = new FileWriter(saveFile);
+			
+			for (int i=0; i < f.GetRowDimension(); i++){
+				for (int d=f.indexpile[i]; d < f.indexpile[i+1]; d++){
+					int col=f.mainelementpile[d];
+					double val=f.valuespile[d];
+					if (d==f.indexpile[i]){
+						writer.append(col + second_delimiter + val);
+					} else {
+						writer.append(" " + col + second_delimiter + val);
+					}
+					
+				}
+				writer.append("\n");
+		   		 if (this.verbose){
+					 if (i%(f.GetRowDimension()/20)==0.0) {
+						 System.out.printf(" Completed: %.2f %% \n",  ((double)i/(double)f.GetRowDimension())*100.0 );
+		        	 }
+					 }
+			}
+			
+			
+			writer.close();
+
+    	} catch (Exception e) {
+    		throw new IllegalStateException(" failed to write at the writting stage");
+    	}
+		
+	}
+	
+	/**
+	 * 
+	 * @param f : Sparse matrix to print
+	 * @param y : a target variable
+	 * @param name : the name of the file
+	 */
+	
+	public void printsmatrix(smatrix f, double y [],String name){
+		
+		// first check all the objects that are available such as id-columns, targets etc
+		//System.out.println(name);
+        
+        String second_delimiter=":";
+        if (f.GeLength()<=0){
+        	throw new IllegalStateException(" It seemes there is nothing to print");	        
+        }
+        if (f.GetRowDimension()!=y.length){
+        	throw new DimensionMismatchException(f.GetRowDimension(),y.length);
+        }
+        //check if matrix sorted by row
+        if(!f.IsSortedByRow()){
+        	//if not sort it
+        	f.convert_type();
+        }
+
+		// printing time!
+		
+		try{  // Catch errors in I/O if necessary.
+		  // Open a file to write to.
+			String saveFile = name;
+			
+		    
+			FileWriter writer = new FileWriter(saveFile);
+			
+			for (int i=0; i < f.GetRowDimension(); i++){
+				writer.append(y[i] + ""); 
+				for (int d=f.indexpile[i]; d < f.indexpile[i+1]; d++){
+					int col=f.mainelementpile[d];
+					double val=f.valuespile[d];
+					writer.append(" "+ col + second_delimiter + val);
+					
+					
+				}
+				writer.append("\n");
+		   		 if (this.verbose){
+					 if (i%(f.GetRowDimension()/20)==0.0) {
+						 System.out.printf(" Completed: %.2f %% \n",  ((double)i/(double)f.GetRowDimension())*100.0 );
+		        	 }
+					 }
+			}
+			
+			
+			writer.close();
+
+    	} catch (Exception e) {
+    		throw new IllegalStateException(" failed to write at the writting stage " + e.getMessage());
+    	}
+		
+	}	
 }

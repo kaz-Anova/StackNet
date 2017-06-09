@@ -54,11 +54,11 @@ public class RandomForestClassifier implements estimator,classifier {
 		this.sorted_indices=indices;
 	}
 	/**
-	 * This keeps the sorted indices for each column
+	 * This keeps the sorted indices' max rank
 	 */
-	private int [] maximum_ranks;
+	private int  maximum_ranks;
 
-	public void set_ranked_scores (int [] indices){
+	public void set_ranked_scores (int  indices){
 
 		this.maximum_ranks=indices;
 	}
@@ -111,7 +111,7 @@ public class RandomForestClassifier implements estimator,classifier {
 	  /**
 	   * digits of rounding to prevent overfitting
 	   */
-	  public int rounding=30;
+	  public double rounding=6;
 	/**
 	 * Proportions of columns (features) to consider
 	 */
@@ -250,6 +250,18 @@ public class RandomForestClassifier implements estimator,classifier {
 	public int getnumber_of_classes(){
 		return n_classes;
 	}
+	/**
+	 * 
+	 * @param classes : the classes to put
+	 */
+	public void setclasses(String[] classes ) {
+		if (classes==null || classes.length<=0){
+			throw new  IllegalStateException (" No classes are found");
+		} else {
+		this.classes= classes;
+		}
+	}
+	
 	@Override
 	public String[] getclasses() {
 		if (classes==null || classes.length<=0){
@@ -610,6 +622,9 @@ public class RandomForestClassifier implements estimator,classifier {
 				this.threads=1;
 			}
 		}	
+		if (!data.IsSortedByRow()){
+			data.convert_type();
+		}
 		int oldthread=this.threads;
 		this.threads=1;
 		
@@ -765,9 +780,6 @@ public class RandomForestClassifier implements estimator,classifier {
 		}
 		if (!data.IsSortedByRow()){
 			data.convert_type();
-		}
-		if (data.indexer==null){
-			data.buildmap();;
 		}
 	double predictions[][]= new double [data.GetRowDimension()][this.n_classes];
 		
@@ -1058,9 +1070,7 @@ public class RandomForestClassifier implements estimator,classifier {
 		if (!data.IsSortedByRow()){
 			data.convert_type();
 		}
-		if (data.indexer==null){
-			data.buildmap();
-		}
+
 		double predictions[]= new double [data.GetRowDimension()];
 		double predictions_probas[][]= new double [data.GetRowDimension()][n_classes];
 
@@ -1393,9 +1403,6 @@ public class RandomForestClassifier implements estimator,classifier {
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
 		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
-		}
 				
 		if (min_split<2){
 			min_split=2;
@@ -1517,6 +1524,9 @@ public class RandomForestClassifier implements estimator,classifier {
 		if (copy){
 			data= manipulate.copies.copies.Copy( data);
 		}
+		fsdataset=new fsmatrix(data);
+			
+		
 		// Initialise randomizer
 
 		
@@ -1540,49 +1550,28 @@ public class RandomForestClassifier implements estimator,classifier {
 		columndimension=data[0].length;
 		feature_importances= new double [columndimension];
 		if (this.sorted_indices==null){
-			this.sorted_indices=new int [this.columndimension] [];
-			this.maximum_ranks=new int [this.columndimension];
-			if (rows==null){
-				rows= new int [data.length];
-				for (int i=0; i <data.length; i++ ){
-					rows[i]=i;
-					}
-				}			
+			this.sorted_indices=new int  [3] [];
+			this.maximum_ranks= 0;
+			this.zero_rank_holder= new int [this.columndimension];
 
-			
-			Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-			int count_of_live_threads=0;
-			// find best!
-			int j=0;
-			for (int column =0 ; column<this.columndimension; column++){
+		// create indices
 
+			sortcolumnsnomap sorty= new sortcolumnsnomap (this.fsdataset,
+														this.rows,
+														this.sorted_indices,
+														this.zero_rank_holder,
+														this.rounding );
 			
-				sortcolumnsnomap sorty= new sortcolumnsnomap (data, rows, this.sorted_indices, column,this.maximum_ranks, this.fstarget.length ,this.rounding);
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				if (count_of_live_threads==threads || j==this.columndimension-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
-			}
+			sorty.verbose=this.verbose;
+			sorty.merge_thresold=this.gamma;
+			sorty.target_vales=fstarget;			
+			sorty.run();
+			this.maximum_ranks=	sorty.getmaxrank();
+		}
 		if (this.verbose){
 			System.out.println("Sorting is done");
 		}
-		}
+		
 
 		// Initialise the tree structure
 
@@ -1592,11 +1581,13 @@ public class RandomForestClassifier implements estimator,classifier {
 
 		int count_of_live_threads=0;
 		for (int n=0; n <this.estimators; n++ ){
-			DecisionTreeClassifier model = new DecisionTreeClassifier(data);
+			DecisionTreeClassifier model = new DecisionTreeClassifier(fsdataset);
 			//general
 			model.set_sorted_indices(this.sorted_indices);
 			model.set_ranked_scores(this.maximum_ranks);
+			model.set_zero_rank(this.zero_rank_holder);
 			model.threads=this.internal_threads;
+			model.rounding=this.rounding;
 			model.verbose=false;
 			model.copy=false;
 			model.cut_off_subsample=this.cut_off_subsample;
@@ -1611,6 +1602,7 @@ public class RandomForestClassifier implements estimator,classifier {
 			
 			model.offset=this.offset;
 			model.gamma=this.gamma;
+			model.bootsrap=this.bootsrap;
 			model.max_depth=this.max_depth;
 			model.max_features=this.max_features;
 			model.max_tree_size=-1;
@@ -1664,6 +1656,9 @@ public class RandomForestClassifier implements estimator,classifier {
 			feature_importances[i]/=sum_importances;
 			
 		}
+		fsdataset=null;
+		dataset=null;
+		sdataset=null;
 		System.gc();
 		
 	}
@@ -1681,9 +1676,7 @@ public class RandomForestClassifier implements estimator,classifier {
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
 		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
-		}
+
 				
 		if (min_split<2){
 			min_split=2;
@@ -1795,6 +1788,8 @@ public class RandomForestClassifier implements estimator,classifier {
 		if (copy){
 			data= (fsmatrix)( data.Copy());
 		}
+
+		
 		// Initialise randomizer
 
 		this.n_classes=classes.length;			
@@ -1813,47 +1808,27 @@ public class RandomForestClassifier implements estimator,classifier {
 		columndimension=data.GetColumnDimension();
 		feature_importances= new double [columndimension];
 		if (this.sorted_indices==null){
-			this.sorted_indices=new int [this.columndimension] [];
-			this.maximum_ranks=new int [this.columndimension];
-			if (rows==null){
-				rows= new int [data.GetRowDimension()];
-				for (int i=0; i <data.GetRowDimension(); i++ ){
-					rows[i]=i;
-					}
-				}	
-		Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-		int count_of_live_threads=0;
-		// find best!
-		int j=0;
-		for (int column =0 ; column<this.columndimension; column++){
+			this.sorted_indices=new int  [3] [];
+			this.maximum_ranks= 0;
+			this.zero_rank_holder= new int [this.columndimension];
 
-				
-				sortcolumnsnomap sorty= new sortcolumnsnomap (data, rows, this.sorted_indices, column,this.maximum_ranks, this.fstarget.length ,this.rounding);
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				if (count_of_live_threads==threads || j==this.columndimension-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
-			}
+		// create indices
+
+			sortcolumnsnomap sorty= new sortcolumnsnomap (this.fsdataset,
+														this.rows,
+														this.sorted_indices,
+														this.zero_rank_holder,
+														this.rounding );
+			sorty.verbose=this.verbose;
+			sorty.merge_thresold=this.gamma;
+			sorty.target_vales=fstarget;			
+			sorty.run();
+			this.maximum_ranks=	sorty.getmaxrank();
+		}
 		if (this.verbose){
 			System.out.println("Sorting is done");
 		}
-		}		
+				
 
 		// Initialise the tree structure
 
@@ -1863,11 +1838,13 @@ public class RandomForestClassifier implements estimator,classifier {
 
 		int count_of_live_threads=0;
 		for (int n=0; n <this.estimators; n++ ){
-			DecisionTreeClassifier model = new DecisionTreeClassifier(data);
+			DecisionTreeClassifier model = new DecisionTreeClassifier(fsdataset);
 			//general
 			model.set_sorted_indices(this.sorted_indices);
 			model.set_ranked_scores(this.maximum_ranks);
+			model.set_zero_rank(this.zero_rank_holder);
 			model.threads=this.internal_threads;
+			model.rounding=this.rounding;
 			model.verbose=false;
 			model.copy=false;
 			model.offset=this.offset;
@@ -1929,6 +1906,8 @@ public class RandomForestClassifier implements estimator,classifier {
 			feature_importances[i]/=sum_importances;
 			
 		}
+		fsdataset=null;
+		sdataset=null;
 		System.gc();
 
 		
@@ -1946,9 +1925,6 @@ public class RandomForestClassifier implements estimator,classifier {
 		}
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
-		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
 		}
 				
 		if (min_split<2){
@@ -1986,7 +1962,7 @@ public class RandomForestClassifier implements estimator,classifier {
 		if ( (target==null || target.length!=data.GetRowDimension()) && (Starget==null || Starget.length!=data.GetRowDimension()) && (this.fstarget==null || this.fstarget.length!=data.GetRowDimension()) ){
 			throw new IllegalStateException(" target array needs to be provided with the same length as the data" );
 		} else if (target!=null && (classes==null ||  classes.length<=1) ){
-				
+
 			// check if values only 1 and zero
 			HashSet<Double> has= new HashSet<Double> ();
 			for (int i=0; i < target.length; i++){
@@ -2062,19 +2038,22 @@ public class RandomForestClassifier implements estimator,classifier {
 		// Initialise randomizer
 
 
-		this.n_classes=classes.length;			
+		this.n_classes=classes.length;	
+		
 		if (this.Objective.equals("AUC") && (this.n_classes!=2)){
 			throw new IllegalStateException("The 'AUC' Metric can only be used when n_classes=2" );	
 		}		
 
+		if (this.sorted_indices==null){
+		// trim data
+		sdataset.trim();
 		
-		if (!sdataset.IsSortedByRow()){
-			sdataset.convert_type();
-			}	
-		if (this.sdataset.indexer==null){
-			this.sdataset.buildmap();
+		if (!this.sdataset.IsSortedByRow()){
+			this.sdataset.convert_type();
+			//System.out.println("built sort");
+			}
+		
 		}
-
 		/**
 		 *  generate rows required by the algorithm
 		 */
@@ -2083,52 +2062,31 @@ public class RandomForestClassifier implements estimator,classifier {
 			data.void_update_indice();
 		}
 		*/
-		data.buildmap();
+	
 		columndimension=data.GetColumnDimension();
 		feature_importances= new double [columndimension];
 		if (this.sorted_indices==null){
-			this.sorted_indices=new int [this.columndimension] [];
-			this.maximum_ranks=new int [this.columndimension];
-			this.zero_rank_holder=new int [this.columndimension];
-			if (rows==null){
-				rows= new int [data.GetRowDimension()];
-				for (int i=0; i <data.GetRowDimension(); i++ ){
-					rows[i]=i;
-					}
-				}
-			Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-			int count_of_live_threads=0;
-			// find best!
-			int j=0;
-			for (int column =0 ; column<this.columndimension; column++){
-
 			
-				sortcolumnsnomap sorty= new sortcolumnsnomap (data,rows, this.sorted_indices, column,this.maximum_ranks,zero_rank_holder, this.fstarget.length ,this.rounding);
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				
-				if (count_of_live_threads==threads || j==this.columndimension-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
-			}
+			this.sorted_indices=new int  [3] [];
+			this.maximum_ranks= 0;
+			this.zero_rank_holder= new int [this.columndimension];
+
+		// create indices
+
+			sortcolumnsnomap sorty= new sortcolumnsnomap (this.sdataset,
+														this.rows,
+														this.sorted_indices,
+														this.zero_rank_holder,
+														this.rounding );
+			sorty.verbose=this.verbose;
+			sorty.merge_thresold=this.gamma;
+			sorty.target_vales=fstarget;			
+			sorty.run();
+			this.maximum_ranks=	sorty.getmaxrank();
+		}
 		if (this.verbose){
 			System.out.println("Sorting is done");
-		}
+		
 		}				
 
 		// Initialise the tree structure
@@ -2139,12 +2097,13 @@ public class RandomForestClassifier implements estimator,classifier {
 
 		int count_of_live_threads=0;
 		for (int n=0; n <this.estimators; n++ ){
-			DecisionTreeClassifier model = new DecisionTreeClassifier(data);
+			DecisionTreeClassifier model = new DecisionTreeClassifier(sdataset);
 			//general
 			model.set_sorted_indices(this.sorted_indices);
 			model.set_ranked_scores(this.maximum_ranks);
 			model.set_zero_rank(this.zero_rank_holder);
 			model.threads=this.internal_threads;
+			model.rounding=this.rounding;
 			model.verbose=false;
 			model.copy=false;
 			model.offset=this.offset;
@@ -2157,7 +2116,6 @@ public class RandomForestClassifier implements estimator,classifier {
 			if (this.columns!=null){
 				model.set_columns(this.columns);
 			}
-			model.bootsrap=this.bootsrap;
 			model.gamma=this.gamma;
 			model.bootsrap=this.bootsrap;
 			model.max_depth=this.max_depth;
@@ -2213,6 +2171,8 @@ public class RandomForestClassifier implements estimator,classifier {
 			feature_importances[i]/=sum_importances;
 			
 		}
+
+		sdataset=null;
 		System.gc();
 
 		
@@ -2432,16 +2392,16 @@ public class RandomForestClassifier implements estimator,classifier {
 				else if (metric.equals("max_depth")) {this.max_depth=Integer.parseInt(value);}
 				else if (metric.equals("Objective")) {this.Objective=value;}
 				else if (metric.equals("threads")) {this.threads=Integer.parseInt(value);}
-				else if (metric.equals("rounding")) {this.rounding=Integer.parseInt(value);}				
+				else if (metric.equals("rounding")) {this.rounding=Double.parseDouble(value);}	
 				else if (metric.equals("offset")) {this.offset=Double.parseDouble(value);}						
 				else if (metric.equals("max_tree_size")) {this.max_tree_size=Integer.parseInt(value);}
 				else if (metric.equals("gamma")) {this.gamma=Double.parseDouble(value);}
 				else if (metric.equals("max_features")) {this.max_features=Double.parseDouble(value);}
-				else if (metric.equals("bootsrap")) {this.bootsrap=(value.equals("True")?true:false);}
+				else if (metric.equals("bootsrap")) {this.bootsrap=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("min_split")) {this.min_split=Double.parseDouble(value);}
-				else if (metric.equals("copy")) {this.copy=(value.equals("True")?true:false);}
+				else if (metric.equals("copy")) {this.copy=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("seed")) {this.seed=Integer.parseInt(value);}
-				else if (metric.equals("verbose")) {this.verbose=(value.equals("True")?true:false)   ;}			
+				else if (metric.equals("verbose")) {this.verbose=(value.toLowerCase().equals("true")?true:false)   ;}			
 				
 			}
 			

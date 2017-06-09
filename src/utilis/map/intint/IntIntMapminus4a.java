@@ -3,9 +3,14 @@ package utilis.map.intint;
 /**
  * Same as IntIntMap4, but using interleaving int[] instead of long[]
  */
-public class IntIntMapminus4a  implements IntIntMap
+public class IntIntMapminus4a  implements IntIntMap 
 {
-    private static final int FREE_KEY = 0;
+    /**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 3435143554171488041L;
+
+	private static final int FREE_KEY = 0;
 
     public static final int NO_VALUE = -1;
 

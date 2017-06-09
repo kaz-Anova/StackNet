@@ -1,8 +1,8 @@
 # StackNet
 
-This repository contains StackNet Meta modelling methodology (and software) which is part of my work as a PhD Student in the computer science department at [UCL](http://www.cs.ucl.ac.uk/home/).  My PhD was sponsored by my company [dunnhumby](http://www.dunnhumby.com/).
+This repository contains StackNet Meta modelling methodology (and software) which is part of my work as a PhD Student in the computer science department at [UCL](http://www.cs.ucl.ac.uk/home/).  My PhD was sponsored by [dunnhumby](http://www.dunnhumby.com/).
 
-
+![Alt text](/images/StackNet_Logo.jpg?raw=true "StackNet Logo")
 
 ## What is StackNet
 
@@ -96,7 +96,7 @@ Network's example:
 StackNet is made available now with a handful of classifiers and regressors. The implementations are based on the original papers and software. However, most have some personal tweaks in them. 
 
 
-## Algorithms contained (in each first release)
+## Algorithms contained
 
 -    AdaboostForestRegressor
 -    AdaboostRandomForestClassifier
@@ -117,6 +117,8 @@ StackNet is made available now with a handful of classifiers and regressors. The
 -    LinearRegression
 -    LibFmRegressor
 -    LibFmClassifier
+-    XgboostRegressor(**New**)
+-    XgboostClassifier(**New**)
 
 Not fully developed
 
@@ -140,13 +142,55 @@ You can do so directly from the jar file, using Java higher than 1.6. You need t
 The basic format is:
 
 ```
-Java –jar stacknet.jar [train or predict] [parameter = value]
+Java –jar stacknet.jar [train or predict] [task=regression or classification]  [parameter = value]
 ```
+
+### Install Xgboost (**NEW**)
+
+Awesome xgboost can be used as a subprocess now in StackNet. This would require privileges to save and change files where the .jar is executed.
+
+It is already pre-compiled for windows(64), mac and linux. 
+
+just unzip the **lib.zip** and verify that the 'lib' folder in the same directory where the StackNet.jar file is. 
+
+for linux you most probably need to change privileges for the executable : 
+```
+cd lib/
+cd linux/
+cd xg/
+chmod +x xgboost
+```
+You can test that it works with :
+`./xgboost`
+
+It should print :
+
+`Usage: <config>`
+
+In windows and mac the behaviour should be similar. After executing `xgboost` from inside the `lib/your_operation_system/xg/` you should see the:
+
+`Usage: <config>`
+
+If you don't see this, then you need to compile it manually and drop the executables in inside `lib/your_operation_system/xg/` .
+
+You may find the follwing sources usefull:
+
+[mac](https://www.ibm.com/developerworks/community/blogs/jfp/entry/Installing_XGBoost_on_Mac_OSX?lang=en)
+[windows1](https://stackoverflow.com/questions/33749735/how-to-install-xgboost-package-in-python-windows-platform) ,[windows2](https://www.ibm.com/developerworks/community/blogs/jfp/entry/Installing_XGBoost_For_Anaconda_on_Windows?lang=en)
+[linux](https://gist.github.com/DanielBeckstein/932087ee116cc2f72bfc6e3e078e899d)
+
+Small Note: The user would need to delete the '.mod' files when no longer need them. StackNet does not do that automatically as it is not possible to determibe when they are not needed anymore.  
+
+** IMPORTANT NOTE:** This implementation does not include all Xgboost's features and the user is advised to use it directly from source to exploit its full potential. Also the version included is 6.0 and it is not certain whether it will be updated in the future as it required manual work to find all libraries and files required that need to be included for it to run. The performance and memory consumption will also be worse than running it directly from source. Additionally the descritpion of the parameters may not match the one in the offcial website, hence it is advised to use [xgboost's online parameter thread in github](https://github.com/dmlc/xgboost/blob/master/doc/parameter.md) for more information about them.
+
+
+
 
 ### Command Line Parameters
 
 Command | Explanation
 --- | ---
+task  | (**NEW**) could be either **regression** or **classification**.</li>
 sparse  | True if the data to be imported are in sparse format (libsvm) or dense (false) 
 has_head   | True if train_file and test_file have headers else false
 model | Name of the output model file. 
@@ -154,15 +198,16 @@ pred_file | Name of the output prediction file.
 train_file | Name of the training file. 
 test_file | Name of the test file. 
 output_name | Prefix of the models to be printed per iteration. This is to allow the Meta features of each iteration to be printed. Defaults to nothing.
-data_prefix | (**NEW**) prefix to be used when the user supplies own pairs of [X_train,X_cv] datasets for each fold as well as an X file for the whole training data. This is particularly useful for when likelihood features are needed or generally features than must be computed within cv.  Each train/valid pair is identified by prefix_train[fold_index_starting_from_zero].txt/prefix_cv[fold_index_starting_from_zero].txt and prefix_train.txt for the final set. For example if prefix=mystack and folds=2 then stacknet is expecting 2 pairs of train/cv files. e.g [[mystack_train0.txt,mystack_cv0.txt],[mystack_train1.txt,mystack_cv1.txt]]. It also expects a [mystack_train.txt]  for the final train set. These files can be either dense or sparse ( when 'sparse=True') and need to have the target variable in the beginning. If you use **output_name** to extract the predictions, these will be stacked vertically in the same order as the cv files. 
+data_prefix |  prefix to be used when the user supplies own pairs of [X_train,X_cv] datasets for each fold as well as an X file for the whole training data. This is particularly useful for when likelihood features are needed or generally features than must be computed within cv.  Each train/valid pair is identified by prefix_train[fold_index_starting_from_zero].txt/prefix_cv[fold_index_starting_from_zero].txt and prefix_train.txt for the final set. For example if prefix=mystack and folds=2 then stacknet is expecting 2 pairs of train/cv files. e.g [[mystack_train0.txt,mystack_cv0.txt],[mystack_train1.txt,mystack_cv1.txt]]. It also expects a [mystack_train.txt]  for the final train set. These files can be either dense or sparse ( when 'sparse=True') and need to have the target variable in the beginning. If you use **output_name** to extract the predictions, these will be stacked vertically in the same order as the cv files. 
 indices_name |  A prefix. When given any value it prints a .csv file for each fold with the corresponding train(0) and valiation(1) indices stacked vertically .The format is “row_index,[0 if train else 1 for validation]”. First it prints the train indices and then the validation indices in exactly the same order as they appear when modelling inside StackNet.
 test_target | True if the test file has a target variable in the beginning (left) else false (only predictors in the file).
 params | Parameter file where each line is a model. empty lines correspond to the creation of new levels 
 verbose | True if we need StackNet to output its progress else false 
 threads | Number of models to run in parallel. This is independent of any extra threads allocated from the selected algorithms. e.g. it is possible to run 4 models in parallel where one is a randomforest that runs on 10 threads (it selected). 
-metric | Metric to output in cross validation for each model-neuron. can be logloss, accuracy or auc (for binary only) 
+metric | Metric to output in cross validation for each model-neuron. can be logloss, accuracy or auc (for binary only) for classification and rmse ,rsquared or mae for regerssion .defaults to 'logloss' for classification and 'rmse' for regression. 
 stackdata | True for restacking else false
 seed | Integer for randomised procedures 
+bins | (**NEW**) A parameter that allows classifiers to be used in regression problems. It first bins (digitises) the target variable and then runs classifiers on the transformed variable. Defaults to 2</li>. 
 folds | Number of folds for re-usable kfold
 
 ### Parameters' File
@@ -177,6 +222,8 @@ Vanilla2hnnclassifier UseConstant:true usescale:true seed:1 Type:SGD maxim_Itera
 LSVC Type:Liblinear threads:1 C:1.0 maxim_Iteration:100 seed:1
 LibFmClassifier lfeatures:3 init_values:0.035 smooth:0.05 learn_rate:0.1 threads:1 C:0.00001 maxim_Iteration:15 seed:1
 NaiveBayesClassifier usescale:true threads:1 Shrinkage:0.1 seed:1 verbose:false
+XgboostRegressor booster:gbtree objective:reg:linear num_round:100 eta:0.015 threads:1 gamma:2.0 max_depth:4 subsample:0.8 colsample_bytree:0.4 seed:1 verbose:false
+XgboostRegressor booster:gblinear objective:reg:gamma num_round:500 eta:0.5 threads:1 lambda:1 alpha:1 seed:1 verbose:false
 
 RandomForestClassifier estimators=1000 rounding:3 threads:4 max_depth:6 max_features:0.6 min_leaf:2.0 Objective:ENTROPY gamma:0.000001 row_subsample:1.0 verbose:false copy=false
 ```
@@ -215,7 +262,7 @@ A **predict** method needs at least a **test_file** and a **model_file**.
 ### Training example:
 
 ## general
-Java –jar stacknet.jar **_train_** **sparse**=false **has_head**=true **model**=model **pred_file**=pred.csv **train_file**=sample_train.csv **test_file**= sample_test.csv **test_target**=true **params**=params.txt **verbose**=true **threads**=7 **metric**=logloss **stackdata**=false **seed**=1 **folds**=5
+Java –jar stacknet.jar **_train_** **task=classification** **sparse**=false **has_head**=true **model**=model **pred_file**=pred.csv **train_file**=sample_train.csv **test_file**= sample_test.csv **test_target**=true **params**=params.txt **verbose**=true **threads**=7 **metric**=logloss **stackdata**=false **seed**=1 **folds**=5
 
 Note that you can have train and test at the same time. In that case after training, it scores the test data. 
 
@@ -304,8 +351,10 @@ double preds [][]=StackNet.predict_proba(X_test);
 
 ## Potential Next Steps
 
-- Add StackNetRegressor
-- increase coverage with well-known and well-performing ml tools
+- ~~Add StackNetRegressor~~ Done. 
+- Add [H<sub>2</sub>O](http://h2o-release.s3.amazonaws.com/h2o/master/3908/index.html)
+- increase coverage in general with well-known and well-performing ml tools
+- Add data pre-processing steps
 
 ## Reference
 

@@ -169,7 +169,7 @@ public class input {
 	/**
 	 * if true it prints stuff
 	 */
-	boolean verbose =true;
+	public boolean verbose =true;
 	
 	/**
 	 * column names
@@ -1233,7 +1233,7 @@ public class input {
 	        	// first we need to count the number of elements in the file (rows and columns)
 	        	// this file cannot have headers
  
-	        	int stats [] =GetTotalNumberOfElementsandrows(file, this.delimeter, false,has_target);
+	        	int stats [] =GetTotalNumberOfElementsandrows(file, this.delimeter, hashead,has_target);
 	        	System.out.println(Arrays.toString(stats));
 	        	int elements=stats[0];
 	        	int rowsize=stats[1];
@@ -1250,22 +1250,31 @@ public class input {
 	                    @SuppressWarnings("resource")
 						BufferedReader br = new BufferedReader(new InputStreamReader(fis,"UTF-8"));
 	                    if ( hashead){
+	                    	
                         	br.readLine();
                         }
-	             
+	                   
 	                    while ((line = br.readLine()) != null  ) {
 	                    	String element []=line.split(this.delimeter + "+",-1);	
 	                    	int len=element.length;
 	                    	int hh=0;
 	                    	if (has_target){
 	                    		hh=1;
+	                    		
 	                    	}
-	                    	if (len>1){
+	                    	if (len>1 && !element[1].equals((""))){
 	                    		for (int h=hh; h < len; h++) {
 	                    			String this_value[]=element[h].split(second_delimiter + "+",-1);
 	                    			try {
 	                    			int columns=Integer.parseInt(this_value[0]);
-	                    			double val=Double.parseDouble(this_value[1]);
+	                    			double val=-9999.99;
+	                    			try {
+	                    				val=Double.parseDouble(this_value[1]);
+	                    			} catch (Exception e) {
+	                    			}
+	                    			if (val==0.0){
+	                    				continue;
+	                    			}
 	                    			//rows[element_counter]=row_counter;
 	                    			cols[element_counter]=columns;
 	                    			if (columns>column_counter){
@@ -1285,7 +1294,12 @@ public class input {
 	                    			String this_value[]=element[0].split(second_delimiter + "+",-1);
 	                    			try {
 	                    			int columns=Integer.parseInt(this_value[0]);
-	                    			double val=Double.parseDouble(this_value[1]);
+	                    			double val=-9999.99;
+	                    			try {
+	                    				val=Double.parseDouble(this_value[1]);
+	                    			} catch (Exception e) {
+	                    			
+	                    			}
 	                    			//rows[element_counter]=row_counter;
 	                    			cols[element_counter]=columns;
 	                    			if (columns>column_counter){
@@ -1371,7 +1385,10 @@ public class input {
 				public static int [] GetTotalNumberOfElementsandrows(String file, String delimiter, boolean has_headers, boolean hasttarget){
 	            	int elements=0;
 	            	int rows=0;
-	            	  
+	            	 int ss=0;
+	            	 if (hasttarget){
+	            		 ss=1;
+	            	 }
 	            	   try {
 		                    FileInputStream fis = new FileInputStream(file);
 		                    BufferedReader br = new BufferedReader(new InputStreamReader(fis,"UTF-8"));
@@ -1384,28 +1401,26 @@ public class input {
 		                    	rows+=1;
 		                    	String element []=line.split(delimiter + "+",-1);
 		                    	int len=element.length;
-		                    	if (len>1){
-		                    	elements+=element.length;
-		                    	if (hasttarget){
-		                    		elements-=1;
+		                    	if ( len>1  && !element[1].equals("") || (len==1  && hasttarget==false)){
+		                    	for (int j=ss; j <element.length;j++ ){
+		                    		String this_value[]=element[j].split(":" + "+" ,-1);
+	                    			double val=-9999.99;
+	                    			try {
+	                    				val=Double.parseDouble(this_value[1]);
+	                    			} catch (Exception e) {
+	                    			}
+	                    			if (val!=0.0){
+	                    				elements+=1;
+	                    			}
 		                    	}
-		                    	} else if (len==1){
-		                    		int nlean=element[0].length();
-		                    		if (nlean>=3){
-		                    			elements+=1;
-		                    			if (hasttarget){
-				                    		elements-=1;
-				                    	}
-		                    		}
-			                    	
-		                    	}
+		                    	} 
 			                    if (rows%100000==0){
 			                    	System.out.println(rows + " " + elements);
 			                    }		                    	
 		                    }
 
 		                	} catch (Exception e) {
-		    	        		throw new IllegalStateException("File " + file + "  failed to import at bufferreader");
+		    	        		throw new IllegalStateException("File " + file + "  failed to import at row " + rows  + " bufferreader");
 		    	        	}
 	            	  
 	            	   return new int [] {elements,rows};
@@ -1449,7 +1464,7 @@ public class input {
 	                       int ro=0;
 	                       while ((line = br.readLine()) != null) {
 	                               String[] tokens = line.split(delimeter,-1);
-	                                       if (tokens[col].equals("") ||tokens[col].equals("NA") ){
+	                                       if (tokens[col].equals("") ||tokens[col].equals("NA")  ||tokens[col].equals("nan") ){
 	                                                   tokens[col]=nullvalue +"";
 	                                       }
 	                                       column[ro]=((Double.parseDouble(tokens[col])));
@@ -1633,7 +1648,7 @@ public class input {
 		                    	row_counter++;
 		                    }      
 	            	} catch (Exception e) {
-		        		throw new IllegalStateException("File " + file + "  failed to import at bufferreader");
+		        		throw new IllegalStateException("File " + file + "  failed to import at bufferreader " + e.getMessage());
 		        	}
 		            
 		            if (models_list.get(models_list.size()-1).size()==0){
@@ -1710,6 +1725,10 @@ public class input {
 					}else if (str_estimator.contains("KernelmodelClassifier")) {
 						is_valid=true;
 					}else if (str_estimator.contains("KernelmodelRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("XgboostClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("XgboostRegressor")) {
 						is_valid=true;
 					} 
 					return is_valid;

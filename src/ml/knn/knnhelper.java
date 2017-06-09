@@ -22,8 +22,8 @@ SOFTWARE.
 package ml.knn;
 import java.util.Random;
 import utilis.XorShift128PlusRandom;
-import preprocess.scaling.maxscaler;
 import preprocess.scaling.scaler;
+import preprocess.scaling.maxscaler;
 import utilis.map.intint.IntIntMapminus4a;
 import matrix.fsmatrix;
 import matrix.smatrix;

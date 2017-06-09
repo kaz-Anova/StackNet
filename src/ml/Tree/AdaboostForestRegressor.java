@@ -45,7 +45,7 @@ Chicago	 </p>
 public class AdaboostForestRegressor implements estimator,regressor {
 
 	/**
-	 * This keeps the sorted indices for each column
+	 * This keeps the sorted indices ranks
 	 */
 	private int sorted_indices [][];
 
@@ -58,9 +58,9 @@ public class AdaboostForestRegressor implements estimator,regressor {
 	/**
 	 * This keeps the sorted indices for each column
 	 */
-	private int [] maximum_ranks;
+	private int maximum_ranks;
 
-	public void set_ranked_scores (int [] indices){
+	public void set_ranked_scores (int indices){
 
 		this.maximum_ranks=indices;
 	}
@@ -99,7 +99,7 @@ public class AdaboostForestRegressor implements estimator,regressor {
 	  /**
 	   * digits of rounding to prevent overfitting
 	   */
-	  public int rounding=30;
+	  public double rounding=6;
 	/**
 	 * offset for divisions
 	 */
@@ -525,9 +525,7 @@ public class AdaboostForestRegressor implements estimator,regressor {
 		if (!data.IsSortedByRow()){
 			data.convert_type();
 		}
-		if (data.indexer==null){
-			data.buildmap();;
-		}
+
 		double predictions[][]= new double [data.GetRowDimension()][this.n_classes];
 		double shrinks[]= new double [(this.ensemble_size<this.threads)?this.ensemble_size:this.threads];
 		Thread[] thread_array= new Thread[(this.ensemble_size<this.threads)?this.ensemble_size:this.threads]; // generate threads' array
@@ -812,9 +810,7 @@ public class AdaboostForestRegressor implements estimator,regressor {
 		if (!data.IsSortedByRow()){
 			data.convert_type();
 		}
-		if (data.indexer==null){
-			data.buildmap();
-		}
+
 	double predictions[]= new double [data.GetRowDimension()];
 		
 		double shrinks[]= new double [(this.ensemble_size<this.threads)?this.ensemble_size:this.threads];
@@ -1080,9 +1076,6 @@ public class AdaboostForestRegressor implements estimator,regressor {
 		
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
-		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
 		}		
 		if (min_split<2){
 			min_split=2;
@@ -1160,7 +1153,8 @@ public class AdaboostForestRegressor implements estimator,regressor {
 			data= manipulate.copies.copies.Copy( data);
 		}
 		// Initialise randomizer
-
+		fsdataset=new fsmatrix(data);
+		
 		
 		this.random = new XorShift128PlusRandom(this.seed);
 
@@ -1189,50 +1183,30 @@ public class AdaboostForestRegressor implements estimator,regressor {
 		
 		columndimension=data[0].length;
 		feature_importances= new double [columndimension];
+		
 		if (this.sorted_indices==null){
-			this.sorted_indices=new int [this.columndimension] [];
-			this.maximum_ranks=new int [this.columndimension];
-			if (rows==null){
-				rows= new int [data.length];
-				for (int i=0; i <data.length; i++ ){
-					rows[i]=i;
-					}
-				}			
+			this.sorted_indices=new int  [3] [];
+			this.maximum_ranks= 0;
+			this.zero_rank_holder= new int [this.columndimension];
 
-			
-			Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-			int count_of_live_threads=0;
-			// find best!
-			int j=0;
-			for (int column =0 ; column<this.columndimension; column++){
+		// create indices
 
-			
-				sortcolumnsnomap sorty= new sortcolumnsnomap (data, rows, this.sorted_indices, column,this.maximum_ranks, this.fstarget.GetRowDimension() , this.rounding);
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				if (count_of_live_threads==threads || j==this.columndimension-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
-			}
+			sortcolumnsnomap sorty= new sortcolumnsnomap (this.fsdataset,
+														this.rows,
+														this.sorted_indices,
+														this.zero_rank_holder,
+														this.rounding );
+			sorty.verbose=this.verbose;
+			sorty.merge_thresold=this.gamma;
+			sorty.fstarget=this.fstarget;			
+			sorty.run();
+			this.maximum_ranks=	sorty.getmaxrank();
+		}
+		
 		if (this.verbose){
 			System.out.println("Sorting is done");
 		}
-		}
+		
 
 
 		// Initialise the tree structure
@@ -1249,10 +1223,11 @@ public class AdaboostForestRegressor implements estimator,regressor {
 
 		
 		for (int n=0; n <this.estimators; n++ ){
-			RandomForestRegressor model = new RandomForestRegressor(data);
+			RandomForestRegressor model = new RandomForestRegressor(fsdataset);
 			//general
 			model.set_sorted_indices(this.sorted_indices);
 			model.set_ranked_scores(this.maximum_ranks);
+			model.set_zero_rank(this.zero_rank_holder);
 			model.internal_threads=this.threads;
 			model.verbose=false;
 			
@@ -1267,10 +1242,12 @@ public class AdaboostForestRegressor implements estimator,regressor {
 				model.set_columns(this.columns);
 			}
 			model.offset=this.offset;
+			model.rounding=this.rounding;
 			model.gamma=this.gamma;
 			model.max_depth=this.max_depth;
 			model.max_features=this.max_features;
 			model.max_tree_size=-1;
+			model.bootsrap=this.bootsrap;
 			model.min_leaf=this.min_leaf;
 			model.min_split=this.min_split;
 			model.Objective=this.Objective;
@@ -1280,10 +1257,10 @@ public class AdaboostForestRegressor implements estimator,regressor {
 			model.fstarget=this.fstarget;
 			tree_body[n]=model;	
 
-			model.fit(data);
+			model.fit(fsdataset);
 			ensemble_size+=1;
 			
-			predictions=tree_body[n].predictfs(data);
+			predictions=tree_body[n].predictfs(fsdataset);
 			
 			double error=0.0;
 			//iterate through predictions
@@ -1339,6 +1316,9 @@ public class AdaboostForestRegressor implements estimator,regressor {
 			feature_importances[i]/=sum_importances;
 			
 		}
+		dataset=null;
+		fsdataset=null;
+		sdataset=null;
 		System.gc();
 		
 	}
@@ -1355,9 +1335,6 @@ public class AdaboostForestRegressor implements estimator,regressor {
 		}
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
-		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
 		}
 				
 		if (min_split<2){
@@ -1434,8 +1411,6 @@ public class AdaboostForestRegressor implements estimator,regressor {
 		// Initialise randomizer
 
 		
-
-		
 		n_classes=0;
 		if (target!=null){
 			n_classes=1;
@@ -1465,47 +1440,24 @@ public class AdaboostForestRegressor implements estimator,regressor {
 		columndimension=data.GetColumnDimension();
 		feature_importances= new double [columndimension];
 		if (this.sorted_indices==null){
-			this.sorted_indices=new int [this.columndimension] [];
-			this.maximum_ranks=new int [this.columndimension];
-			if (rows==null){
-				rows= new int [data.GetRowDimension()];
-				for (int i=0; i <data.GetRowDimension(); i++ ){
-					rows[i]=i;
-					}
-				}	
-		Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-		int count_of_live_threads=0;
-		// find best!
-		int j=0;
-		for (int column =0 ; column<this.columndimension; column++){
+			this.sorted_indices=new int  [3] [];
+			this.maximum_ranks= 0;
+			this.zero_rank_holder= new int [this.columndimension];
 
-				
-				sortcolumnsnomap sorty= new sortcolumnsnomap (data, rows, this.sorted_indices, column,this.maximum_ranks, this.fstarget.GetRowDimension(), this.rounding );
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				if (count_of_live_threads==threads || j==this.columndimension-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
-			}
+		// create indices
+
+			sortcolumnsnomap sorty= new sortcolumnsnomap (this.fsdataset,
+														this.rows,
+														this.sorted_indices,
+														this.zero_rank_holder,
+														this.rounding );
+			sorty.run();
+			this.maximum_ranks=	sorty.getmaxrank();
+		}
 		if (this.verbose){
 			System.out.println("Sorting is done");
 		}
-		}		
+				
 
 		// Initialise the tree structure
 		this.coeffs=new double [this.estimators];
@@ -1522,13 +1474,14 @@ public class AdaboostForestRegressor implements estimator,regressor {
 
 		
 		for (int n=0; n <this.estimators; n++ ){
-			RandomForestRegressor model = new RandomForestRegressor(data);
+			RandomForestRegressor model = new RandomForestRegressor(fsdataset);
 			//general
 			model.set_sorted_indices(this.sorted_indices);
 			model.set_ranked_scores(this.maximum_ranks);
+			model.set_zero_rank(this.zero_rank_holder);
 			model.internal_threads=this.threads;
 			model.verbose=false;
-			
+			model.rounding=this.rounding;
 			model.estimators=this.trees;
 			model.copy=false;
 			model.cut_off_subsample=this.cut_off_subsample;
@@ -1544,6 +1497,7 @@ public class AdaboostForestRegressor implements estimator,regressor {
 			model.max_depth=this.max_depth;
 			model.max_features=this.max_features;
 			model.max_tree_size=-1;
+			model.bootsrap=this.bootsrap;
 			model.min_leaf=this.min_leaf;
 			model.min_split=this.min_split;
 			model.Objective=this.Objective;
@@ -1553,10 +1507,10 @@ public class AdaboostForestRegressor implements estimator,regressor {
 			model.fstarget=this.fstarget;
 			tree_body[n]=model;	
 
-			model.fit(data);
+			model.fit(fsdataset);
 			ensemble_size+=1;
 			
-			predictions=tree_body[n].predictfs(data);
+			predictions=tree_body[n].predictfs(fsdataset);
 			
 			double error=0.0;
 			//iterate through predictions
@@ -1610,6 +1564,9 @@ public class AdaboostForestRegressor implements estimator,regressor {
 			feature_importances[i]/=sum_importances;
 			
 		}
+		fsdataset=null;
+		sdataset=null;
+		
 		System.gc();
 
 		
@@ -1627,9 +1584,6 @@ public class AdaboostForestRegressor implements estimator,regressor {
 		}
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
-		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
 		}
 				
 		if (min_split<2){
@@ -1723,12 +1677,12 @@ public class AdaboostForestRegressor implements estimator,regressor {
 		} else {
 			throw new IllegalStateException(" A target array needs to be provided" );
 		}
-		if (!sdataset.IsSortedByRow()){
-			sdataset.convert_type();
-			}	
-		if (this.sdataset.indexer==null){
-			this.sdataset.buildmap();
-		}
+		sdataset.trim();
+		
+		if (!this.sdataset.IsSortedByRow()){
+			this.sdataset.convert_type();
+			//System.out.println("built sort");
+			}
 
 		/**
 		 *  generate rows required by the algorithm
@@ -1741,49 +1695,24 @@ public class AdaboostForestRegressor implements estimator,regressor {
 		columndimension=data.GetColumnDimension();
 		feature_importances= new double [columndimension];
 		if (this.sorted_indices==null){
-			this.sorted_indices=new int [this.columndimension] [];
-			this.maximum_ranks=new int [this.columndimension];
-			this.zero_rank_holder=new int [this.columndimension];
-			if (rows==null){
-				rows= new int [data.GetRowDimension()];
-				for (int i=0; i <data.GetRowDimension(); i++ ){
-					rows[i]=i;
-					}
-				}
-			Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-			int count_of_live_threads=0;
-			// find best!
-			int j=0;
-			for (int column =0 ; column<this.columndimension; column++){
+			this.sorted_indices=new int  [3] [];
+			this.maximum_ranks= 0;
+			this.zero_rank_holder= new int [this.columndimension];
 
-			
-				sortcolumnsnomap sorty= new sortcolumnsnomap (data,rows, this.sorted_indices, column,this.maximum_ranks,zero_rank_holder, this.fstarget.GetRowDimension(), this.rounding );
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				
-				if (count_of_live_threads==threads || j==this.columndimension-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
-			}
+		// create indices
+
+			sortcolumnsnomap sorty= new sortcolumnsnomap (this.sdataset,
+														this.rows,
+														this.sorted_indices,
+														this.zero_rank_holder,
+														this.rounding );
+			sorty.run();
+			this.maximum_ranks=	sorty.getmaxrank();
+		}
 		if (this.verbose){
 			System.out.println("Sorting is done");
 		}
-		}				
+						
 	
 		
 		// Initialise the tree structure
@@ -1800,13 +1729,14 @@ public class AdaboostForestRegressor implements estimator,regressor {
 
 		
 		for (int n=0; n <this.estimators; n++ ){
-			RandomForestRegressor model = new RandomForestRegressor(data);
+			RandomForestRegressor model = new RandomForestRegressor(sdataset);
 			//general
 			model.set_sorted_indices(this.sorted_indices);
 			model.set_ranked_scores(this.maximum_ranks);
+			model.set_zero_rank(this.zero_rank_holder);
 			model.internal_threads=this.threads;
 			model.verbose=false;
-			
+			model.rounding=this.rounding;
 			model.estimators=this.trees;
 			model.copy=false;
 			model.cut_off_subsample=this.cut_off_subsample;
@@ -1827,14 +1757,15 @@ public class AdaboostForestRegressor implements estimator,regressor {
 			model.Objective=this.Objective;
 			model.row_subsample=this.row_subsample;
 			model.seed=this.seed+ n;
+			model.bootsrap=this.bootsrap;
 			model.weights=this.weights;
 			model.fstarget=this.fstarget;
 			tree_body[n]=model;	
 
-			model.fit(data);
+			model.fit(sdataset);
 			ensemble_size+=1;
 			
-			predictions=tree_body[n].predictfs(data);
+			predictions=tree_body[n].predictfs(sdataset);
 			
 			double error=0.0;
 			//iterate through predictions
@@ -1892,6 +1823,8 @@ public class AdaboostForestRegressor implements estimator,regressor {
 			feature_importances[i]/=sum_importances;
 			
 		}
+
+		sdataset=null;
 		System.gc();
 
 		
@@ -2017,16 +1950,16 @@ public class AdaboostForestRegressor implements estimator,regressor {
 				else if (metric.equals("max_depth")) {this.max_depth=Integer.parseInt(value);}
 				else if (metric.equals("Objective")) {this.Objective=value;}
 				else if (metric.equals("threads")) {this.threads=Integer.parseInt(value);}
-				else if (metric.equals("rounding")) {this.rounding=Integer.parseInt(value);}				
+				else if (metric.equals("rounding")) {this.rounding=Double.parseDouble(value);}					
 				else if (metric.equals("offset")) {this.offset=Double.parseDouble(value);}						
 				else if (metric.equals("max_tree_size")) {this.max_tree_size=Integer.parseInt(value);}
 				else if (metric.equals("gamma")) {this.gamma=Double.parseDouble(value);}
 				else if (metric.equals("max_features")) {this.max_features=Double.parseDouble(value);}
-				else if (metric.equals("bootsrap")) {this.bootsrap=(value.equals("True")?true:false);}
+				else if (metric.equals("bootsrap")) {this.bootsrap=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("min_split")) {this.min_split=Double.parseDouble(value);}
-				else if (metric.equals("copy")) {this.copy=(value.equals("True")?true:false);}
+				else if (metric.equals("copy")) {this.copy=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("seed")) {this.seed=Integer.parseInt(value);}
-				else if (metric.equals("verbose")) {this.verbose=(value.equals("True")?true:false)   ;}			
+				else if (metric.equals("verbose")) {this.verbose=(value.toLowerCase().equals("true")?true:false)   ;}			
 				
 			}
 			

@@ -1153,7 +1153,10 @@ public class NaiveBayesClassifier implements estimator,classifier {
  	    	   System.out.println("Distinct classes : " + classes.length);
  	    	   System.out.println("Predictors : " +  columndimension);
  	       }	
-	System.gc();
+			sdataset=null;
+			fsdataset=null;
+			dataset=null;
+			System.gc();
 	
 }
 
@@ -1340,7 +1343,10 @@ public class NaiveBayesClassifier implements estimator,classifier {
 		
 
 
-	System.gc();
+			sdataset=null;
+			fsdataset=null;
+			dataset=null;
+			System.gc();
 	
 	
 }
@@ -1541,8 +1547,10 @@ public class NaiveBayesClassifier implements estimator,classifier {
 		
 
 
-	System.gc();
-	
+			sdataset=null;
+			fsdataset=null;
+			dataset=null;
+			System.gc();
 }
 
 	@Override
@@ -1668,9 +1676,9 @@ public class NaiveBayesClassifier implements estimator,classifier {
 				
 				if (metric.equals("Shrinkage")) {this.Shrinkage=Double.parseDouble(value);}		
 				else if (metric.equals("seed")) {this.seed=Integer.parseInt(value);}
-				else if (metric.equals("usescale")) {this.usescale=(value.equals("True")?true:false);}
-				else if (metric.equals("copy")) {this.copy=(value.equals("True")?true:false);}
-				else if (metric.equals("verbose")) {this.verbose=(value.equals("True")?true:false)   ;}
+				else if (metric.equals("usescale")) {this.usescale=(value.toLowerCase().equals("true")?true:false);}
+				else if (metric.equals("copy")) {this.copy=(value.toLowerCase().equals("true")?true:false);}
+				else if (metric.equals("verbose")) {this.verbose=(value.toLowerCase().equals("true")?true:false)   ;}
 
 			}
 			

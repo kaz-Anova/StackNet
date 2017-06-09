@@ -90,12 +90,6 @@ public interface scaler extends Serializable {
 	 * 
 	 * @return the maximum values as computed from the fit methods
 	 */
-	public double []get_max_absolute_values();
-	
-	/**
-	 * 
-	 * @return the maximum values as computed from the fit methods
-	 */
 	public double transform(double value, int column);
 	
 	/**

@@ -22,9 +22,6 @@ package ml.Tree;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Random;
 
 import preprocess.scaling.scaler;
@@ -203,7 +200,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 	  /**
 	   * This holds all the nodes in the tree
 	   */
-	private HashMap<Integer, Node> temp_tree_body ; 
+	private ArrayList< Node> temp_tree_body ; 
 	
 	/**
 	 * the final version of the nodes in the tree, use as array for faster access (and less memory)
@@ -273,9 +270,9 @@ public class DecisionTreeRegressor implements estimator,regressor {
 	/**
 	 * This keeps the sorted indices for each column
 	 */
-	private int [] maximum_ranks;
+	private int  maximum_ranks;
 
-	public void set_ranked_scores (int [] indices){
+	public void set_ranked_scores (int indices){
 
 		this.maximum_ranks=indices;
 	}
@@ -400,7 +397,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 	  /**
 	   * digits of rounding to prevent overfitting
 	   */
-	  public int rounding=30;
+	  public double rounding=6;
 	/**
 	 * The object that holds the modelling data in double form in cases the user chooses this form
 	 */
@@ -557,7 +554,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				}
 				
 				//Initialise an svc helper model
-				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body);
+				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body, this.rounding);
 				thread_array[count_of_live_threads]= new Thread(svc);
 				thread_array[count_of_live_threads].start();
 				count_of_live_threads++;
@@ -626,7 +623,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 					}
 					 split_var=new_Node.Variable;
 					 cutt_off=new_Node.cutoffval;
-					 value=data.GetElement(i,split_var);	
+					 value=  Math.round(data.GetElement(i,split_var)* 10.0 * rounding) / (10.0 * rounding);     
 					previous_id=THE_id;
 					// left split
 					if (value <=cutt_off) {
@@ -685,7 +682,22 @@ public class DecisionTreeRegressor implements estimator,regressor {
 					}
 					 split_var=new_Node.Variable;
 					 cutt_off=new_Node.cutoffval;
-					 value=data.GetElement(i,split_var);	
+					 
+					 value=0.0;
+				     for (int j=data.indexpile[i];j<data.indexpile[i+1];j++){
+						int check_feature=data.mainelementpile[j];
+						if (check_feature<split_var){ // we found our feature
+							continue;// next row - here the feature has zero value
+						}
+						else if (check_feature>split_var){ // we found our feature
+							break;// next row - here the feature has zero value
+						}					
+						else { // we found our feature
+							value=Math.round(data.valuespile[j] * 10.0 * rounding) / (10.0 * rounding) ;
+							break;//found it! no longer need to keep on looping
+						}
+					}
+					 	
 					previous_id=THE_id;
 					// left split
 					if (value <=cutt_off) {
@@ -743,7 +755,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 					}
 					 split_var=new_Node.Variable;
 					 cutt_off=new_Node.cutoffval;
-					 value=data[i][split_var];	
+					 value=  Math.round(data[i][split_var]* 10.0 * rounding) / (10.0 * rounding)   ;	
 					previous_id=THE_id;
 					// left split
 					if (value <=cutt_off) {
@@ -821,7 +833,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				}
 				
 				//Initialise an svc helper model
-				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body);
+				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body, this.rounding);
 				thread_array[count_of_live_threads]= new Thread(svc);
 				thread_array[count_of_live_threads].start();
 				count_of_live_threads++;
@@ -877,9 +889,6 @@ public class DecisionTreeRegressor implements estimator,regressor {
 		if (!data.IsSortedByRow()){
 			data.convert_type();
 		}
-		if (data.indexer==null){
-			data.buildmap();
-		}
 		double predictions[][]= new double [data.GetRowDimension()][this.n_classes];
 		
 		double per=data.GetRowDimension()/this.threads;
@@ -918,7 +927,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				}
 				
 				//Initialise an svc helper model
-				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body);
+				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body, this.rounding);
 				thread_array[count_of_live_threads]= new Thread(svc);
 				thread_array[count_of_live_threads].start();
 				count_of_live_threads++;
@@ -974,7 +983,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			Node new_Node=this.tree_body[THE_id];
 			int split_var=new_Node.Variable;
 			double cutt_off=new_Node.cutoffval;
-			double value=data[split_var];
+			double value=Math.round(data[split_var]* 10.0 * rounding) / (10.0 * rounding) ;
 
 			// left split
 			if (value <=cutt_off) {
@@ -1036,7 +1045,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			Node new_Node=this.tree_body[THE_id];
 			int split_var=new_Node.Variable;
 			double cutt_off=new_Node.cutoffval;
-			double value=data.GetElement(rows, split_var);
+			double value= Math.round(data.GetElement(rows, split_var)* 10.0 * rounding) / (10.0 * rounding) ;
 
 			// left split
 			if (value <=cutt_off) {
@@ -1110,7 +1119,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			double value=0.0;
 			Integer existed_var_index_in_sparse_array =column_Values.get(split_var);
 			if (existed_var_index_in_sparse_array!=-1){
-				 value=data.valuespile[existed_var_index_in_sparse_array];
+				 value= Math.round( data.valuespile[existed_var_index_in_sparse_array]* 10.0 * rounding) / (10.0 * rounding) ;
 			}
 			// left split
 			if (value <=cutt_off) {
@@ -1204,7 +1213,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				}
 				
 				//Initialise an svc helper model
-				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body);
+				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body, this.rounding);
 				thread_array[count_of_live_threads]= new Thread(svc);
 				thread_array[count_of_live_threads].start();
 				count_of_live_threads++;
@@ -1301,7 +1310,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				}
 				
 				//Initialise an svc helper model
-				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body);
+				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body, this.rounding);
 				thread_array[count_of_live_threads]= new Thread(svc);
 				thread_array[count_of_live_threads].start();
 				count_of_live_threads++;
@@ -1393,7 +1402,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				}
 				
 				//Initialise an svc helper model
-				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body);
+				scoringhelper svc = new scoringhelper(data , predictions, loop_list[n], loop_list[n+1],this.tree_body, this.rounding);
 				thread_array[count_of_live_threads]= new Thread(svc);
 				thread_array[count_of_live_threads].start();
 				count_of_live_threads++;
@@ -1453,7 +1462,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			Node new_Node=this.tree_body[THE_id];
 			int split_var=new_Node.Variable;
 			double cutt_off=new_Node.cutoffval;
-			double value=data[split_var];
+			double value=Math.round( data[split_var]* 10.0 * rounding) / (10.0 * rounding);
 
 			// left split
 			if (value <=cutt_off) {
@@ -1514,7 +1523,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			Node new_Node=this.tree_body[THE_id];
 			int split_var=new_Node.Variable;
 			double cutt_off=new_Node.cutoffval;
-			double value=data.GetElement(rows, split_var);
+			double value=Math.round(data.GetElement(rows, split_var)* 10.0 * rounding) / (10.0 * rounding) ;
 
 			// left split
 			if (value <=cutt_off) {
@@ -1569,10 +1578,6 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			this.threads=Runtime.getRuntime().availableProcessors();
 		}	
 
-		if (data.indexer==null){
-			data.buildmap();
-		}
-
 
 		int THE_id=0;
 		IntIntMapminus4a column_Values=new IntIntMapminus4a(data.GetColumnDimension(), 0.5F);
@@ -1589,7 +1594,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			double value=0.0;
 			Integer existed_var_index_in_sparse_array =column_Values.get(split_var);
 			if (existed_var_index_in_sparse_array!=-1){
-				 value=data.valuespile[existed_var_index_in_sparse_array];
+				 value=Math.round(data.valuespile[existed_var_index_in_sparse_array]* 10.0 * rounding) / (10.0 * rounding) ;
 			}
 			// left split
 			if (value <=cutt_off) {
@@ -1634,10 +1639,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
 		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
-		}
-				
+	
 		if (min_split<2){
 			min_split=2;
 		}
@@ -1697,8 +1699,11 @@ public class DecisionTreeRegressor implements estimator,regressor {
 		if (copy){
 			data= manipulate.copies.copies.Copy( data);
 		}
-		// Initialise randomizer
 
+
+		fsdataset=new fsmatrix(data);
+		
+		// Initialise randomizer
 		
 		this.random = new XorShift128PlusRandom(this.seed);
 
@@ -1771,13 +1776,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				subset_of_rows=null;
 				
 			}
-			if (this.bootsrap){
-				int newrows[]= new int[this.rows.length];
-				for (int i=0; i < newrows.length; i++){
-					newrows[i]=this.rows[random.nextInt(this.rows.length)];
-				}
-				this.rows=newrows;
-			}		
+		
 			//check if initial cols are given
 			if (columns==null){
 				subsampleinteger = get_random_integer(this.feature_subselection);
@@ -1799,40 +1798,34 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				subset_of_cols=null;
 			}
 		
-		if (this.sorted_indices==null){
-			this.sorted_indices=new int  [this.columndimension] [];
-			this.maximum_ranks= new int [this.columndimension];
-		Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-		int count_of_live_threads=0;
-		// find best!
-		int j=0;
-		for (int column : columns){
-				
-			sortcolumnsnomap sorty= new sortcolumnsnomap (data, this.rows, this.sorted_indices, column,this.maximum_ranks, this.fstarget.GetRowDimension(),rounding );
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				if (count_of_live_threads==threads || j==columns.length-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
+			if (this.sorted_indices==null){
+				this.sorted_indices=new int  [3] [];
+				this.maximum_ranks= 0;
+				this.zero_rank_holder= new int [this.columndimension];
+
+			// create indices
+
+				sortcolumnsnomap sorty= new sortcolumnsnomap (this.fsdataset,
+															this.rows,
+															this.sorted_indices,
+															this.zero_rank_holder,
+															this.rounding );
+				sorty.verbose=this.verbose;
+				sorty.merge_thresold=this.gamma;
+				sorty.fstarget=this.fstarget;					
+				sorty.run();
+				this.maximum_ranks=	sorty.getmaxrank();
 			}
-		}
 		double current_weighted_count=0.0;
 		double current_sum_value [] =new double [this.n_classes];
+	
+		if (this.bootsrap){
+			int newrows[]= new int[this.rows.length];
+			for (int i=0; i < newrows.length; i++){
+				newrows[i]=this.rows[random.nextInt(this.rows.length)];
+			}
+			this.rows=newrows;
+		}
 		
 		if (this.weights!=null){
 		for (int i :rows  ){
@@ -1855,11 +1848,11 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			System.out.println(" weighted sum Value(s): " + Arrays.toString(current_sum_value));			
 		}
 		// Initialise the tree structure
-		temp_tree_body = new HashMap<Integer, Node>();
+		temp_tree_body = new ArrayList<Node>(10000);
 
 		Node initial_node = new Node(current_sum_value,current_weighted_count, current_id);
 		
-		temp_tree_body.put(current_id, initial_node);
+		temp_tree_body.add(initial_node);
 		current_id+=1;
 		int current_level=1;
 		
@@ -1878,33 +1871,23 @@ public class DecisionTreeRegressor implements estimator,regressor {
 		this.weights=null;
 		columns=null;
 		this.sorted_indices=null;
-		this.maximum_ranks=null;
 		this.zero_rank_holder=null;
 		this.fstarget=null;
 		data=null;
 		target=null;
 		target2d=null;
-		this.starget=null;	
-				
+		this.starget=null;
+		fsdataset=null;
+		this.sdataset=null;	
 		tree_body = new Node [temp_tree_body.size()];
 		
- 
-		for (  Map.Entry<Integer, Node> entry: this.temp_tree_body.entrySet()) {
-			   Integer key=entry.getKey();
-	           Node a =entry.getValue();
-	           /*
-	           Node b= new Node(a.sum_prediction.clone(),a.weighted_count,key);
-	           b.Variable=a.Variable;
-	           b.cutoffval=a.cutoffval;
-	           b.childless=a.childless;
-	           b.childmore=a.childmore;
-	           ntree.put(key, b);
-	           */
+		for (   Node a: this.temp_tree_body) {
+			   int key=a.id;
 	           tree_body[key]=a;
 		}
 		temp_tree_body=null;
 		
-		//System.gc();
+		System.gc();
 		
 	}
 	@Override
@@ -1920,9 +1903,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
 		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
-		}
+
 				
 		if (min_split<2){
 			min_split=2;
@@ -2050,13 +2031,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				subset_of_rows=null;
 				
 			}
-			if (this.bootsrap){
-				int newrows[]= new int[this.rows.length];
-				for (int i=0; i < newrows.length; i++){
-					newrows[i]=this.rows[random.nextInt(this.rows.length)];
-				}
-				this.rows=newrows;
-			}		
+	
 			//check if initial cols are given
 			if (columns==null){
 				subsampleinteger = get_random_integer(this.feature_subselection);
@@ -2077,41 +2052,36 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				}
 				subset_of_cols=null;
 			}
-		
-		if (this.sorted_indices==null){
-			this.sorted_indices=new int  [this.columndimension] [];
-			this.maximum_ranks= new int [this.columndimension];
-		Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-		int count_of_live_threads=0;
-		// find best!
-		int j=0;
-		for (int column : columns){
-				
-			sortcolumnsnomap sorty= new sortcolumnsnomap (data, this.rows, this.sorted_indices, column,this.maximum_ranks, this.fstarget.GetRowDimension(),rounding );
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				if (count_of_live_threads==threads || j==columns.length-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
+			
+			if (this.sorted_indices==null){
+				this.sorted_indices=new int  [3] [];
+				this.maximum_ranks= 0;
+				this.zero_rank_holder= new int [this.columndimension];
+
+			// create indices
+
+				sortcolumnsnomap sorty= new sortcolumnsnomap (this.fsdataset,
+															this.rows,
+															this.sorted_indices,
+															this.zero_rank_holder,
+															this.rounding );
+				sorty.verbose=this.verbose;
+				sorty.merge_thresold=this.gamma;
+				sorty.fstarget=this.fstarget;					
+				sorty.run();
+				this.maximum_ranks=	sorty.getmaxrank();
 			}
-		}
+			
 		double current_weighted_count=0.0;
 		double current_sum_value [] =new double [this.n_classes];
+
+		if (this.bootsrap){
+			int newrows[]= new int[this.rows.length];
+			for (int i=0; i < newrows.length; i++){
+				newrows[i]=this.rows[random.nextInt(this.rows.length)];
+			}
+			this.rows=newrows;
+		}			
 		
 		if (this.weights!=null){
 		for (int i :rows  ){
@@ -2134,11 +2104,11 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			System.out.println(" weighted sum Value(s): " + Arrays.toString(current_sum_value));			
 		}
 		// Initialise the tree structure
-		temp_tree_body = new HashMap<Integer, Node>();
+		temp_tree_body = new ArrayList< Node>();
 
 		Node initial_node = new Node(current_sum_value,current_weighted_count, current_id);
 		
-		temp_tree_body.put(current_id, initial_node);
+		temp_tree_body.add( initial_node);
 		current_id+=1;
 		int current_level=1;
 		
@@ -2156,32 +2126,23 @@ public class DecisionTreeRegressor implements estimator,regressor {
 		this.weights=null;
 		columns=null;
 		this.sorted_indices=null;
-		this.maximum_ranks=null;
 		this.zero_rank_holder=null;
 		this.fstarget=null;
 		data=null;
+		fsdataset=null;
 		target=null;
 		target2d=null;
 		this.starget=null;	
-				
+		this.sdataset=null;	
 		
 		tree_body = new Node [temp_tree_body.size()];
 		
 		 
-		for (  Map.Entry<Integer, Node> entry: this.temp_tree_body.entrySet()) {
-			   Integer key=entry.getKey();
-	           Node a =entry.getValue();
-	           /*
-	           Node b= new Node(a.sum_prediction.clone(),a.weighted_count,key);
-	           b.Variable=a.Variable;
-	           b.cutoffval=a.cutoffval;
-	           b.childless=a.childless;
-	           b.childmore=a.childmore;
-	           ntree.put(key, b);
-	           */
+		for (   Node a: this.temp_tree_body) {
+			   int key=a.id;
 	           tree_body[key]=a;
 		}
-		//System.gc();
+		System.gc();
 
 		
 	}
@@ -2197,9 +2158,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
 		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
-		}
+
 		if (this.offset<=0){
 			this.offset=0.0000001;
 		}	
@@ -2282,13 +2241,13 @@ public class DecisionTreeRegressor implements estimator,regressor {
 		} else {
 			throw new IllegalStateException(" A target array needs to be provided" );
 		}
+		if (this.sorted_indices==null){
+		sdataset.trim();
 		
-		if (!sdataset.IsSortedByRow()){
-			sdataset.convert_type();
+		if (!this.sdataset.IsSortedByRow()){
+			this.sdataset.convert_type();
+			//System.out.println("built sort");
 			}
-		
-		if (this.sdataset.indexer==null){
-			this.sdataset.buildmap();
 		}
 		/**
 		 *  generate rows required by the algorithm
@@ -2339,13 +2298,7 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				subset_of_rows=null;
 				
 			}
-			if (this.bootsrap){
-				int newrows[]= new int[this.rows.length];
-				for (int i=0; i < newrows.length; i++){
-					newrows[i]=this.rows[random.nextInt(this.rows.length)];
-				}
-				this.rows=newrows;
-			}		
+	
 			//check if initial cols are given
 			if (columns==null){
 				subsampleinteger = get_random_integer(this.feature_subselection);
@@ -2366,42 +2319,35 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				}
 				subset_of_cols=null;
 			}
-		
-		if (this.sorted_indices==null){
-			this.sorted_indices=new int  [this.columndimension] [];
-			this.maximum_ranks= new int [this.columndimension];
-			this.zero_rank_holder= new int [this.columndimension];
-		Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-		int count_of_live_threads=0;
-		// find best!
-		int j=0;
-		for (int column : columns){
-				
-			sortcolumnsnomap sorty= new sortcolumnsnomap (data, this.rows, this.sorted_indices, column, this.maximum_ranks, this.zero_rank_holder, this.fstarget.GetRowDimension(),rounding );
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				if (count_of_live_threads==threads || j==columns.length-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
+			
+			if (this.sorted_indices==null){
+				this.sorted_indices=new int  [3] [];
+				this.maximum_ranks= 0;
+				this.zero_rank_holder= new int [this.columndimension];
+
+			// create indices
+
+				sortcolumnsnomap sorty= new sortcolumnsnomap (this.sdataset,
+															this.rows,
+															this.sorted_indices,
+															this.zero_rank_holder,
+															this.rounding );
+				sorty.verbose=this.verbose;
+				sorty.merge_thresold=this.gamma;
+				sorty.fstarget=this.fstarget;					
+				sorty.run();
+				this.maximum_ranks=	sorty.getmaxrank();
 			}
-		}
 		double current_weighted_count=0.0;
 		double current_sum_value [] =new double [this.n_classes];
+	
+		if (this.bootsrap){
+			int newrows[]= new int[this.rows.length];
+			for (int i=0; i < newrows.length; i++){
+				newrows[i]=this.rows[random.nextInt(this.rows.length)];
+			}
+			this.rows=newrows;
+		}	
 		
 		if (this.weights!=null){
 		for (int i :rows  ){
@@ -2424,11 +2370,11 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			System.out.println(" weighted sum Value(s): " + Arrays.toString(current_sum_value));			
 		}
 		// Initialise the tree structure
-		temp_tree_body = new HashMap<Integer, Node>();
+		temp_tree_body = new ArrayList<Node>();
 
 		Node initial_node = new Node(current_sum_value,current_weighted_count, current_id);
 		
-		temp_tree_body.put(current_id, initial_node);
+		temp_tree_body.add( initial_node);
 		current_id+=1;
 		int current_level=1;
 		
@@ -2447,32 +2393,21 @@ public class DecisionTreeRegressor implements estimator,regressor {
 		this.weights=null;
 		columns=null;
 		this.sorted_indices=null;
-		this.maximum_ranks=null;
 		this.zero_rank_holder=null;
 		this.fstarget=null;
 		data=null;
 		target=null;
 		target2d=null;
 		this.starget=null;	
-		
+		this.sdataset=null;
 		tree_body = new Node [temp_tree_body.size()];
 
-		
-		for (  Map.Entry<Integer, Node> entry: this.temp_tree_body.entrySet()) {
-			   Integer key=entry.getKey();
-	           Node a =entry.getValue();
-	           /*
-	           Node b= new Node(a.sum_prediction.clone(),a.weighted_count,key);
-	           b.Variable=a.Variable;
-	           b.cutoffval=a.cutoffval;
-	           b.childless=a.childless;
-	           b.childmore=a.childmore;
-	           ntree.put(key, b);
-	           */
+		for (   Node a: this.temp_tree_body) {
+			   int key=a.id;
 	           tree_body[key]=a;
 		}
 		
-		//System.gc();
+		System.gc();
 
 		
 		// calculate first node
@@ -2499,98 +2434,366 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				) {
 			
 			// create a subset of columns in this iterations
-			HashSet<Integer> columns_to_use = new HashSet<Integer> ();
-			
+			int columns_to_use [] = new int [this.columndimension];
+			int valid_cols[]=new int [this.columndimension];
+			int z=0;
 			int subsampleinteger = get_random_integer(this.max_features);
 			
-			for (int col : columns) {
-				if (random.nextInt()<=subsampleinteger && this.maximum_ranks[col]>1){
-					columns_to_use.add(col);
-				} 
-			}
-			// if we don't get any match...lets have at least one
-			if (columns_to_use.size()==0){
-				columns_to_use.add(columns[random.nextInt(this.columns.length)]);
-			}
+			double sum_target []=new double [this.maximum_ranks * this.n_classes];
+			double weighted_count []=new double [this.maximum_ranks ];
+			int count []=new int [this.maximum_ranks ];
 			
+			if (this.fsdataset!=null){
+				
+				for (int col : columns) {
+					if (random.nextInt()<=subsampleinteger){
+						columns_to_use[z]=col;
+						z++;
+					} 
+				}
+				// if we don't get any match...lets have at least one
+				if (z==0){
+					columns_to_use[z]=columns[random.nextInt(this.columns.length)];
+
+					z++;
+					
+				}
+				
+				
+			} else if (this.sdataset!=null){
+			
+				for (int col : columns) {
+					if (random.nextInt()<=subsampleinteger){
+						columns_to_use[z]=col;
+						valid_cols[col]=1;
+						z++;
+						
+						int zerorank=this.zero_rank_holder[col];
+						
+						if (zerorank==-1){
+							continue;
+						}	
+						count[zerorank]=rowsubset.length;
+						weighted_count[zerorank]=current_weighted_count;
+						for (int c=0; c <this.n_classes;c++){
+							sum_target[zerorank*this.n_classes + c]=current_sum_value[c];
+						}					
+						
+						
+					} 
+				}
+				// if we don't get any match...lets have at least one
+				if (z==0){
+					columns_to_use[z]=columns[random.nextInt(this.columns.length)];
+					valid_cols[columns_to_use[z]]=1;
+					int zerorank=this.zero_rank_holder[columns_to_use[z]];
+					
+					if (zerorank!=-1){
+							
+						count[zerorank]=rowsubset.length;
+						weighted_count[zerorank]=current_weighted_count;
+						for (int c=0; c <this.n_classes;c++){
+							sum_target[zerorank*this.n_classes + c]=current_sum_value[c];
+						}
+					}
+					z++;
+				}
+			}	
 			int best_variable =-1; // the one that determines the split
 			int countless_rows=-1;
 			double weighted_countless=-1.0;
 			double weighted_sumless[]= new double [this.n_classes];
 			double best_cuttof=Double.MIN_VALUE; // the cut-off for the best_variable
-			double best_gamma =this.gamma; // the metric gain for the best variable
 			boolean better_one_is_found=false; // use this to keep track of whether we found better features or not
-			int best_rank=-1;
-			int best_row=-1;
-			// based on our column sub-samples, find the best features in this round
+			int best_rank=-1;	
+			double best_gamma =Double.NEGATIVE_INFINITY; // the metric gain for the best variable
 			
-			Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-			splitintadjustednomap2[] splithelperreg_array= new splitintadjustednomap2[this.threads];
-			// start the loop to find the support vectors 
+			//trigerred columns for this round
+			int active_coounter=0;
+			if (this.fsdataset!=null){
+				
+				if (this.weights==null ){
+					for (int i=0; i <rowsubset.length;i++){
+						//get the row
+					    int row=rowsubset[i];
+					    //loop through all non zero elements
+					    for (int b=0; b<z; b++ ){
+					    	//retrieve the column
+					    	int column=columns_to_use[ b];
+					    	int rank=this.sorted_indices[0][row*this.fsdataset.GetColumnDimension() + column];
+					    	active_coounter++; 	
+					    	
+					    	count[rank]+=1;
+					    	weighted_count[rank]+=1.0;
+					    	for (int v=0; v <this.n_classes; v++ ){
+								 double temp=this.fstarget.GetElement(row, v);
+								 sum_target[(rank*this.n_classes+v)]+=temp;	
+					    	}
+		
 
-				int count_of_live_threads=0;
-
-				int j=0;
-
-				for (int column : columns_to_use){
-					
-					double best_gamma_array []= {best_gamma}; // the metric gain for the best variable
-					int countless_array []={0}; 
-					double weighted_countless_array []={0}; 					
-					double weighted_seumless_array []=new double [this.n_classes]; 
-
-						splithelperreg_array[count_of_live_threads]= new splitintadjustednomap2 (this.sorted_indices[column], this.fstarget,
-								column, this.Objective, this.cut_off_subsample, this.min_leaf, best_gamma_array, 
-								countless_array, this.seed + current_level + column , current_weighted_count, current_sum_value, weighted_seumless_array,
-								weighted_countless_array,rowsubset, this.maximum_ranks[column] ,  zero_rank_holder);
-												
-					
-					splithelperreg_array[count_of_live_threads].offset=this.offset;
-					splithelperreg_array[count_of_live_threads].weight=this.weights;
-					thread_array[count_of_live_threads]= new Thread(splithelperreg_array[count_of_live_threads]);
-					thread_array[count_of_live_threads].start();
-					
-					count_of_live_threads++;
-					if (count_of_live_threads==threads || j==columns_to_use.size()-1){
-						for (int s=0; s <count_of_live_threads;s++ ){
-							try {
-								thread_array[s].join();
-							} catch (InterruptedException e) {
-							   System.out.println(e.getMessage());
-							   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-							}
-						}
-						
-						//extract the values and see if we got a gamma better than required one
-						for (int s=0; s <count_of_live_threads;s++ ){
-							double b_gama=splithelperreg_array[s].best_gamma_array[0];
-							//System.out.println( " best var : " + splithelperreg_array[s].feature);
-							//System.out.println( " b_gamabest var : " + b_gama);
-							if (b_gama>best_gamma){
-								best_rank=splithelperreg_array[s].getbestrank();
-								best_row=splithelperreg_array[s].getbestrow();
-								best_variable=splithelperreg_array[s].feature;
-								best_gamma=b_gama;
-								countless_rows=splithelperreg_array[s].countless_array[0];
-								weighted_countless=splithelperreg_array[s].count_weighted_less_array[0];
-								weighted_sumless=splithelperreg_array[s].sum_weighted_less_array;
-								better_one_is_found=true;
-							
-							}	
-						}
-
-						thread_array= new Thread[this.threads]; // generate threads' array
-						splithelperreg_array= new splitintadjustednomap2[this.threads];						
-						count_of_live_threads=0;
-						
+					    }
 					}
-					
-					j+=1;
+				}else {
+					for (int i=0; i <rowsubset.length;i++){
+						//get the row
+					    int row=rowsubset[i];
+					    //loop through all non zero elements
+					    for (int b=0; b<z; b++ ){
+					    	//retrieve the column
+					    	int column=columns_to_use[ b];
+					    	int rank=this.sorted_indices[0][row*this.fsdataset.GetColumnDimension() + column];
+					    	active_coounter++; 	
+					    	count[rank]+=1;
+					    	weighted_count[rank]+=weights[row];			    	
+					    	for (int v=0; v <this.n_classes; v++ ){
+								 double temp=this.fstarget.GetElement(row, v)*weights[row];
+								 sum_target[(rank*this.n_classes+v)]+=temp;	
+					    	}
+
+					    }
+					}
 				}
+				
+				
+			} else if (this.sdataset!=null){
+				if (this.weights==null ){
+					for (int i=0; i <rowsubset.length;i++){
+						//get the row
+					    int row=rowsubset[i];
+					    //loop through all non zero elements
+					    for (int el=sdataset.indexpile[row];el<sdataset.indexpile[row+1];el++ ){
+					    	//retrieve the column
+					    	int column=sdataset.mainelementpile[el];
+					    	// check if column is subset
+					    	if (valid_cols[column]!=1){
+					    		continue;
+					    	}
+					    	int rank=this.sorted_indices[0][el];
+					    	
+					    	count[rank]+=1;
+					    	weighted_count[rank]+=1.0;
+					    	active_coounter++;
+					    	int zerorank=this.zero_rank_holder[column];
+					    	
+					    	if (zerorank!=-1){
+					    		count[zerorank]-=1;
+								weighted_count[zerorank]-=1.0;
+					    	}
+		
+							for (int v=0; v <this.n_classes; v++ ){
+								 double temp=this.fstarget.GetElement(row, v);
+								 sum_target[(rank*this.n_classes+v)]+=temp;	
+								 if (zerorank!=-1){
+									 sum_target[(zerorank*this.n_classes+v)]-=temp;
+								 }
+							    	
+								}
+	 	
+		
+					    }
+					}
+				}else {
+					for (int i=0; i <rowsubset.length;i++){
+						//get the row
+					    int row=rowsubset[i];
+					    //loop through all non zero elements
+					    for (int el=sdataset.indexpile[row];el<sdataset.indexpile[row+1];el++ ){
+					    	//retrieve the column
+					    	int column=sdataset.mainelementpile[el];
+					    	// check if column is subset
+					    	if (valid_cols[column]!=1){
+					    		continue;
+					    	}
+					    	int rank=this.sorted_indices[0][el];
+	
+					    	count[rank]+=1;
+					    	weighted_count[rank]+=weights[row];
+					    	active_coounter++;
+					    	int zerorank=this.zero_rank_holder[column];
+					    	
+					    	if (zerorank!=-1){
+					    		count[zerorank]-=1;
+								weighted_count[zerorank]-=weights[row];
+					    	}
+		
+							for (int v=0; v <this.n_classes; v++ ){
+								 double temp=this.fstarget.GetElement(row, v)*weights[row];
+								 sum_target[(rank*this.n_classes+v)]+=temp;	
+								 if (zerorank!=-1){
+								 sum_target[(zerorank*this.n_classes+v)]-=temp;
+								 }
+							    	
+								}
+	   	
+		
+					    }
+					}
+				}	
+			}
+			columns_to_use=null;
+			valid_cols=null;
+			
+
+			//subsample ranks
+			if (active_coounter>0){
+				
+				int valid_threads=(weighted_count.length<this.threads)?weighted_count.length:this.threads;
+				int length_of_each_threaded_pass =weighted_count.length/valid_threads;
+				Thread [] thread_array= new Thread[valid_threads];
+				int [][] locations= new int[valid_threads][2];
+				int points=0;
+				int m=0;
+				
+				if (this.fsdataset!=null){
+					
+					for (int n=0; n <valid_threads-1; n++ ){
+						locations[n][0]=points;
+						//System.out.println((points + length_of_each_threaded_pass) + " " + this.maximum_ranks + " " + weighted_count.length);
+					
+						if (points + length_of_each_threaded_pass>=weighted_count.length){
+							break;
+						}
+						int end=points + length_of_each_threaded_pass;
+						int el=this.sorted_indices[1][end];
+						int col=el%fsdataset.GetColumnDimension();
+						int newcol=col;
+						while (col==newcol && end <weighted_count.length-1){
+							end++;
+							el=this.sorted_indices[1][end];
+							newcol=el%fsdataset.GetColumnDimension();
+						}
+						if (end>weighted_count.length-1){
+							end=weighted_count.length;
+						}
+						locations[n][1]=end;
+						m++;
+						points=end;
+						if (end>=weighted_count.length){
+							break;
+						}
+					}
+
+					} else if (this.sdataset!=null){
+					for (int n=0; n <valid_threads-1; n++ ){
+						locations[n][0]=points;
+						if (points + length_of_each_threaded_pass>=weighted_count.length){
+							break;
+						}						
+						int end=points + length_of_each_threaded_pass;
+						int col=this.sorted_indices[2][end];
+						int newcol=col;
+						while (col==newcol && end <weighted_count.length-1){
+							end++;
+							newcol=this.sorted_indices[2][end];
+						}
+						if (end>weighted_count.length-1){
+							end=weighted_count.length;
+						}
+						locations[n][1]=end;
+						m++;
+						points=end;
+						if (end==weighted_count.length){
+							break;
+						}
+					}
+					}
+				if (points<weighted_count.length){
+				locations[m][0]=points;
+				locations[m][1]=weighted_count.length;
+				m++;
+				}
+				int best_ranks[]= new int [m];
+				double best_gama[]=new double [m];
+				
+				subsampleinteger = get_random_integer(this.cut_off_subsample);
+				if (this.fsdataset!=null){
+					
+					for (int t=0; t<m;t++){
+						thread_array[t]=new Thread(new regressionmetric(
+								current_weighted_count,
+								current_sum_value,
+								best_gama,
+								best_ranks,
+								subsampleinteger,
+								this.sorted_indices[1],
+								count,
+								sum_target,
+								weighted_count,
+								this.Objective,
+								t,locations[t][0],
+								locations[t][1],
+								this.fsdataset.GetColumnDimension()));
+						//System.out.println(t + " " + locations[t][0]+ " " + locations[t][1] + " " + this.sorted_indices[2][locations[t][0]] + " " + this.sorted_indices[2][locations[t][1]-1]);
+						thread_array[t].start();
+					}
+				} else if (this.sdataset!=null){
+					for (int t=0; t<m;t++){
+						thread_array[t]=new Thread(new regressionmetric(
+								current_weighted_count,
+								current_sum_value,
+								best_gama,
+								best_ranks,
+								subsampleinteger,
+								this.sorted_indices[2],
+								count,
+								sum_target,
+								weighted_count,
+								this.Objective,t,locations[t][0],locations[t][1]));
+						thread_array[t].start();
+					}
+				}
+				for (int t=0; t<m;t++){
+					try {
+						thread_array[t].join();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+	
+				
+				for (int j=0;j < best_ranks.length; j++){
+					//System.out.println(best_gama[j]  + " " + best_ranks[j]);
+					if (best_gama[j]>best_gamma){
+						best_gamma=best_gama[j];
+						best_rank=best_ranks[j];
+						better_one_is_found=true;
+					}
+				}
+			
+			}
+			
+			if (better_one_is_found){
+				
+				if (this.fsdataset!=null){
+					int ind=this.sorted_indices[1][best_rank];
+					best_variable=ind%this.fsdataset.GetColumnDimension();
+				} else if (this.sdataset!=null){
+					best_variable =this.sorted_indices[2][best_rank]; // the one that determines the split
+				}
+				countless_rows=count[best_rank];
+				weighted_countless=weighted_count[best_rank];
+				for (int j=0; j < this.n_classes; j++){
+					weighted_sumless[j]=sum_target[best_rank*this.n_classes + j];
+				}
+				int best_index=this.sorted_indices[1][best_rank];
+				if (this.fsdataset!=null){
+					best_cuttof=Math.round(fsdataset.data[best_index]* 10.0 * rounding) / (10.0 * rounding);
+				} else if (this.sdataset!=null){				
+					if (best_index==-1){
+						best_cuttof=0.0;
+					} else {
+						best_cuttof=Math.round( sdataset.valuespile[best_index]* 10.0 * rounding) / (10.0 * rounding); 
+					}
+				}
+
+			}
+	
 				//System.gc();
 		
 				// there is  a better split - thats good!
-			if (better_one_is_found ) {
+			if (better_one_is_found && best_gamma>= Double.NEGATIVE_INFINITY) {
 				//System.out.println("--------------------------------------");
 
 				feature_importances[best_variable]+=best_gamma;
@@ -2602,19 +2805,11 @@ public class DecisionTreeRegressor implements estimator,regressor {
 			double weighted_summore[]= new double [this.n_classes];
 			for (int s=0; s < this.n_classes ; s++){
 				weighted_summore[s]=current_sum_value[s]-weighted_sumless[s];
-			}	
-			
-			if (this.dataset!=null){
-				best_cuttof=this.dataset[best_row][best_variable];
-				
-			} else if (this.fsdataset!=null){
-				best_cuttof=this.fsdataset.GetElement(best_row, best_variable);
-				
-			} else {
-				best_cuttof=this.sdataset.GetElement(best_row, best_variable);
-	 
 			}
-			/*
+			if (this.verbose){
+			System.out.println("level " + current_level +  "  best_variable " +  " "+ best_variable + " best_cuttof " + best_cuttof + " " + this.Objective +  " "+ best_gamma);
+			}
+			/*	
 			System.out.println("level " + current_level);
 			System.out.println("best_variable " + best_variable);
 			System.out.println("best_cuttof " + best_cuttof);
@@ -2644,193 +2839,370 @@ public class DecisionTreeRegressor implements estimator,regressor {
 
 			}			
 			 */
-			
-			// both are to be splitted
-			if (countmore_rows>0 && countless_rows >0 && weighted_countmore>=this.min_leaf && weighted_countless>=this.min_leaf){
+			if (this.fsdataset!=null){
 				
-				// add details to the current nod
-				A_node.specifyvariable(best_variable, best_cuttof);
-				
-				int valid_rows_for_less [] =new int[countless_rows];
-				int valid_rows_for_more [] =new int[countmore_rows];
-				int less=0;
-				int more=0;
-				
-				//populate with the correct indices
-				int [] bestfeaturemap=this.sorted_indices[best_variable];
-				if (this.sdataset==null ||  this.zero_rank_holder[best_variable]==-1){
-				for(int ro: rowsubset){
-					if ( bestfeaturemap[ro]<=best_rank){
-						valid_rows_for_less[less++]=ro;	
-					} else {
-						valid_rows_for_more[more++]=ro;	
-					}
-				}
-				} else {
-					int data_rows=this.fstarget.GetRowDimension();
-					int densened_sorted_indices []= new int [data_rows];
-					int the_zero_rank=this.zero_rank_holder[best_variable];
+				// both are to be splitted
+				if (countmore_rows>0 && countless_rows >0 && weighted_countmore>=this.min_leaf && weighted_countless>=this.min_leaf){
 					
-					for (int i=0; i <bestfeaturemap.length; ){
-						densened_sorted_indices[bestfeaturemap[i]]=bestfeaturemap[i+1];
-						i+=2;
-					}
-					for(int ro: rowsubset){
-						int rank=densened_sorted_indices[ro];
-						if (rank==0){
-							rank=the_zero_rank;
-						}
-						if ( rank<=best_rank){
-							valid_rows_for_less[less++]=ro;	
-						} else {
-							valid_rows_for_more[more++]=ro;	
-						}
-					}					
-				}
-
-				 // aren't we good?! We have our rows, lets create the nodes
-				 //before this code becomes any longer
-				 Node Less= new Node(weighted_sumless ,weighted_countless,current_id);
-				 A_node.setchildless(current_id);
-				 temp_tree_body.put(current_id, Less);
-				 current_id+=1;
-				 Node Right= new Node(weighted_summore,weighted_countmore,current_id);	
-				 A_node.setchildmore(current_id);
-				 temp_tree_body.put(current_id, Right);
-				 current_id+=1;
-				 
-				 rowsubset=null;
-				 
-				 // expand Left Node nodes
-				 expand_node(Less,valid_rows_for_less, weighted_sumless,
-						 weighted_countless,current_level + 1);
-				
-				// expand Right Node nodes
-				 expand_node(Right,valid_rows_for_more, weighted_summore,
-						 weighted_countmore,current_level + 1);				
-				
-				
-				// end of "all is good, everything is to be splitted"
-			} else if (countless_rows >0 &&  weighted_countless>=this.min_leaf) {
-				
-				
-				// add details to the current nod
-				A_node.specifyvariable(best_variable, best_cuttof);
-
-				//populate with the correct indices
-				
+					// add details to the current nod
+					A_node.specifyvariable(best_variable, best_cuttof);
+					
 					int valid_rows_for_less [] =new int[countless_rows];
-
+					int valid_rows_for_more [] =new int[countmore_rows];
 					int less=0;
+					int more=0;
+					
 					//populate with the correct indices
-					int [] bestfeaturemap=this.sorted_indices[best_variable];
-					if (this.sdataset==null ||  this.zero_rank_holder[best_variable]==-1){
-						for(int ro: rowsubset){
-							if ( bestfeaturemap[ro]<=best_rank){
-								valid_rows_for_less[less++]=ro;	
-							} 
 	
-						}
-					} else {
-						int data_rows=this.fstarget.GetRowDimension();
-						int densened_sorted_indices []= new int [data_rows];
-						int the_zero_rank=this.zero_rank_holder[best_variable];
-						
-						for (int i=0; i <bestfeaturemap.length; ){
-							densened_sorted_indices[bestfeaturemap[i]]=bestfeaturemap[i+1];
-							i+=2;
-						}
 						for(int ro: rowsubset){
-							int rank=densened_sorted_indices[ro];
-							if (rank==0){
-								rank=the_zero_rank;
-							}
-							if ( rank<=best_rank){
-								valid_rows_for_less[less++]=ro;	
-							} 
+							
+							int index=ro*this.fsdataset.GetColumnDimension() + best_variable;
+							int ranking=this.sorted_indices[0][ index ];
+
+									if ( ranking<=best_rank){
+										valid_rows_for_less[less++]=ro;	
+									}else {
+										valid_rows_for_more[more++]=ro;	
+									}
+								} // end of check_feature if statement
+
+	
+					 // aren't we good?! We have our rows, lets create the nodes
+					 //before this code becomes any longer
+					 Node Less= new Node(weighted_sumless ,weighted_countless,current_id);
+					 A_node.setchildless(current_id);
+					 temp_tree_body.add( Less);
+					 current_id+=1;
+					 Node Right= new Node(weighted_summore,weighted_countmore,current_id);	
+					 A_node.setchildmore(current_id);
+					 temp_tree_body.add( Right);
+					 current_id+=1;
+					 
+					 rowsubset=null;
+					 
+					 // expand Left Node nodes
+					 expand_node(Less,valid_rows_for_less, weighted_sumless,
+							 weighted_countless,current_level + 1);
+					
+					// expand Right Node nodes
+					 expand_node(Right,valid_rows_for_more, weighted_summore,
+							 weighted_countmore,current_level + 1);				
+					
+					
+					// end of "all is good, everything is to be splitted"
+				} else if (countless_rows >0 &&  weighted_countless>=this.min_leaf) {
+					
+					
+					// add details to the current nod
+					A_node.specifyvariable(best_variable, best_cuttof);
+	
+					//populate with the correct indices
+					
+						int valid_rows_for_less [] =new int[countless_rows];
+	
+						int less=0;
+							
+							for(int ro: rowsubset){
+								
+								int index=ro*this.fsdataset.GetColumnDimension() + best_variable;
+								int ranking=this.sorted_indices[0][ index ];
+								
+										if ( ranking<=best_rank){
+											valid_rows_for_less[less++]=ro;	
+										}
+
+							}					
+						
+	
+					 // aren't we good?! We have our rows, lets create the nodes
+					 //before this code becomes any longer
+					 Node Less= new Node(weighted_sumless ,weighted_countless,current_id);
+					 A_node.setchildless(current_id);
+					 temp_tree_body.add( Less);
+					 current_id+=1;
+					 rowsubset=null;
+					 // expand Left Node nodes
+					 expand_node(Less,valid_rows_for_less, weighted_sumless,
+							 weighted_countless,current_level + 1);
+						
+	
+					// end of Left splitting only"
+				}  else if (countmore_rows>0 && weighted_countmore>=this.min_leaf ){
+					
+					// add details to the current nod
+					A_node.specifyvariable(best_variable, best_cuttof);
+					int valid_rows_for_more [] =new int[countmore_rows];
+					int more=0;
+					
+					//populate with the correct indices
+
+						for(int ro: rowsubset){
+							
+							int index=ro*this.fsdataset.GetColumnDimension() + best_variable;
+							int ranking=this.sorted_indices[0][ index ];
+									if ( ranking>best_rank){
+										valid_rows_for_more[more++]=ro;	
+									}
+
 						}					
-					}
-
-				 // aren't we good?! We have our rows, lets create the nodes
-				 //before this code becomes any longer
-				 Node Less= new Node(weighted_sumless ,weighted_countless,current_id);
-				 A_node.setchildless(current_id);
-				 temp_tree_body.put(current_id, Less);
-				 current_id+=1;
-				 rowsubset=null;
-				 // expand Left Node nodes
-				 expand_node(Less,valid_rows_for_less, weighted_sumless,
-						 weighted_countless,current_level + 1);
 					
-
-				// end of Left splitting only"
-			}  else if (countmore_rows>0 && weighted_countmore>=this.min_leaf ){
+					 // aren't we good?! We have our rows, lets create the nodes
+					 //before this code becomes any longer
+					 Node Right= new Node(weighted_summore,weighted_countmore,current_id);	
+					 A_node.setchildmore(current_id);
+					 temp_tree_body.add( Right);
+					 current_id+=1;
+					 rowsubset=null;
+					// expand Right Node nodes
+					 expand_node(Right,valid_rows_for_more, weighted_summore,
+							 weighted_countmore,current_level + 1);				
+					
+					
+					// end of right splitting only
 				
-				// add details to the current nod
-				A_node.specifyvariable(best_variable, best_cuttof);
-				int valid_rows_for_more [] =new int[countmore_rows];
-				int more=0;
-				
-				//populate with the correct indices
-				int [] bestfeaturemap=this.sorted_indices[best_variable];
-				if (this.sdataset==null ||  this.zero_rank_holder[best_variable]==-1){
-					for(int ro: rowsubset){
-						if ( bestfeaturemap[ro]>best_rank){
-							valid_rows_for_more[more++]=ro;	
-						} 
-					}
+	
 				} else {
-					int data_rows=this.fstarget.GetRowDimension();
-					int densened_sorted_indices []= new int [data_rows];
-					int the_zero_rank=this.zero_rank_holder[best_variable];
 					
-					for (int i=0; i <bestfeaturemap.length; ){
-						densened_sorted_indices[bestfeaturemap[i]]=bestfeaturemap[i+1];
-						i+=2;
-					}
-					for(int ro: rowsubset){
-						int rank=densened_sorted_indices[ro];
-						if (rank==0){
-							rank=the_zero_rank;
-						}
-						if ( rank>best_rank){
-							valid_rows_for_more[more++]=ro;	
-						} 
-					}					
+					 rowsubset=null;
+					 //children-less I am afraid
+					 A_node.childless=-1;
+					 A_node.childmore=-1;
+					
+					 // end of no match.
 				}
-				 // aren't we good?! We have our rows, lets create the nodes
-				 //before this code becomes any longer
-				 Node Right= new Node(weighted_summore,weighted_countmore,current_id);	
-				 A_node.setchildmore(current_id);
-				 temp_tree_body.put(current_id, Right);
-				 current_id+=1;
-				 rowsubset=null;
-				// expand Right Node nodes
-				 expand_node(Right,valid_rows_for_more, weighted_summore,
-						 weighted_countmore,current_level + 1);				
 				
 				
-				// end of right splitting only
+			} else if(this.sdataset!=null){
 			
-
-			} else {
-				 rowsubset=null;
-				
 			
-				 //children-less I am afraid
-				 A_node.childless=-1;
-				 A_node.childmore=-1;
+				// both are to be splitted
+				if (countmore_rows>0 && countless_rows >0 && weighted_countmore>=this.min_leaf && weighted_countless>=this.min_leaf){
+					
+					// add details to the current nod
+					A_node.specifyvariable(best_variable, best_cuttof);
+					
+					int valid_rows_for_less [] =new int[countless_rows];
+					int valid_rows_for_more [] =new int[countmore_rows];
+					int less=0;
+					int more=0;
+					
+					//populate with the correct indices
+	
+						for(int ro: rowsubset){
+							int count_rows=0;
+							for (int j=sdataset.indexpile[ro]; j < sdataset.indexpile[ro+1];j++ ){
+								int check_feature=sdataset.mainelementpile[j];
+								
+								if (check_feature<best_variable){ // we found our feature
+									continue;// next row - here the feature has zero value
+								}
+								if (check_feature>best_variable){ // we found our feature
+									count_rows+=1;
+									int ranking=this.zero_rank_holder[best_variable];
+									if ( ranking<=best_rank){
+										valid_rows_for_less[less++]=ro;	
+									}else {
+										valid_rows_for_more[more++]=ro;	
+									}
+									break;// next row - here the feature has zero value
+								}					
+								if (check_feature==best_variable ){ // we found our feature
+									count_rows+=1;
+									int ranking=this.sorted_indices[0][ j ];
+									if ( ranking<=best_rank){
+										valid_rows_for_less[less++]=ro;	
+									}else {
+										valid_rows_for_more[more++]=ro;	
+									}
+									break;//found it! no longer need to keep on looping
+								} // end of check_feature if statement
+								
+								
+							}// end of columns loop	
+							if (count_rows==0){
+								int ranking=this.zero_rank_holder[best_variable];
+								if ( ranking<=best_rank){
+									valid_rows_for_less[less++]=ro;	
+								}else {
+									valid_rows_for_more[more++]=ro;	
+								}								
+							}
+						}					
+					
+	
+					 // aren't we good?! We have our rows, lets create the nodes
+					 //before this code becomes any longer
+					 Node Less= new Node(weighted_sumless ,weighted_countless,current_id);
+					 A_node.setchildless(current_id);
+					 temp_tree_body.add( Less);
+					 current_id+=1;
+					 Node Right= new Node(weighted_summore,weighted_countmore,current_id);	
+					 A_node.setchildmore(current_id);
+					 temp_tree_body.add( Right);
+					 current_id+=1;
+					 
+					 rowsubset=null;
+					 
+					 // expand Left Node nodes
+					 expand_node(Less,valid_rows_for_less, weighted_sumless,
+							 weighted_countless,current_level + 1);
+					
+					// expand Right Node nodes
+					 expand_node(Right,valid_rows_for_more, weighted_summore,
+							 weighted_countmore,current_level + 1);				
+					
+					
+					// end of "all is good, everything is to be splitted"
+				} else if (countless_rows >0 &&  weighted_countless>=this.min_leaf) {
+					
+					
+					// add details to the current nod
+					A_node.specifyvariable(best_variable, best_cuttof);
+	
+					//populate with the correct indices
+					
+						int valid_rows_for_less [] =new int[countless_rows];
+	
+						int less=0;
+							
+							for(int ro: rowsubset){
+								
+								int count_rows=0;
+								
+								for (int j=sdataset.indexpile[ro]; j < sdataset.indexpile[ro+1];j++ ){
+									int check_feature=sdataset.mainelementpile[j];
+									
+									if (check_feature<best_variable){ // we found our feature
+										continue;// next row - here the feature has zero value
+									}
+									if (check_feature>best_variable){ // we found our feature
+										count_rows+=1;
+										int ranking=this.zero_rank_holder[best_variable];
+										if ( ranking<=best_rank){
+											valid_rows_for_less[less++]=ro;	
+										}
+										break;// next row - here the feature has zero value
+									}					
+									if (check_feature==best_variable ){ // we found our feature
+										count_rows+=1;
+										int ranking=this.sorted_indices[0][ j ];
+										if ( ranking<=best_rank){
+											valid_rows_for_less[less++]=ro;	
+										}
+										break;//found it! no longer need to keep on looping
+									} // end of check_feature if statement
+									
+									
+								}// end of columns loop		
+								if (count_rows==0){
+									int ranking=this.zero_rank_holder[best_variable];
+									if ( ranking<=best_rank){
+										valid_rows_for_less[less++]=ro;	
+									}						
+								}
+							}					
+						
+	
+					 // aren't we good?! We have our rows, lets create the nodes
+					 //before this code becomes any longer
+					 Node Less= new Node(weighted_sumless ,weighted_countless,current_id);
+					 A_node.setchildless(current_id);
+					 temp_tree_body.add( Less);
+					 current_id+=1;
+					 rowsubset=null;
+					 // expand Left Node nodes
+					 expand_node(Less,valid_rows_for_less, weighted_sumless,
+							 weighted_countless,current_level + 1);
+						
+	
+					// end of Left splitting only"
+				}  else if (countmore_rows>0 && weighted_countmore>=this.min_leaf ){
+					
+					// add details to the current nod
+					A_node.specifyvariable(best_variable, best_cuttof);
+					int valid_rows_for_more [] =new int[countmore_rows];
+					int more=0;
+					
+					//populate with the correct indices
+						
+	
+						for(int ro: rowsubset){
+							
+							int count_rows=0;
+							
+							for (int j=sdataset.indexpile[ro]; j < sdataset.indexpile[ro+1];j++ ){
+								int check_feature=sdataset.mainelementpile[j];
+								
+								if (check_feature<best_variable){ // we found our feature
+									continue;// next row - here the feature has zero value
+								}
+								if (check_feature>best_variable){ // we found our feature
+									count_rows+=1;
+									int ranking=this.zero_rank_holder[best_variable];
+									if ( ranking>best_rank){
+									
+										valid_rows_for_more[more++]=ro;	
+									}
+									break;// next row - here the feature has zero value
+								}					
+								if (check_feature==best_variable ){ // we found our feature
+									count_rows+=1;
+									int ranking=this.sorted_indices[0][ j ];
+									if ( ranking>best_rank){
+										valid_rows_for_more[more++]=ro;	
+									}
+									break;//found it! no longer need to keep on looping
+								} // end of check_feature if statement
+								
+								
+							}// end of columns loop				
+							if (count_rows==0){
+								int ranking=this.zero_rank_holder[best_variable];
+								if ( ranking>best_rank){
+								
+									valid_rows_for_more[more++]=ro;	
+								}				
+							}
+						}					
+					
+					 // aren't we good?! We have our rows, lets create the nodes
+					 //before this code becomes any longer
+					 Node Right= new Node(weighted_summore,weighted_countmore,current_id);	
+					 A_node.setchildmore(current_id);
+					 temp_tree_body.add( Right);
+					 current_id+=1;
+					 rowsubset=null;
+					// expand Right Node nodes
+					 expand_node(Right,valid_rows_for_more, weighted_summore,
+							 weighted_countmore,current_level + 1);				
+					
+					
+					// end of right splitting only
 				
-				 // end of no match.
+	
+				} else {
+					
+					 rowsubset=null;
+					 //children-less I am afraid
+					 A_node.childless=-1;
+					 A_node.childmore=-1;
+					
+					 // end of no match.
+				}
+			
 			}
-			
-			
 			
 			// end of better one is found
-			} else {
-				rowsubset=null;
 			}
-						
+				
+			
+			
+			
+			
+			
+			
+			
+			
 			// end of requirements' section
 		}
 
@@ -3037,16 +3409,16 @@ public class DecisionTreeRegressor implements estimator,regressor {
 				else if (metric.equals("max_depth")) {this.max_depth=Integer.parseInt(value);}
 				else if (metric.equals("Objective")) {this.Objective=value;}
 				else if (metric.equals("threads")) {this.threads=Integer.parseInt(value);}
-				else if (metric.equals("rounding")) {this.rounding=Integer.parseInt(value);}				
+				else if (metric.equals("rounding")) {this.rounding=Double.parseDouble(value);}				
 				else if (metric.equals("offset")) {this.offset=Double.parseDouble(value);}						
 				else if (metric.equals("max_tree_size")) {this.max_tree_size=Integer.parseInt(value);}
 				else if (metric.equals("gamma")) {this.gamma=Double.parseDouble(value);}
 				else if (metric.equals("max_features")) {this.max_features=Double.parseDouble(value);}
-				else if (metric.equals("bootsrap")) {this.bootsrap=(value.equals("True")?true:false);}
+				else if (metric.equals("bootsrap")) {this.bootsrap=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("min_split")) {this.min_split=Double.parseDouble(value);}
-				else if (metric.equals("copy")) {this.copy=(value.equals("True")?true:false);}
+				else if (metric.equals("copy")) {this.copy=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("seed")) {this.seed=Integer.parseInt(value);}
-				else if (metric.equals("verbose")) {this.verbose=(value.equals("True")?true:false)   ;}				
+				else if (metric.equals("verbose")) {this.verbose=(value.toLowerCase().equals("true")?true:false)   ;}				
 				
 			}
 			

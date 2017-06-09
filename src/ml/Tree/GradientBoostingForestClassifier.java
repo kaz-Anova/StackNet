@@ -58,11 +58,11 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		this.sorted_indices=indices;
 	}
 	/**
-	 * This keeps the sorted indices for each column
+	 * This keeps the sorted indices' max rank
 	 */
-	private int [] maximum_ranks;
+	private int  maximum_ranks;
 
-	public void set_ranked_scores (int [] indices){
+	public void set_ranked_scores (int indices){
 
 		this.maximum_ranks=indices;
 	}
@@ -197,7 +197,7 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 	  /**
 	   * digits of rounding to prevent overfitting
 	   */
-	  public int rounding=30;
+	  public double rounding=6;
     /**
      * seed to use
      */
@@ -262,6 +262,17 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 	
 	public int getnumber_of_classes(){
 		return n_classes;
+	}
+	/**
+	 * 
+	 * @param classes : the classes to put
+	 */
+	public void setclasses(String[] classes ) {
+		if (classes==null || classes.length<=0){
+			throw new  IllegalStateException (" No classes are found");
+		} else {
+		this.classes= classes;
+		}
 	}
 	@Override
 	public String[] getclasses() {
@@ -576,12 +587,10 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		if (!data.IsSortedByRow()){
 			data.convert_type();
 		}
-		if (data.indexer==null){
-			data.buildmap();;
-		}
+
 		double predictions[][]= new double [data.GetRowDimension()][this.n_classes];
 		
-
+		//System.out.println(tree_body[0].isfitted());
 		Thread[] thread_array= new Thread[(tree_body.length <this.threads)?tree_body.length:this.threads]; // generate threads' array
         fsmatrix arrays []= new fsmatrix[(tree_body.length <this.threads)?tree_body.length:this.threads];
         
@@ -898,9 +907,7 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		if (!data.IsSortedByRow()){
 			data.convert_type();
 		}
-		if (data.indexer==null){
-			data.buildmap();
-		}
+
 		double predictions[]= new double [data.GetRowDimension()];
 		double prediction_probas[][]= new double [data.GetRowDimension()][n_classes];
 
@@ -1298,9 +1305,6 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
 		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
-		}
 				
 		if (min_split<2){
 			min_split=2;
@@ -1413,7 +1417,8 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 			data= manipulate.copies.copies.Copy( data);
 		}
 		// Initialise randomiser
-
+		fsdataset=new fsmatrix(data);
+		
 		
 		this.random = new XorShift128PlusRandom(this.seed);
 
@@ -1435,48 +1440,27 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		columndimension=data[0].length;
 		feature_importances= new double [columndimension];
 		if (this.sorted_indices==null){
-			this.sorted_indices=new int [this.columndimension] [];
-			this.maximum_ranks=new int [this.columndimension];
-			if (rows==null){
-				rows= new int [data.length];
-				for (int i=0; i <data.length; i++ ){
-					rows[i]=i;
-					}
-				}			
+			this.sorted_indices=new int  [3] [];
+			this.maximum_ranks= 0;
+			this.zero_rank_holder= new int [this.columndimension];
 
-			
-			Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-			int count_of_live_threads=0;
-			// find best!
-			int j=0;
-			for (int column =0 ; column<this.columndimension; column++){
+		// create indices
 
+			sortcolumnsnomap sorty= new sortcolumnsnomap (this.fsdataset,
+														this.rows,
+														this.sorted_indices,
+														this.zero_rank_holder,
+														this.rounding );
 			
-				sortcolumnsnomap sorty= new sortcolumnsnomap (data, rows, this.sorted_indices, column,this.maximum_ranks, this.fstarget.length,this.rounding );
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				if (count_of_live_threads==threads || j==this.columndimension-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
-			}
+			sorty.verbose=this.verbose;
+			sorty.merge_thresold=this.gamma;
+			sorty.target_vales=fstarget;			
+			sorty.run();
+			this.maximum_ranks=	sorty.getmaxrank();
+		}
 		if (this.verbose){
 			System.out.println("Sorting is done");
-		}
+		
 		}
 
 		//calculate initial estimates
@@ -1580,10 +1564,11 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		//fsmatrix fstarget_model=new fsmatrix(residuals);
 		
 		for (int n=0; n <this.estimators; n++ ){
-			RandomForestRegressor model = new RandomForestRegressor(data);
+			RandomForestRegressor model = new RandomForestRegressor(fsdataset);
 			//general
 			model.set_sorted_indices(this.sorted_indices);
 			model.set_ranked_scores(this.maximum_ranks);
+			model.set_zero_rank(this.zero_rank_holder);
 			model.internal_threads=this.threads;
 			model.verbose=false;
 			
@@ -1597,11 +1582,14 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 			if (this.columns!=null){
 				model.set_columns(this.columns);
 			}
+		
+			model.rounding=this.rounding;
 			model.offset=this.offset;
 			model.gamma=this.gamma;
 			model.max_depth=this.max_depth;
 			model.max_features=this.max_features;
 			model.max_tree_size=-1;
+			model.bootsrap=this.bootsrap;
 			model.min_leaf=this.min_leaf;
 			model.min_split=this.min_split;
 			model.Objective=this.Objective;
@@ -1636,10 +1624,10 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 				
 			model.fstarget=fstarget_model;
 			tree_body[n]=model;	
-			model.fit(data);
+			model.fit(fsdataset);
 			
 			
-			residuals=tree_body[n].predict2d(data);
+			residuals=tree_body[n].predict2d(fsdataset);
 			// appends new predictions to and create new residuals. Predictions are re-scaled
 			append_predictions(predictions,  residuals,this.shrinkage);
 			
@@ -1663,6 +1651,9 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 			feature_importances[i]/=sum_importances;
 			
 		}
+		fsdataset=null;
+		dataset=null;
+		sdataset=null;
 		System.gc();
 		
 	}
@@ -1676,9 +1667,6 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
-		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
 		}
 				
 		if (min_split<2){
@@ -1791,9 +1779,7 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		if (copy){
 			data= (fsmatrix) data.Copy();
 		}
-		// Initialise randomiser
 
-		
 		this.random = new XorShift128PlusRandom(this.seed);
 
 		this.n_classes=classes.length;			
@@ -1814,49 +1800,28 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		columndimension=data.GetColumnDimension();
 		feature_importances= new double [columndimension];
 		if (this.sorted_indices==null){
-			this.sorted_indices=new int [this.columndimension] [];
-			this.maximum_ranks=new int [this.columndimension];
-			if (rows==null){
-				rows= new int [data.GetRowDimension()];
-				for (int i=0; i <data.GetRowDimension(); i++ ){
-					rows[i]=i;
-					}
-				}			
+			this.sorted_indices=new int  [3] [];
+			this.maximum_ranks= 0;
+			this.zero_rank_holder= new int [this.columndimension];
 
-			
-			Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-			int count_of_live_threads=0;
-			// find best!
-			int j=0;
-			for (int column =0 ; column<this.columndimension; column++){
+		// create indices
 
+			sortcolumnsnomap sorty= new sortcolumnsnomap (this.fsdataset,
+														this.rows,
+														this.sorted_indices,
+														this.zero_rank_holder,
+														this.rounding );
+			sorty.verbose=this.verbose;
+			sorty.merge_thresold=this.gamma;
+			sorty.target_vales=fstarget;			
 			
-				sortcolumnsnomap sorty= new sortcolumnsnomap (data, rows, this.sorted_indices, column,this.maximum_ranks, this.fstarget.length ,this.rounding);
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				if (count_of_live_threads==threads || j==this.columndimension-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
-			}
+			sorty.run();
+			this.maximum_ranks=	sorty.getmaxrank();
+		}
 		if (this.verbose){
 			System.out.println("Sorting is done");
 		}
-		}
+		
 		
 
 		//System.out.println(initial_estimates);
@@ -1959,13 +1924,14 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 	//fsmatrix fstarget_model=new fsmatrix(residuals);
 	
 	for (int n=0; n <this.estimators; n++ ){
-		RandomForestRegressor model = new RandomForestRegressor(data);
+		RandomForestRegressor model = new RandomForestRegressor(fsdataset);
 		//general
 		model.set_sorted_indices(this.sorted_indices);
 		model.set_ranked_scores(this.maximum_ranks);
+		model.set_zero_rank(this.zero_rank_holder);
 		model.internal_threads=this.threads;
 		model.verbose=false;
-		
+		model.rounding=this.rounding;
 		model.estimators=this.trees;
 		model.copy=false;
 		model.cut_off_subsample=this.cut_off_subsample;
@@ -1984,6 +1950,7 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		model.min_leaf=this.min_leaf;
 		model.min_split=this.min_split;
 		model.Objective=this.Objective;
+		model.bootsrap=this.bootsrap;
 		model.row_subsample=this.row_subsample;
 		model.seed=this.seed+ n;
 		model.weights=this.weights;
@@ -2014,10 +1981,10 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 			}
 			model.fstarget=fstarget_model;
 			tree_body[n]=model;	
-			model.fit(data);
+			model.fit(fsdataset);
 			
 			
-			residuals=tree_body[n].predict2d(data);
+			residuals=tree_body[n].predict2d(fsdataset);
 			// appends new predictions to and create new residuals. Predictions are re-scaled
 			append_predictions(predictions,  residuals,this.shrinkage);
 			
@@ -2041,6 +2008,8 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 			feature_importances[i]/=sum_importances;
 			
 		}
+		fsdataset=null;
+		sdataset=null;
 		System.gc();
 
 
@@ -2056,9 +2025,6 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		sdataset=data;
 		if (max_tree_size<=0){
 			max_tree_size=Double.MAX_VALUE;
-		}
-		if (gamma<=0){
-			max_depth=Double.MAX_VALUE;
 		}
 				
 		if (min_split<2){
@@ -2172,7 +2138,14 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 			data= (smatrix) data.Copy();
 		}
 		// Initialise randomiser
-
+		// trim data
+		sdataset.trim();
+		
+		if (!this.sdataset.IsSortedByRow()){
+			this.sdataset.convert_type();
+			//System.out.println("built sort");
+			}
+		
 		
 		this.random = new XorShift128PlusRandom(this.seed);
 
@@ -2194,51 +2167,28 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		columndimension=data.GetColumnDimension();
 		feature_importances= new double [columndimension];
 		if (this.sorted_indices==null){
-			this.sorted_indices=new int [this.columndimension] [];
-			this.maximum_ranks=new int [this.columndimension];
-			this.zero_rank_holder=new int [this.columndimension];
-			if (rows==null){
-				rows= new int [data.GetRowDimension()];
-				for (int i=0; i <data.GetRowDimension(); i++ ){
-					rows[i]=i;
-					}
-				}			
+			this.sorted_indices=new int  [3] [];
+			this.maximum_ranks= 0;
+			this.zero_rank_holder= new int [this.columndimension];
 
-			data.buildmap();
-			Thread[] thread_array= new Thread[this.threads]; // generate threads' array
-			int count_of_live_threads=0;
-			// find best!
-			int j=0;
-			for (int column =0 ; column<this.columndimension; column++){
+		// create indices
 
+			sortcolumnsnomap sorty= new sortcolumnsnomap (this.sdataset,
+														this.rows,
+														this.sorted_indices,
+														this.zero_rank_holder,
+														this.rounding );
 			
-				sortcolumnsnomap sorty= new sortcolumnsnomap (data, rows, this.sorted_indices, column,this.maximum_ranks, zero_rank_holder, this.fstarget.length, this.rounding );
-				
-				// double array data
-	
-				thread_array[count_of_live_threads]= new Thread(sorty);
-				thread_array[count_of_live_threads].start();
-				
-				count_of_live_threads++;
-				if (count_of_live_threads==threads || j==this.columndimension-1){
-					for (int s=0; s <count_of_live_threads;s++ ){
-						try {
-							thread_array[s].join();
-						} catch (InterruptedException e) {
-						   System.out.println(e.getMessage());
-						   throw new IllegalStateException(" algorithm was terminated due to multithreading error");
-						}
-					}
-					thread_array= new Thread[this.threads]; // generate threads' array					
-					count_of_live_threads=0;
-				}
-				
-				j+=1;
-			}
+			sorty.verbose=this.verbose;
+			sorty.merge_thresold=this.gamma;
+			sorty.target_vales=fstarget;			
+			sorty.run();
+			this.maximum_ranks=	sorty.getmaxrank();
+		}
 		if (this.verbose){
 			System.out.println("Sorting is done");
 		}
-		}
+		
 		
 		
 		//calculate initial estimates
@@ -2340,13 +2290,14 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 	//fsmatrix fstarget_model=new fsmatrix(residuals);
 	
 	for (int n=0; n <this.estimators; n++ ){
-		RandomForestRegressor model = new RandomForestRegressor(data);
+		RandomForestRegressor model = new RandomForestRegressor(sdataset);
 		//general
 		model.set_sorted_indices(this.sorted_indices);
 		model.set_ranked_scores(this.maximum_ranks);
+		model.set_zero_rank(this.zero_rank_holder);
 		model.internal_threads=this.threads;
 		model.verbose=false;
-		
+		model.rounding=this.rounding;
 		model.estimators=this.trees;
 		model.copy=false;
 		model.cut_off_subsample=this.cut_off_subsample;
@@ -2366,6 +2317,7 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		model.min_split=this.min_split;
 		model.Objective=this.Objective;
 		model.row_subsample=this.row_subsample;
+		model.bootsrap=this.bootsrap;
 		model.seed=this.seed+ n;
 		model.weights=this.weights;
 		
@@ -2395,10 +2347,10 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 			}
 			model.fstarget=fstarget_model;
 			tree_body[n]=model;	
-			model.fit(data);
+			model.fit(sdataset);
 			
 			
-			residuals=tree_body[n].predict2d(data);
+			residuals=tree_body[n].predict2d(sdataset);
 			// appends new predictions to and create new residuals. Predictions are re-scaled
 			append_predictions(predictions,  residuals,this.shrinkage);
 			
@@ -2422,6 +2374,8 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 			feature_importances[i]/=sum_importances;
 			
 		}
+
+		sdataset=null;
 		System.gc();
 
 
@@ -2640,16 +2594,16 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 				else if (metric.equals("max_depth")) {this.max_depth=Integer.parseInt(value);}
 				else if (metric.equals("Objective")) {this.Objective=value;}
 				else if (metric.equals("threads")) {this.threads=Integer.parseInt(value);}
-				else if (metric.equals("rounding")) {this.rounding=Integer.parseInt(value);}				
+				else if (metric.equals("rounding")) {this.rounding=Double.parseDouble(value);}			
 				else if (metric.equals("offset")) {this.offset=Double.parseDouble(value);}						
 				else if (metric.equals("max_tree_size")) {this.max_tree_size=Integer.parseInt(value);}
 				else if (metric.equals("gamma")) {this.gamma=Double.parseDouble(value);}
 				else if (metric.equals("max_features")) {this.max_features=Double.parseDouble(value);}
-				else if (metric.equals("bootsrap")) {this.bootsrap=(value.equals("True")?true:false);}
+				else if (metric.equals("bootsrap")) {this.bootsrap=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("min_split")) {this.min_split=Double.parseDouble(value);}
-				else if (metric.equals("copy")) {this.copy=(value.equals("True")?true:false);}
+				else if (metric.equals("copy")) {this.copy=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("seed")) {this.seed=Integer.parseInt(value);}
-				else if (metric.equals("verbose")) {this.verbose=(value.equals("True")?true:false)   ;}				
+				else if (metric.equals("verbose")) {this.verbose=(value.toLowerCase().equals("true")?true:false)   ;}				
 				
 			}
 			

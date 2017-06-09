@@ -25,8 +25,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
-import preprocess.scaling.maxscaler;
 import preprocess.scaling.scaler;
+import preprocess.scaling.maxscaler;
 import matrix.fsmatrix;
 import matrix.smatrix;
 

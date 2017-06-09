@@ -339,6 +339,13 @@ public class quicksort {
         	Quicksortasc(numbers, B, i, high);
       }
     
+    /**
+     * 
+     * @param numbers : Array to based on which to sort everything else
+     * @param B : array to be sorted based on numbers
+     * @param low : start of the loop
+     * @param high : end of the loop
+     */
     public static void Quicksortasc(double numbers [], int B [], int low, int high) {
         int i = low, j = high;
         // Get the pivot element from the middle of the list
@@ -374,7 +381,247 @@ public class quicksort {
         	Quicksortasc(numbers, B, low, j);
         if (i < high)
         	Quicksortasc(numbers, B, i, high);
-      }   
+      }
+    /**
+     * 
+     * @param numbers : Array to based on which to sort everything else
+     * @param B : array to be sorted based on numbers
+     * @param low : start of the loop
+     * @param high : end of the loop
+     */
+    public static void Quicksortasc(int numbers [], int B [], int low, int high) {
+        int i = low, j = high;
+        // Get the pivot element from the middle of the list
+        double pivot = numbers[low + (high-low)/2];
+
+        // Divide into two lists
+        while (i <= j) {
+          // If the current value from the left list is smaller then the pivot
+          // element then get the next element from the left list
+          while (numbers[i] < pivot) {
+            i++;
+          }
+          // If the current value from the right list is larger then the pivot
+          // element then get the next element from the right list
+          while (numbers[j] > pivot) {
+            j--;
+          }
+
+          // If we have found a values in the left list which is larger then
+          // the pivot element and if we have found a value in the right list
+          // which is smaller then the pivot element then we exchange the
+          // values.
+          // As we are done we can increase i and j
+          if (i <= j) {
+        	  swap(numbers, i, j);
+              swap(B, i, j);
+            i++;
+            j--;
+          }
+        }
+        // Recursion
+        if (low < j)
+        	Quicksortasc(numbers, B, low, j);
+        if (i < high)
+        	Quicksortasc(numbers, B, i, high);
+      }
+    
+    /**
+     * 
+     * @param numbers : Array to based on which to sort everything else
+     * @param B : array to be sorted based on numbers
+     * @param C : array to be sorted based on numbers
+     * @param low : start of the loop
+     * @param high : end of the loop
+     */
+    public static void Quicksortasc(int numbers [], int B [], int C [],int low, int high) {
+        int i = low, j = high;
+        // Get the pivot element from the middle of the list
+        double pivot = numbers[low + (high-low)/2];
+
+        // Divide into two lists
+        while (i <= j) {
+          // If the current value from the left list is smaller then the pivot
+          // element then get the next element from the left list
+          while (numbers[i] < pivot) {
+            i++;
+          }
+          // If the current value from the right list is larger then the pivot
+          // element then get the next element from the right list
+          while (numbers[j] > pivot) {
+            j--;
+          }
+          // If we have found a values in the left list which is larger then
+          // the pivot element and if we have found a value in the right list
+          // which is smaller then the pivot element then we exchange the
+          // values.
+          // As we are done we can increase i and j
+          if (i <= j) {
+        	  swap(numbers, i, j);
+              swap(B, i, j);
+              swap(C, i, j);
+            i++;
+            j--;
+          }
+        }
+        // Recursion
+        if (low < j)
+        	Quicksortasc(numbers, B, C,low, j);
+        if (i < high)
+        	Quicksortasc(numbers, B, C, i, high);
+      }
+    /**
+     * 
+     * @param numbers : Array with double values to be sorted in an ascending way (2nd)
+     * @param B : Array with int values to be sorted in an ascending way (1st)
+     * @param C :  Array with int values to be sorted based on the other 2 arrays
+     * @param low : start location for the sort
+     * @param high  end location for the sort
+     * <p> This is to be used for sorting trees' indices</p>
+     */
+    public static void Quicksortasc(double numbers [], int B [],  int C [],int low, int high) {
+        int i = low, j = high;
+        // Get the pivot element from the middle of the list
+        double pivot = numbers[low + (high-low)/2];
+        int intpivot=  B[low + (high-low)/2];
+        // Divide into two lists
+        while (i <= j) {
+          // If the current value from the left list is smaller then the pivot
+          // element then get the next element from the left list
+          while (B[i] < intpivot || ( B[i] == intpivot && numbers[i] < pivot) ) {
+            i++;
+          }
+          // If the current value from the right list is larger then the pivot
+          // element then get the next element from the right list
+          while (B[j] > intpivot || ( B[j] == intpivot && numbers[j] > pivot) ) {
+            j--;
+          } 
+
+          // If we have found a values in the left list which is larger then
+          // the pivot element and if we have found a value in the right list
+          // which is smaller then the pivot element then we exchange the
+          // values.
+          // As we are done we can increase i and j
+          
+          if (i <= j) {
+        	  swap(numbers, i, j);
+              swap(B, i, j);
+              swap(C, i, j);
+            i++;
+            j--;
+          }
+        }
+        // Recursion
+        if (low < j)
+        	Quicksortasc(numbers, B, C, low, j);
+        if (i < high)
+        	Quicksortasc(numbers, B,C, i, high);
+      } 
+  
+    
+    
+    
+    /**
+     * 
+     * @param numbers : Array with double values to be sorted in an ascending way (2nd)
+     * @param B : Array with int values to be sorted in an ascending way (1st)
+     * @param C :  Array with int values to be sorted based on the other 2 arrays
+     * @param D :  Array with int values to be sorted based on the other 2 arrays
+     * @param low : start location for the sort
+     * @param high  end location for the sort
+     * <p> This is to be used for sorting trees' indices</p>
+     */
+    public static void Quicksortasc(double numbers [], int B [],  int C [], int D [],int low, int high) {
+        int i = low, j = high;
+        // Get the pivot element from the middle of the list
+        double pivot = numbers[low + (high-low)/2];
+        int intpivot=  B[low + (high-low)/2];
+        // Divide into two lists
+        while (i <= j) {
+          // If the current value from the left list is smaller then the pivot
+          // element then get the next element from the left list
+          while (B[i] < intpivot || ( B[i] == intpivot && numbers[i] < pivot) ) {
+            i++;
+          }
+          // If the current value from the right list is larger then the pivot
+          // element then get the next element from the right list
+          while (B[j] > intpivot || ( B[j] == intpivot && numbers[j] > pivot) ) {
+            j--;
+          } 
+
+          // If we have found a values in the left list which is larger then
+          // the pivot element and if we have found a value in the right list
+          // which is smaller then the pivot element then we exchange the
+          // values.
+          // As we are done we can increase i and j
+          
+          if (i <= j) {
+        	  swap(numbers, i, j);
+              swap(B, i, j);
+              swap(C, i, j);
+              swap(D, i, j);
+            i++;
+            j--;
+          }
+        }
+        // Recursion
+        if (low < j)
+        	Quicksortasc(numbers, B, C, D,low, j);
+        if (i < high)
+        	Quicksortasc(numbers, B,C,D, i, high);
+      } 
+    
+    /**
+     * 
+     * @param numbers : Array with double values to be sorted in an ascending way (2nd)
+     * @param B : Array with int values to be sorted in an ascending way (1st)
+     * @param C :  Array with int values to be sorted based on the other 2 arrays
+     * @param D :  Array with double values to be sorted based on the other 2 arrays
+     * @param low : start location for the sort
+     * @param high  end location for the sort
+     * <p> This is to be used for sorting trees' indices</p>
+     */
+    public static void Quicksortasc(double numbers [], int B [],  int C [], double D [],int low, int high) {
+        int i = low, j = high;
+        // Get the pivot element from the middle of the list
+        double pivot = numbers[low + (high-low)/2];
+        int intpivot=  B[low + (high-low)/2];
+        // Divide into two lists
+        while (i <= j) {
+          // If the current value from the left list is smaller then the pivot
+          // element then get the next element from the left list
+          while (B[i] < intpivot || ( B[i] == intpivot && numbers[i] < pivot) ) {
+            i++;
+          }
+          // If the current value from the right list is larger then the pivot
+          // element then get the next element from the right list
+          while (B[j] > intpivot || ( B[j] == intpivot && numbers[j] > pivot) ) {
+            j--;
+          } 
+
+          // If we have found a values in the left list which is larger then
+          // the pivot element and if we have found a value in the right list
+          // which is smaller then the pivot element then we exchange the
+          // values.
+          // As we are done we can increase i and j
+          
+          if (i <= j) {
+        	  swap(numbers, i, j);
+              swap(B, i, j);
+              swap(C, i, j);
+              swap(D, i, j);
+            i++;
+            j--;
+          }
+        }
+        // Recursion
+        if (low < j)
+        	Quicksortasc(numbers, B, C, D,low, j);
+        if (i < high)
+        	Quicksortasc(numbers, B,C,D, i, high);
+      } 
+    
+    
     public static void Quicksortasc(int numbers [], int low, int high) {
         int i = low, j = high;
         // Get the pivot element from the middle of the list

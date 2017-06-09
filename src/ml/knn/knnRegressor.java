@@ -24,9 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
-
-import preprocess.scaling.maxscaler;
 import preprocess.scaling.scaler;
+import preprocess.scaling.maxscaler;
 import exceptions.DimensionMismatchException;
 import matrix.fsmatrix;
 import matrix.smatrix;
@@ -2490,9 +2489,9 @@ public class knnRegressor implements estimator,regressor {
 				else if (metric.equals("neibours")) {this.neibours=Integer.parseInt(value);}
 				else if (metric.equals("submodelcutsper")) {this.submodelcutsper=Double.parseDouble(value);}			
 				else if (metric.equals("distance")) {this.distance=value;}
-				else if (metric.equals("copy")) {this.copy=(value.equals("True")?true:false);}
+				else if (metric.equals("copy")) {this.copy=(value.toLowerCase().equals("true")?true:false);}
 				else if (metric.equals("seed")) {this.seed=Integer.parseInt(value);}
-				else if (metric.equals("verbose")) {this.verbose=(value.equals("True")?true:false)   ;}
+				else if (metric.equals("verbose")) {this.verbose=(value.toLowerCase().equals("true")?true:false)   ;}
 				
 			}
 			

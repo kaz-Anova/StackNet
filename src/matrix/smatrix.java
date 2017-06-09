@@ -285,6 +285,14 @@ public class smatrix implements matrix, Serializable {
 		 
 		 
 	 }
+	 /**
+	  * 
+	  * @param cols : Columimension to set
+	  * <b> WARNING </b> This is for internal use only
+	  */
+	 public void set_column_dimension(int cols){
+		 this.columns=cols;
+	 }
 	 
 	 public void void_update_indice(){
 		 
@@ -519,6 +527,51 @@ public class smatrix implements matrix, Serializable {
 		
 	}
 	
+	
+	/**
+	 * This method ensures the there are no zeros. If they do- it removes them
+	 */
+	public void trim(){
+		
+		if (this.valuespile==null ||this.valuespile.length <=0){
+			throw new IllegalStateException(" Matrix is empty");
+		}
+		//check if there are zero
+		int zero_count=0;
+		// find number of zeros
+		for (int i=0; i < this.valuespile.length; i++){
+			if (this.valuespile[i]==0.0){
+				zero_count++;
+			}
+		}
+		// if there are zeros...
+		if (zero_count>0){
+			
+			double values[]= new double [this.valuespile.length -zero_count];
+			int cols[]= new int [this.valuespile.length -zero_count];
+			int rows[]=new int [this.indexpile.length] ;	
+			int case_counter=0;
+			
+			for (int i=0; i <this.indexpile.length-1; i++ ){
+				
+				rows[i]=case_counter;
+				for (int j=this.indexpile[i]; j< this.indexpile[i+1];j++){
+					
+					if (this.valuespile[j]!=0.0){
+						
+						values[case_counter]=this.valuespile[j];
+						cols[case_counter]=this.mainelementpile[j];
+						case_counter++;
+					}
+					
+				}
+				rows[i+1]=case_counter;
+				
+			}
+			
+		}
+		
+	}
 	
 	/**
 	 * @param values : 2d array to convert to sparse matrix 
@@ -788,20 +841,30 @@ public class smatrix implements matrix, Serializable {
 							validcounter+=1;
 						}
 			}
+			int indexes[] = new int [this.indexpile.length];
 			double [] valuespile= new double [validcounter];
 			int columns=max_col;
 			int [] mainelementpile=new int [validcounter];	
 			int counter=0;
-			for (int i=0; i < this.mainelementpile.length; i++ ){
-				if (this.mainelementpile[i]<=max_col-1){
-					mainelementpile[counter]=this.mainelementpile[i];
-					valuespile[counter]=this.valuespile[i];		
-					counter++;
+			
+			for (int r=0; r <this.indexpile.length-1; r++ ){
+				indexes[r]=counter;
+				for  (int j=this.indexpile[r]; j<this.indexpile[r+1];j++ ){
+					
+					int col=this.mainelementpile[j];
+					double val=this.valuespile[j];	
+					
+					if (col<=max_col-1){
+						
+						mainelementpile[counter]=col;
+						valuespile[counter]=val;
+						counter++;
+					}
 				}
-				
+				indexes[r+1]=counter;
 			}
 			
-			return new smatrix( valuespile,mainelementpile, this.indexpile.clone(),this.indexpile.length, columns,validcounter,  true);	
+			return new smatrix( valuespile,mainelementpile, indexes,indexes.length-1, columns,validcounter,  true);	
 		} else if (max_col>=this.GetColumnDimension()){
 			return this;
 		} else if (!this.iscolumnmatrix){
@@ -1229,6 +1292,7 @@ public class smatrix implements matrix, Serializable {
 	public matrix Copy() {
 		
 		double [] newdata= new double [slength];
+		//System.out.println(slength + " " +this.valuespile.length );
 		int mainp[]= new int[slength];
 		int newindex[]= new int[this.indexpile.length];
 		
