@@ -177,9 +177,9 @@ If you don't see this, then you need to compile it manually and drop the executa
 
 You may find the follwing sources usefull:
 
-[mac](https://www.ibm.com/developerworks/community/blogs/jfp/entry/Installing_XGBoost_on_Mac_OSX?lang=en)
-[windows1](https://stackoverflow.com/questions/33749735/how-to-install-xgboost-package-in-python-windows-platform) ,[windows2](https://www.ibm.com/developerworks/community/blogs/jfp/entry/Installing_XGBoost_For_Anaconda_on_Windows?lang=en)
-[linux](https://gist.github.com/DanielBeckstein/932087ee116cc2f72bfc6e3e078e899d)
+-    [mac](https://www.ibm.com/developerworks/community/blogs/jfp/entry/Installing_XGBoost_on_Mac_OSX?lang=en)
+-    [windows1](https://stackoverflow.com/questions/33749735/how-to-install-xgboost-package-in-python-windows-platform) ,[windows2](https://www.ibm.com/developerworks/community/blogs/jfp/entry/Installing_XGBoost_For_Anaconda_on_Windows?lang=en)
+-    [linux](https://gist.github.com/DanielBeckstein/932087ee116cc2f72bfc6e3e078e899d)
 
 Small Note: The user would need to delete the '.mod' files when no longer need them. StackNet does not do that automatically as it is not possible to determibe when they are not needed anymore.  
 
