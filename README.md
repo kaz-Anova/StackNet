@@ -12,7 +12,7 @@ The Sofware is made available under MIT licence.
 
 [1] Wolpert, D. H. (1992). Stacked generalization. *Neural networks*, 5(2), 241-259.
 
-##How does it work
+## How does it work
 
 Given some input data, a neural network normally applies a perceptron along with a transformation function like relu, sigmoid, tanh or others. The equation is often expressed as:
 
