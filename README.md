@@ -173,7 +173,7 @@ In windows and mac the behaviour should be similar. After executing `xgboost` fr
 
 `Usage: <config>`
 
-If you don't see this, then you need to compile it manually and drop the executables in inside `lib/your_operation_system/xg/` .
+If you don't see this, then you need to compile it manually and drop the executables inside `lib/your_operation_system/xg/` .
 
 You may find the follwing sources usefull:
 
