@@ -87,7 +87,7 @@ public static double [] label ;
  * <p> This method reads a file and print various information about the columns
  */
 
-        @SuppressWarnings("resource")
+
 		public  void getfileinfo (String n, String delimeter, int xfirstlines, boolean hasheaders, boolean hasconsecutivedel) {
         	
         	File x= new File(n);
@@ -282,7 +282,7 @@ public static double [] label ;
  * <p> Method to read a file as a String array.
  */
 
-        @SuppressWarnings("resource")
+
 		public void putfiletoarrayString(String n, String delimeter, int [] cols, String nullvalue,
         		boolean hasheaders,boolean hasconsecutivedel,boolean verbose) {
         	File x= new File(n);
@@ -565,7 +565,7 @@ public static double [][] putfiletoarraydoublestatic(String x) {
          * <p> Method to read a file as a double array.
          */
 
-                @SuppressWarnings("resource")
+
 				public void putfiletoarraydouble(String n, String delimeter, int [] cols, String nullvalue, 
                 		boolean hasheaders,boolean hasconsecutivedel,boolean verbose) {
                 	File x= new File(n);
@@ -625,6 +625,7 @@ public static double [][] putfiletoarraydoublestatic(String x) {
                                      ro++;  }
                        //Close the buffer reader
                              br.close();
+                             fis.close();
                      } catch (Exception e) {
                              e.printStackTrace();
                      }
@@ -654,7 +655,7 @@ public static double [][] putfiletoarraydoublestatic(String x) {
  * <p> Method to read a file as a String array.
  */
 
-        @SuppressWarnings("resource")
+
 		public void putfiletoarrayString(String n, String delimeter, int start, int last, String nullvalue,
         		boolean hasheaders,boolean hasconsecutivedel,boolean verbose) {
                 String line="";
@@ -788,7 +789,7 @@ public static double [][] putfiletoarraydoublestatic(String x) {
          * <p> Method to read a file as a double array.
          */     
         
-        @SuppressWarnings("resource")
+
 		public void putfiletoarraydouble(String n, String delimeter, int start, int last, double nullvalue, 
         		boolean hasheaders, boolean hasconsecutivedel,boolean verbose) {
             String line;
@@ -881,7 +882,7 @@ public static double [][] putfiletoarraydoublestatic(String x) {
          * <p> Method to read a file as a double array.
          */     
         
-        @SuppressWarnings("resource")
+
 		public void putfractiontoarraydouble(String n, String delimeter, int start, int last,int column,double split, 
         		double nullvalue,boolean hasheaders,boolean hasconsecutivedel, boolean verbose) {
             String line;
@@ -995,7 +996,7 @@ public static double [][] putfiletoarraydoublestatic(String x) {
          * <p> Method to read a file as a String array.
          */     
         
-        @SuppressWarnings("resource")
+
 		public void putfractiontoarrayString(String n, String delimeter, int start, int last,double split, int seed,
         		String nullvalue,boolean hasheaders,boolean hasconsecutivedel, boolean verbose) {
             String line;
@@ -1276,7 +1277,6 @@ public static double [][] putfiletoarraydoublestatic(String x) {
          * <p> Method to read a file as a String array.
          */     
         
-        @SuppressWarnings("resource")
 		public void putfractiontoarrayStringandprint(String n, String filetoprint,String delfile, int start, int last,double split, int seed,
         		String nullvalue,boolean hasheaders,boolean hasconsecutivedel, boolean verbose) {
             String line;
@@ -1431,8 +1431,7 @@ public static double [][] putfiletoarraydoublestatic(String x) {
          * @param verbose : Print details about the imported file.
          * <p> Method to read a file as a String array.
          */     
-        
-        @SuppressWarnings("resource")
+
 		public void putfractiontoarrayStringandprint2(String n, String filetoprint,String delfile, int start, int last,double split, int seed,
         		String nullvalue,boolean hasheaders,boolean hasconsecutivedel, boolean verbose) {
             String line;
@@ -1585,8 +1584,7 @@ public static double [][] putfiletoarraydoublestatic(String x) {
          * @param verbose : Print details about the imported file.
          * <p> Method to read a file as a double array.
          */     
-        
-        @SuppressWarnings("resource")
+
 		public void putfwholefile(String n, String delimeter, int start, int last,int column,
         		double nullvalue,boolean hasheaders, boolean hasconsecutivedel, boolean verbose) {
             String line;
@@ -1689,8 +1687,7 @@ public static double [][] putfiletoarraydoublestatic(String x) {
          * @param verbose : Print details about the imported file.
          * <p> Method to read a file as a double array.
          */     
-        
-        @SuppressWarnings("resource")
+
 		public void putfwholefileString(String n, String delimeter, int start, int last,int column,
         		double nullvalue,boolean hasheaders, boolean hasconsecutivedel, boolean verbose) {
             String line;
@@ -1895,8 +1892,7 @@ public static double [][] putfiletoarraydoublestatic(String x) {
          * @param verbose : Print details about the imported file.
          * <p> Method to read a file as a double array.
          */     
-        
-        @SuppressWarnings("resource")
+
 		public static double [][] putfwholefiletodouble(String n, String delimeter, int start, int last,int column,
         		double nullvalue,boolean hasheaders,boolean hasconsecutivedel, boolean verbose) {
             String line;

@@ -76,12 +76,8 @@ public interface classifier extends estimator {
 	 * @return the number of distinct classes
 	 */
 	public int getnumber_of_classes();	
-	
-	/**
-	 * @param names : Classes' names
-	 * <p> method to add order and names to the classes to be classified
-	 */
-	public void AddClassnames(String names[]);
+
+
 	
 	//public double [][] predict_probafromfile(); 
 }

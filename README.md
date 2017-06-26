@@ -2,7 +2,9 @@
 
 This repository contains StackNet Meta modelling methodology (and software) which is part of my work as a PhD Student in the computer science department at [UCL](http://www.cs.ucl.ac.uk/home/).  My PhD was sponsored by [dunnhumby](http://www.dunnhumby.com/).
 
-![Alt text](/images/StackNet_Logo.jpg?raw=true "StackNet Logo")
+StackNet is empowered by [H2O](https://github.com/h2oai/h2o-3)'s [agorithms](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science.html)
+
+![Alt text](/images/StackNet_Logo.png?raw=true "StackNet Logo")
 
 ## What is StackNet
 
@@ -89,6 +91,8 @@ StackNet is (commonly) **better than the best single model it contains in each f
 
 StackNet (methodology - not the software) was also used to win the  [Truly Native](http://blog.kaggle.com/2015/12/03/dato-winners-interview-1st-place-mad-professors/ ) data modelling competition hosted by the popular data science platform Kaggle in 2015 
 
+StackNet in simple terms is also explained in [kaggle's blog](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/) 
+
 Network's example:
 
 ![Alt text](/images/mad_prof_winning.png?raw=true "Winning Truly Native competitions Using STackNet Methodology")
@@ -98,25 +102,25 @@ StackNet is made available now with a handful of classifiers and regressors. The
 
 ## Algorithms contained
 
--    AdaboostForestRegressor
--    AdaboostRandomForestClassifier
--    DecisionTreeClassifier
--    DecisionTreeRegressor
--    GradientBoostingForestClassifier
--    GradientBoostingForestRegressor
--    RandomForestClassifier
--    RandomForestRegressor
--    Vanilla2hnnregressor
--    Vanilla2hnnclassifier
--    Softmaxnnclassifier
--    Multinnregressor
--    NaiveBayesClassifier
--    LSVR
--    LSVC
--    LogisticRegression
--    LinearRegression
--    LibFmRegressor
--    LibFmClassifier
+-    [AdaboostForestRegressor](/parameters/PARAMETERS.MD#AdaboostForestRegressor)
+-    [AdaboostRandomForestClassifier](/parameters/PARAMETERS.MD#AdaboostRandomForestClassifier)
+-    [DecisionTreeClassifier](/parameters/PARAMETERS.MD#DecisionTreeClassifier)
+-    [DecisionTreeRegressor](/parameters/PARAMETERS.MD#DecisionTreeRegressor)
+-    [GradientBoostingForestClassifier](/parameters/PARAMETERS.MD#GradientBoostingForestClassifier)
+-    [GradientBoostingForestRegressor](/parameters/PARAMETERS.MD#GradientBoostingForestRegressor)
+-    [RandomForestClassifier](/parameters/PARAMETERS.MD#RandomForestClassifier)
+-    [RandomForestRegressor](/parameters/PARAMETERS.MD#RandomForestRegressor)
+-    [Vanilla2hnnregressor](/parameters/PARAMETERS.MD#Vanilla2hnnregressor)
+-    [Vanilla2hnnclassifier](/parameters/PARAMETERS.MD#Vanilla2hnnclassifier)
+-    [Softmaxnnclassifier](/parameters/PARAMETERS.MD#Softmaxnnclassifier)
+-    [Multinnregressor](/parameters/PARAMETERS.MD#Multinnregressor)
+-    [NaiveBayesClassifier](/parameters/PARAMETERS.MD#NaiveBayesClassifier)
+-    [LSVR](/parameters/PARAMETERS.MD#LSVR)
+-    [LSVC](/parameters/PARAMETERS.MD#LSVC)
+-    [LogisticRegression](/parameters/PARAMETERS.MD#LogisticRegression)
+-    [LinearRegression](/parameters/PARAMETERS.MD#LinearRegression)
+-    [LibFmRegressor](/parameters/PARAMETERS.MD#LibFmRegressor)
+-    [LibFmClassifier](/parameters/PARAMETERS.MD#LibFmClassifier)
 
 Not fully developed
 
@@ -126,9 +130,21 @@ Not fully developed
 -    KernelmodelRegressor
 
 Wrappers
--    XgboostRegressor(**New**)
--    XgboostClassifier(**New**)
+-    [XgboostRegressor](/parameters/PARAMETERS.MD#XgboostRegressor)
+-    [XgboostClassifier](/parameters/PARAMETERS.MD#XgboostClassifier)
+-    [LightgbmRegressor](/parameters/PARAMETERS.MD#LightgbmRegressor)(**New**)
+-    [LightgbmClassifier](/parameters/PARAMETERS.MD#LightgbmClassifier)(**New**)
 
+H2O(**New**)
+-  [H2ODeepLearningClassifier](/parameters/PARAMETERS.MD#H2ODeepLearningClassifier)(**New**)
+-  [H2ODeepLearningRegressor](/parameters/PARAMETERS.MD#H2ODeepLearningRegressor)(**New**)
+-  [H2ODrfClassifier](/parameters/PARAMETERS.MD#H2ODrfClassifier)(**New**)
+-  [H2ODrfRegressor](/parameters/PARAMETERS.MD#H2ODrfRegressor)(**New**)
+-  [H2OGbmClassifier](/parameters/PARAMETERS.MD#H2OGbmClassifier)(**New**)
+-  [H2OGbmRegressor](/parameters/PARAMETERS.MD#H2OGbmRegressor)(**New**)
+-  [H2OGlmClassifier](/parameters/PARAMETERS.MD#H2OGlmClassifier)(**New**)
+-  [H2OGlmRegressor](/parameters/PARAMETERS.MD#H2OGlmRegressor)(**New**)
+-  [H2ONaiveBayesClassifier](/parameters/PARAMETERS.MD#H2ONaiveBayesClassifier)(**New**)
 
 ## Algorithm's Tuning parameters
 
@@ -147,13 +163,13 @@ The basic format is:
 Java –jar stacknet.jar [train or predict] [task=regression or classification]  [parameter = value]
 ```
 
-### Install Xgboost (**NEW**)
+### Install Xgboost
 
 Awesome xgboost can be used as a subprocess now in StackNet. This would require privileges to save and change files where the .jar is executed.
 
 It is already pre-compiled for windows(64), mac and linux. 
 
-just unzip the **lib.zip** and verify that the 'lib' folder in the same directory where the StackNet.jar file is. 
+~~just unzip the **lib.zip** and~~ verify that the 'lib' folder in the same directory where the StackNet.jar file is. By default it should be there when you do `git clone`
 
 for linux you most probably need to change privileges for the executable : 
 ```
@@ -181,12 +197,58 @@ You may find the follwing sources usefull:
 -    [windows1](https://stackoverflow.com/questions/33749735/how-to-install-xgboost-package-in-python-windows-platform) ,[windows2](https://www.ibm.com/developerworks/community/blogs/jfp/entry/Installing_XGBoost_For_Anaconda_on_Windows?lang=en)
 -    [linux](https://gist.github.com/DanielBeckstein/932087ee116cc2f72bfc6e3e078e899d)
 
-Small Note: The user would need to delete the '.mod' files when no longer need them. StackNet does not do that automatically as it is not possible to determibe when they are not needed anymore.  
+Small Note: The user would need to delete the '.mod' files from inside the `model/` folder when no longer need them. StackNet does not do that automatically as it is not possible to determine when they are not needed anymore.  
 
 **IMPORTANT NOTE:** This implementation does not include all Xgboost's features and the user is advised to use it directly from source to exploit its full potential. Also the version included is 6.0 and it is not certain whether it will be updated in the future as it required manual work to find all libraries and files required that need to be included for it to run. The performance and memory consumption will also be worse than running it directly from source. Additionally the descritpion of the parameters may not match the one in the offcial website, hence it is advised to use [xgboost's online parameter thread in github](https://github.com/dmlc/xgboost/blob/master/doc/parameter.md) for more information about them.
 
+### Install lightGBM (**NEW**)
 
+[lightGBM](https://github.com/Microsoft/LightGBM) can be used as a subprocess now in StackNet. This would require privileges to save and change files where the .jar is executed.
 
+It is already pre-compiled for windows(64), mac and linux. 
+
+Verify that the 'lib' folder in the same directory where the StackNet.jar file is. By default it should be there when you do `git clone`
+
+for linux you most probably need to change privileges for the executable : 
+```
+cd lib/
+cd linux/
+cd lightgbm/
+chmod +x lightgbm
+```
+You can test that it works with :
+`./lightgbm`
+
+It should print something in the form of:
+
+```
+[LightGBM] [Info] Finished loading parameters
+[LightGBM] [Fatal] No training/prediction data, application quit
+Met Exceptions:
+No training/prediction data, application quit
+```
+
+In windows and mac the behaviour should be similar. After executing `lightgbm` from inside the `lib/your_operation_system/lightgbm/` you should see the:
+
+`[LightGBM] [Info] Finished loading parameters...`
+
+If you don't see this, then you need to compile it manually and drop the executables inside `lib/your_operation_system/lightgbm/` .
+
+You may find the follwing sources usefull:
+
+[Install LightGBM](https://github.com/Microsoft/LightGBM/wiki/Installation-Guide)
+
+Small Note: The user would need to delete the '.mod' files from inside the `model/` folder when no longer need them. StackNet does not do that automatically as it is not possible to determine when they are not needed anymore.  
+
+**IMPORTANT NOTE:** This implementation does not include all LightGBM's features and the user is advised to use it directly from source to exploit its full potential. it is not certain whether it will be updated in the future as it required manual work to find all libraries and files required that need to be included for it to run. The performance and memory consumption will also be worse than running it directly from source. Additionally the descritpion of the parameters may not match the one in the offcial website, hence it is advised to use [LightGBM's online parameter thread in github](https://github.com/Microsoft/LightGBM/blob/master/docs/Parameters.md) for more information about them.
+
+### Install H2O Algorithms
+
+All the required jars are already packaged within the StackNet jar, however the user may find them inside the repo too. 
+
+No special installation is required , but experimentally system protection might be blocking it , therefore make certain that the StackNet.jar is in the exceptions of firewall.
+
+Additionally the first time STackNet uses an H2o Algorithm within the ensemble it takes more time (as with every other time) because it sets up a cluster . 
 
 ### Command Line Parameters
 
@@ -277,7 +339,7 @@ Note that you can have train and test at the same time. In that case after train
 
 ### Predict example:
 
-Java –jar stacknet.jar **_predict_** **sparse**=false **has_head**=true **model**=model **pred_file**=pred.csv **test_file**=sample_test.csv **test_target**=true **verbose**=true  **metric**=logloss
+Java -jar stacknet.jar **_predict_** **sparse**=false **has_head**=true **model**=model **pred_file**=pred.csv **test_file**=sample_test.csv **test_target**=true **verbose**=true  **metric**=logloss
 
 
 ## Run StackNet from within (Java) code

@@ -35,31 +35,8 @@ import matrix.fsmatrix;
 import matrix.smatrix;
 import ml.estimator;
 import ml.regressor;
-import ml.Kernel.copy.KernelmodelClassifier;
-import ml.Kernel.copy.KernelmodelRegressor;
-import ml.LSVC.LSVC;
-import ml.LSVR.LSVR;
-import ml.LibFm.LibFmClassifier;
-import ml.LibFm.LibFmRegressor;
-import ml.LinearRegression.LinearRegression;
-import ml.LogisticRegression.LogisticRegression;
-import ml.NaiveBayes.NaiveBayesClassifier;
-import ml.Tree.AdaboostForestRegressor;
-import ml.Tree.AdaboostRandomForestClassifier;
-import ml.Tree.DecisionTreeClassifier;
-import ml.Tree.DecisionTreeRegressor;
-import ml.Tree.GradientBoostingForestClassifier;
-import ml.Tree.GradientBoostingForestRegressor;
-import ml.Tree.RandomForestClassifier;
-import ml.Tree.RandomForestRegressor;
-import ml.knn.knnClassifier;
-import ml.knn.knnRegressor;
-import ml.nn.Vanilla2hnnclassifier;
-import ml.nn.Vanilla2hnnregressor;
-import ml.nn.multinnregressor;
-import ml.nn.softmaxnnclassifier;
-import ml.xgboost.XgboostClassifier;
-import ml.xgboost.XgboostRegressor;
+import ml.Bagging.BaggingClassifier;
+import ml.Bagging.BaggingRegressor;
 import preprocess.binning.equalsizebinner;
 import preprocess.scaling.scaler;
 import utilis.XorShift128PlusRandom;
@@ -608,61 +585,21 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 					for (int es=0; es <level_grid.length; es++ ){
 						String splits[]=level_grid[es].split(" " + "+");	
 						String str_estimator=splits[0];
-						
-						if (str_estimator.contains("AdaboostForestRegressor")) {
-							mini_batch_tree[es]= new AdaboostForestRegressor(X_train);
-						} else if (str_estimator.contains("AdaboostRandomForestClassifier")) {
-							mini_batch_tree[es]= new AdaboostRandomForestClassifier(X_train);
-						}else if (str_estimator.contains("DecisionTreeClassifier")) {
-							mini_batch_tree[es]= new DecisionTreeClassifier(X_train);
-						}else if (str_estimator.contains("DecisionTreeRegressor")) {
-							mini_batch_tree[es]= new DecisionTreeRegressor(X_train);
-						}else if (str_estimator.contains("GradientBoostingForestClassifier")) {
-							mini_batch_tree[es]= new GradientBoostingForestClassifier(X_train);
-						}else if (str_estimator.contains("GradientBoostingForestRegressor")) {
-							mini_batch_tree[es]= new GradientBoostingForestRegressor(X_train);
-						}else if (str_estimator.contains("RandomForestClassifier")) {
-							mini_batch_tree[es]= new RandomForestClassifier(X_train);
-						}else if (str_estimator.contains("RandomForestRegressor")) {
-							mini_batch_tree[es]= new RandomForestRegressor(X_train);
-						}else if (str_estimator.contains("Vanilla2hnnregressor")) {
-							mini_batch_tree[es]= new Vanilla2hnnregressor(X_train);
-						}else if (str_estimator.contains("Vanilla2hnnclassifier")) {
-							mini_batch_tree[es]= new Vanilla2hnnclassifier(X_train);
-						}else if (str_estimator.contains("softmaxnnclassifier")) {
-							mini_batch_tree[es]= new softmaxnnclassifier(X_train);
-						}else if (str_estimator.contains("multinnregressor")) {
-							mini_batch_tree[es]= new multinnregressor(X_train);
-						}else if (str_estimator.contains("NaiveBayesClassifier")) {
-							mini_batch_tree[es]= new NaiveBayesClassifier(X_train);
-						}else if (str_estimator.contains("LSVR")) {
-							mini_batch_tree[es]= new LSVR(X_train);
-						}else if (str_estimator.contains("LSVC")) {
-							mini_batch_tree[es]= new LSVC(X_train);
-						}else if (str_estimator.contains("LogisticRegression")) {
-							mini_batch_tree[es]= new LogisticRegression(X_train);
-						}else if (str_estimator.contains("LinearRegression")) {
-							mini_batch_tree[es]= new LinearRegression(X_train);
-						}else if (str_estimator.contains("LibFmRegressor")) {
-							mini_batch_tree[es]= new LibFmRegressor(X_train);
-						}else if (str_estimator.contains("LibFmClassifier")) {
-							mini_batch_tree[es]= new LibFmClassifier(X_train);
-						}else if (str_estimator.contains("knnClassifier")) {
-							mini_batch_tree[es]= new knnClassifier(X_train);
-						}else if (str_estimator.contains("knnRegressor")) {
-							mini_batch_tree[es]= new knnRegressor(X_train);
-						}else if (str_estimator.contains("KernelmodelClassifier")) {
-							mini_batch_tree[es]= new KernelmodelClassifier(X_train);
-						}else if (str_estimator.contains("KernelmodelRegressor")) {
-							mini_batch_tree[es]= new KernelmodelRegressor(X_train);
-						}else if (str_estimator.contains("XgboostRegressor")) {
-							mini_batch_tree[es]= new XgboostRegressor(X_train);									
-						}else if (str_estimator.contains("XgboostClassifier")) {
-							mini_batch_tree[es]= new XgboostClassifier(X_train);							
+ 						int bags=find_bags(level_grid[es]);
+						if (containsClassifier(str_estimator)){
+							BaggingClassifier mod = new BaggingClassifier(X_train);
+							mod.set_model_parameters(level_grid[es]);
+							mini_batch_tree[es]=mod;
+							mini_batch_tree[es].AddClassnames(this.classes);
+						} else if (containsRegressor(str_estimator)){
+							BaggingRegressor mod = new BaggingRegressor(X_train);
+							mod.set_model_parameters(level_grid[es]);
+							mini_batch_tree[es]=mod;
 						} else {
-							throw new IllegalStateException(" The selected model '" + str_estimator + "' inside the '" + level_grid[es] + "' is not recognizable!" );
+							throw new IllegalStateException(" Only regressors and classifiers supported in StackNet for the meantime." );	
 						}
-						mini_batch_tree[es].set_params(level_grid[es]);
+						mini_batch_tree[es].set_params("estimators:" +bags +  " verbose:false seed:1");
+						
 						if (containsClassifier(str_estimator)){
 							mini_batch_tree[es].set_target(binner.transform(y_train));
 						}else {
@@ -788,61 +725,21 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 			for (int es=0; es <level_grid.length; es++ ){
 				String splits[]=level_grid[es].split(" " + "+");	
 				String str_estimator=splits[0];
-				
-				if (str_estimator.contains("AdaboostForestRegressor")) {
-					mini_batch_tree[es]= new AdaboostForestRegressor(data);
-				} else if (str_estimator.contains("AdaboostRandomForestClassifier")) {
-					mini_batch_tree[es]= new AdaboostRandomForestClassifier(data);
-				}else if (str_estimator.contains("DecisionTreeClassifier")) {
-					mini_batch_tree[es]= new DecisionTreeClassifier(data);
-				}else if (str_estimator.contains("DecisionTreeRegressor")) {
-					mini_batch_tree[es]= new DecisionTreeRegressor(data);
-				}else if (str_estimator.contains("GradientBoostingForestClassifier")) {
-					mini_batch_tree[es]= new GradientBoostingForestClassifier(data);
-				}else if (str_estimator.contains("GradientBoostingForestRegressor")) {
-					mini_batch_tree[es]= new GradientBoostingForestRegressor(data);
-				}else if (str_estimator.contains("RandomForestClassifier")) {
-					mini_batch_tree[es]= new RandomForestClassifier(data);
-				}else if (str_estimator.contains("RandomForestRegressor")) {
-					mini_batch_tree[es]= new RandomForestRegressor(data);
-				}else if (str_estimator.contains("Vanilla2hnnregressor")) {
-					mini_batch_tree[es]= new Vanilla2hnnregressor(data);
-				}else if (str_estimator.contains("Vanilla2hnnclassifier")) {
-					mini_batch_tree[es]= new Vanilla2hnnclassifier(data);
-				}else if (str_estimator.contains("softmaxnnclassifier")) {
-					mini_batch_tree[es]= new softmaxnnclassifier(data);
-				}else if (str_estimator.contains("multinnregressor")) {
-					mini_batch_tree[es]= new multinnregressor(data);
-				}else if (str_estimator.contains("NaiveBayesClassifier")) {
-					mini_batch_tree[es]= new NaiveBayesClassifier(data);
-				}else if (str_estimator.contains("LSVR")) {
-					mini_batch_tree[es]= new LSVR(data);
-				}else if (str_estimator.contains("LSVC")) {
-					mini_batch_tree[es]= new LSVC(data);
-				}else if (str_estimator.contains("LogisticRegression")) {
-					mini_batch_tree[es]= new LogisticRegression(data);
-				}else if (str_estimator.contains("LinearRegression")) {
-					mini_batch_tree[es]= new LinearRegression(data);
-				}else if (str_estimator.contains("LibFmRegressor")) {
-					mini_batch_tree[es]= new LibFmRegressor(data);
-				}else if (str_estimator.contains("LibFmClassifier")) {
-					mini_batch_tree[es]= new LibFmClassifier(data);
-				}else if (str_estimator.contains("knnClassifier")) {
-					mini_batch_tree[es]= new knnClassifier(data);
-				}else if (str_estimator.contains("knnRegressor")) {
-					mini_batch_tree[es]= new knnRegressor(data);
-				}else if (str_estimator.contains("KernelmodelClassifier")) {
-					mini_batch_tree[es]= new KernelmodelClassifier(data);
-				}else if (str_estimator.contains("KernelmodelRegressor")) {
-					mini_batch_tree[es]= new KernelmodelRegressor(data);
-				}else if (str_estimator.contains("XgboostRegressor")) {
-					mini_batch_tree[es]= new XgboostRegressor(data);									
-				}else if (str_estimator.contains("XgboostClassifier")) {
-					mini_batch_tree[es]= new XgboostClassifier(data);								
+				int bags=find_bags(level_grid[es]);
+				if (containsClassifier(str_estimator)){
+					BaggingClassifier mod = new BaggingClassifier(data);
+					mod.set_model_parameters(level_grid[es]);
+					mini_batch_tree[es]=mod;
+					mini_batch_tree[es].AddClassnames(this.classes);
+				} else if (containsRegressor(str_estimator)){
+					BaggingRegressor mod = new BaggingRegressor(data);
+					mod.set_model_parameters(level_grid[es]);
+					mini_batch_tree[es]=mod;
 				} else {
-					throw new IllegalStateException(" The selected model '" + str_estimator + "' inside the '" + level_grid[es] + "' is not recognizable!" );
+					throw new IllegalStateException(" Only regressors and classifiers supported in StackNet for the meantime." );	
 				}
-				mini_batch_tree[es].set_params(level_grid[es]);
+				mini_batch_tree[es].set_params("estimators:" +bags +  " verbose:false seed:1");										
+						
 				if (level==0){
 					if (containsClassifier(str_estimator)){
 						mini_batch_tree[es].set_target(binner.transform(this.target));
@@ -1161,61 +1058,21 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 					for (int es=0; es <level_grid.length; es++ ){
 						String splits[]=level_grid[es].split(" " + "+");	
 						String str_estimator=splits[0];
-						
-						if (str_estimator.contains("AdaboostForestRegressor")) {
-							mini_batch_tree[es]= new AdaboostForestRegressor(X_train);
-						} else if (str_estimator.contains("AdaboostRandomForestClassifier")) {
-							mini_batch_tree[es]= new AdaboostRandomForestClassifier(X_train);
-						}else if (str_estimator.contains("DecisionTreeClassifier")) {
-							mini_batch_tree[es]= new DecisionTreeClassifier(X_train);
-						}else if (str_estimator.contains("DecisionTreeRegressor")) {
-							mini_batch_tree[es]= new DecisionTreeRegressor(X_train);
-						}else if (str_estimator.contains("GradientBoostingForestClassifier")) {
-							mini_batch_tree[es]= new GradientBoostingForestClassifier(X_train);
-						}else if (str_estimator.contains("GradientBoostingForestRegressor")) {
-							mini_batch_tree[es]= new GradientBoostingForestRegressor(X_train);
-						}else if (str_estimator.contains("RandomForestClassifier")) {
-							mini_batch_tree[es]= new RandomForestClassifier(X_train);
-						}else if (str_estimator.contains("RandomForestRegressor")) {
-							mini_batch_tree[es]= new RandomForestRegressor(X_train);
-						}else if (str_estimator.contains("Vanilla2hnnregressor")) {
-							mini_batch_tree[es]= new Vanilla2hnnregressor(X_train);
-						}else if (str_estimator.contains("Vanilla2hnnclassifier")) {
-							mini_batch_tree[es]= new Vanilla2hnnclassifier(X_train);
-						}else if (str_estimator.contains("softmaxnnclassifier")) {
-							mini_batch_tree[es]= new softmaxnnclassifier(X_train);
-						}else if (str_estimator.contains("multinnregressor")) {
-							mini_batch_tree[es]= new multinnregressor(X_train);
-						}else if (str_estimator.contains("NaiveBayesClassifier")) {
-							mini_batch_tree[es]= new NaiveBayesClassifier(X_train);
-						}else if (str_estimator.contains("LSVR")) {
-							mini_batch_tree[es]= new LSVR(X_train);
-						}else if (str_estimator.contains("LSVC")) {
-							mini_batch_tree[es]= new LSVC(X_train);
-						}else if (str_estimator.contains("LogisticRegression")) {
-							mini_batch_tree[es]= new LogisticRegression(X_train);
-						}else if (str_estimator.contains("LinearRegression")) {
-							mini_batch_tree[es]= new LinearRegression(X_train);
-						}else if (str_estimator.contains("LibFmRegressor")) {
-							mini_batch_tree[es]= new LibFmRegressor(X_train);
-						}else if (str_estimator.contains("LibFmClassifier")) {
-							mini_batch_tree[es]= new LibFmClassifier(X_train);
-						}else if (str_estimator.contains("knnClassifier")) {
-							mini_batch_tree[es]= new knnClassifier(X_train);
-						}else if (str_estimator.contains("knnRegressor")) {
-							mini_batch_tree[es]= new knnRegressor(X_train);
-						}else if (str_estimator.contains("KernelmodelClassifier")) {
-							mini_batch_tree[es]= new KernelmodelClassifier(X_train);
-						}else if (str_estimator.contains("KernelmodelRegressor")) {
-							mini_batch_tree[es]= new KernelmodelRegressor(X_train);
-						}else if (str_estimator.contains("XgboostRegressor")) {
-							mini_batch_tree[es]= new XgboostRegressor(X_train);									
-						}else if (str_estimator.contains("XgboostClassifier")) {
-							mini_batch_tree[es]= new XgboostClassifier(X_train);								
+ 						int bags=find_bags(level_grid[es]);
+						if (containsClassifier(str_estimator)){
+							BaggingClassifier mod = new BaggingClassifier(X_train);
+							mod.set_model_parameters(level_grid[es]);
+							mini_batch_tree[es]=mod;
+							mini_batch_tree[es].AddClassnames(this.classes);
+						} else if (containsRegressor(str_estimator)){
+							BaggingRegressor mod = new BaggingRegressor(X_train);
+							mod.set_model_parameters(level_grid[es]);
+							mini_batch_tree[es]=mod;
 						} else {
-							throw new IllegalStateException(" The selected model '" + str_estimator + "' inside the '" + level_grid[es] + "' is not recognizable!" );
+							throw new IllegalStateException(" Only regressors and classifiers supported in StackNet for the meantime." );	
 						}
-						mini_batch_tree[es].set_params(level_grid[es]);
+						mini_batch_tree[es].set_params("estimators:" +bags +  " verbose:false seed:1");
+						
 						if (containsClassifier(str_estimator)){
 							mini_batch_tree[es].set_target(binner.transform(y_train));
 						}else {
@@ -1332,61 +1189,21 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 			for (int es=0; es <level_grid.length; es++ ){
 				String splits[]=level_grid[es].split(" " + "+");	
 				String str_estimator=splits[0];
-				
-				if (str_estimator.contains("AdaboostForestRegressor")) {
-					mini_batch_tree[es]= new AdaboostForestRegressor(data);
-				} else if (str_estimator.contains("AdaboostRandomForestClassifier")) {
-					mini_batch_tree[es]= new AdaboostRandomForestClassifier(data);
-				}else if (str_estimator.contains("DecisionTreeClassifier")) {
-					mini_batch_tree[es]= new DecisionTreeClassifier(data);
-				}else if (str_estimator.contains("DecisionTreeRegressor")) {
-					mini_batch_tree[es]= new DecisionTreeRegressor(data);
-				}else if (str_estimator.contains("GradientBoostingForestClassifier")) {
-					mini_batch_tree[es]= new GradientBoostingForestClassifier(data);
-				}else if (str_estimator.contains("GradientBoostingForestRegressor")) {
-					mini_batch_tree[es]= new GradientBoostingForestRegressor(data);
-				}else if (str_estimator.contains("RandomForestClassifier")) {
-					mini_batch_tree[es]= new RandomForestClassifier(data);
-				}else if (str_estimator.contains("RandomForestRegressor")) {
-					mini_batch_tree[es]= new RandomForestRegressor(data);
-				}else if (str_estimator.contains("Vanilla2hnnregressor")) {
-					mini_batch_tree[es]= new Vanilla2hnnregressor(data);
-				}else if (str_estimator.contains("Vanilla2hnnclassifier")) {
-					mini_batch_tree[es]= new Vanilla2hnnclassifier(data);
-				}else if (str_estimator.contains("softmaxnnclassifier")) {
-					mini_batch_tree[es]= new softmaxnnclassifier(data);
-				}else if (str_estimator.contains("multinnregressor")) {
-					mini_batch_tree[es]= new multinnregressor(data);
-				}else if (str_estimator.contains("NaiveBayesClassifier")) {
-					mini_batch_tree[es]= new NaiveBayesClassifier(data);
-				}else if (str_estimator.contains("LSVR")) {
-					mini_batch_tree[es]= new LSVR(data);
-				}else if (str_estimator.contains("LSVC")) {
-					mini_batch_tree[es]= new LSVC(data);
-				}else if (str_estimator.contains("LogisticRegression")) {
-					mini_batch_tree[es]= new LogisticRegression(data);
-				}else if (str_estimator.contains("LinearRegression")) {
-					mini_batch_tree[es]= new LinearRegression(data);
-				}else if (str_estimator.contains("LibFmRegressor")) {
-					mini_batch_tree[es]= new LibFmRegressor(data);
-				}else if (str_estimator.contains("LibFmClassifier")) {
-					mini_batch_tree[es]= new LibFmClassifier(data);
-				}else if (str_estimator.contains("knnClassifier")) {
-					mini_batch_tree[es]= new knnClassifier(data);
-				}else if (str_estimator.contains("knnRegressor")) {
-					mini_batch_tree[es]= new knnRegressor(data);
-				}else if (str_estimator.contains("KernelmodelClassifier")) {
-					mini_batch_tree[es]= new KernelmodelClassifier(data);
-				}else if (str_estimator.contains("KernelmodelRegressor")) {
-					mini_batch_tree[es]= new KernelmodelRegressor(data);
-				}else if (str_estimator.contains("XgboostRegressor")) {
-					mini_batch_tree[es]= new XgboostRegressor(data);									
-				}else if (str_estimator.contains("XgboostClassifier")) {
-					mini_batch_tree[es]= new XgboostClassifier(data);							
+				int bags=find_bags(level_grid[es]);
+				if (containsClassifier(str_estimator)){
+					BaggingClassifier mod = new BaggingClassifier(data);
+					mod.set_model_parameters(level_grid[es]);
+					mini_batch_tree[es]=mod;
+					mini_batch_tree[es].AddClassnames(this.classes);
+				} else if (containsRegressor(str_estimator)){
+					BaggingRegressor mod = new BaggingRegressor(data);
+					mod.set_model_parameters(level_grid[es]);
+					mini_batch_tree[es]=mod;
 				} else {
-					throw new IllegalStateException(" The selected model '" + str_estimator + "' inside the '" + level_grid[es] + "' is not recognizable!" );
+					throw new IllegalStateException(" Only regressors and classifiers supported in StackNet for the meantime." );	
 				}
-				mini_batch_tree[es].set_params(level_grid[es]);
+				mini_batch_tree[es].set_params("estimators:" +bags +  " verbose:false seed:1");		
+				
 				if (level==0){
 					if (containsClassifier(str_estimator)){
 						mini_batch_tree[es].set_target(binner.transform(this.target));
@@ -2375,61 +2192,21 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 					for (int es=0; es <level_grid.length; es++ ){
 						String splits[]=level_grid[es].split(" " + "+");	
 						String str_estimator=splits[0];
-						
-						if (str_estimator.contains("AdaboostForestRegressor")) {
-							mini_batch_tree[es]= new AdaboostForestRegressor(X_train);
-						} else if (str_estimator.contains("AdaboostRandomForestClassifier")) {
-							mini_batch_tree[es]= new AdaboostRandomForestClassifier(X_train);
-						}else if (str_estimator.contains("DecisionTreeClassifier")) {
-							mini_batch_tree[es]= new DecisionTreeClassifier(X_train);
-						}else if (str_estimator.contains("DecisionTreeRegressor")) {
-							mini_batch_tree[es]= new DecisionTreeRegressor(X_train);
-						}else if (str_estimator.contains("GradientBoostingForestClassifier")) {
-							mini_batch_tree[es]= new GradientBoostingForestClassifier(X_train);
-						}else if (str_estimator.contains("GradientBoostingForestRegressor")) {
-							mini_batch_tree[es]= new GradientBoostingForestRegressor(X_train);
-						}else if (str_estimator.contains("RandomForestClassifier")) {
-							mini_batch_tree[es]= new RandomForestClassifier(X_train);
-						}else if (str_estimator.contains("RandomForestRegressor")) {
-							mini_batch_tree[es]= new RandomForestRegressor(X_train);
-						}else if (str_estimator.contains("Vanilla2hnnregressor")) {
-							mini_batch_tree[es]= new Vanilla2hnnregressor(X_train);
-						}else if (str_estimator.contains("Vanilla2hnnclassifier")) {
-							mini_batch_tree[es]= new Vanilla2hnnclassifier(X_train);
-						}else if (str_estimator.contains("softmaxnnclassifier")) {
-							mini_batch_tree[es]= new softmaxnnclassifier(X_train);
-						}else if (str_estimator.contains("multinnregressor")) {
-							mini_batch_tree[es]= new multinnregressor(X_train);
-						}else if (str_estimator.contains("NaiveBayesClassifier")) {
-							mini_batch_tree[es]= new NaiveBayesClassifier(X_train);
-						}else if (str_estimator.contains("LSVR")) {
-							mini_batch_tree[es]= new LSVR(X_train);
-						}else if (str_estimator.contains("LSVC")) {
-							mini_batch_tree[es]= new LSVC(X_train);
-						}else if (str_estimator.contains("LogisticRegression")) {
-							mini_batch_tree[es]= new LogisticRegression(X_train);
-						}else if (str_estimator.contains("LinearRegression")) {
-							mini_batch_tree[es]= new LinearRegression(X_train);
-						}else if (str_estimator.contains("LibFmRegressor")) {
-							mini_batch_tree[es]= new LibFmRegressor(X_train);
-						}else if (str_estimator.contains("LibFmClassifier")) {
-							mini_batch_tree[es]= new LibFmClassifier(X_train);
-						}else if (str_estimator.contains("knnClassifier")) {
-							mini_batch_tree[es]= new knnClassifier(X_train);
-						}else if (str_estimator.contains("knnRegressor")) {
-							mini_batch_tree[es]= new knnRegressor(X_train);
-						}else if (str_estimator.contains("KernelmodelClassifier")) {
-							mini_batch_tree[es]= new KernelmodelClassifier(X_train);
-						}else if (str_estimator.contains("KernelmodelRegressor")) {
-							mini_batch_tree[es]= new KernelmodelRegressor(X_train);
-						}else if (str_estimator.contains("XgboostRegressor")) {
-							mini_batch_tree[es]= new XgboostRegressor(X_train);									
-						}else if (str_estimator.contains("XgboostClassifier")) {
-							mini_batch_tree[es]= new XgboostClassifier(X_train);									
+ 						int bags=find_bags(level_grid[es]);
+						if (containsClassifier(str_estimator)){
+							BaggingClassifier mod = new BaggingClassifier(X_train);
+							mod.set_model_parameters(level_grid[es]);
+							mini_batch_tree[es]=mod;
+							mini_batch_tree[es].AddClassnames(this.classes);
+						} else if (containsRegressor(str_estimator)){
+							BaggingRegressor mod = new BaggingRegressor(X_train);
+							mod.set_model_parameters(level_grid[es]);
+							mini_batch_tree[es]=mod;
 						} else {
-							throw new IllegalStateException(" The selected model '" + str_estimator + "' inside the '" + level_grid[es] + "' is not recognizable!" );
+							throw new IllegalStateException(" Only regressors and classifiers supported in StackNet for the meantime." );	
 						}
-						mini_batch_tree[es].set_params(level_grid[es]);
+						mini_batch_tree[es].set_params("estimators:" +bags +  " verbose:false seed:1");
+						
 						if (containsClassifier(str_estimator)){
 							mini_batch_tree[es].set_target(binner.transform(y_train));
 						}else {
@@ -2539,61 +2316,21 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 			for (int es=0; es <level_grid.length; es++ ){
 				String splits[]=level_grid[es].split(" " + "+");	
 				String str_estimator=splits[0];
-				
-				if (str_estimator.contains("AdaboostForestRegressor")) {
-					mini_batch_tree[es]= new AdaboostForestRegressor(data);
-				} else if (str_estimator.contains("AdaboostRandomForestClassifier")) {
-					mini_batch_tree[es]= new AdaboostRandomForestClassifier(data);
-				}else if (str_estimator.contains("DecisionTreeClassifier")) {
-					mini_batch_tree[es]= new DecisionTreeClassifier(data);
-				}else if (str_estimator.contains("DecisionTreeRegressor")) {
-					mini_batch_tree[es]= new DecisionTreeRegressor(data);
-				}else if (str_estimator.contains("GradientBoostingForestClassifier")) {
-					mini_batch_tree[es]= new GradientBoostingForestClassifier(data);
-				}else if (str_estimator.contains("GradientBoostingForestRegressor")) {
-					mini_batch_tree[es]= new GradientBoostingForestRegressor(data);
-				}else if (str_estimator.contains("RandomForestClassifier")) {
-					mini_batch_tree[es]= new RandomForestClassifier(data);
-				}else if (str_estimator.contains("RandomForestRegressor")) {
-					mini_batch_tree[es]= new RandomForestRegressor(data);
-				}else if (str_estimator.contains("Vanilla2hnnregressor")) {
-					mini_batch_tree[es]= new Vanilla2hnnregressor(data);
-				}else if (str_estimator.contains("Vanilla2hnnclassifier")) {
-					mini_batch_tree[es]= new Vanilla2hnnclassifier(data);
-				}else if (str_estimator.contains("softmaxnnclassifier")) {
-					mini_batch_tree[es]= new softmaxnnclassifier(data);
-				}else if (str_estimator.contains("multinnregressor")) {
-					mini_batch_tree[es]= new multinnregressor(data);
-				}else if (str_estimator.contains("NaiveBayesClassifier")) {
-					mini_batch_tree[es]= new NaiveBayesClassifier(data);
-				}else if (str_estimator.contains("LSVR")) {
-					mini_batch_tree[es]= new LSVR(data);
-				}else if (str_estimator.contains("LSVC")) {
-					mini_batch_tree[es]= new LSVC(data);
-				}else if (str_estimator.contains("LogisticRegression")) {
-					mini_batch_tree[es]= new LogisticRegression(data);
-				}else if (str_estimator.contains("LinearRegression")) {
-					mini_batch_tree[es]= new LinearRegression(data);
-				}else if (str_estimator.contains("LibFmRegressor")) {
-					mini_batch_tree[es]= new LibFmRegressor(data);
-				}else if (str_estimator.contains("LibFmClassifier")) {
-					mini_batch_tree[es]= new LibFmClassifier(data);
-				}else if (str_estimator.contains("knnClassifier")) {
-					mini_batch_tree[es]= new knnClassifier(data);
-				}else if (str_estimator.contains("knnRegressor")) {
-					mini_batch_tree[es]= new knnRegressor(data);
-				}else if (str_estimator.contains("KernelmodelClassifier")) {
-					mini_batch_tree[es]= new KernelmodelClassifier(data);
-				}else if (str_estimator.contains("KernelmodelRegressor")) {
-					mini_batch_tree[es]= new KernelmodelRegressor(data);
-				}else if (str_estimator.contains("XgboostRegressor")) {
-					mini_batch_tree[es]= new XgboostRegressor(data);									
-				}else if (str_estimator.contains("XgboostClassifier")) {
-					mini_batch_tree[es]= new XgboostClassifier(data);							
+				int bags=find_bags(level_grid[es]);
+				if (containsClassifier(str_estimator)){
+					BaggingClassifier mod = new BaggingClassifier(data);
+					mod.set_model_parameters(level_grid[es]);
+					mini_batch_tree[es]=mod;
+					mini_batch_tree[es].AddClassnames(this.classes);
+				} else if (containsRegressor(str_estimator)){
+					BaggingRegressor mod = new BaggingRegressor(data);
+					mod.set_model_parameters(level_grid[es]);
+					mini_batch_tree[es]=mod;
 				} else {
-					throw new IllegalStateException(" The selected model '" + str_estimator + "' inside the '" + level_grid[es] + "' is not recognizable!" );
+					throw new IllegalStateException(" Only regressors and classifiers supported in StackNet for the meantime." );	
 				}
-				mini_batch_tree[es].set_params(level_grid[es]);
+				mini_batch_tree[es].set_params("estimators:" +bags +  " verbose:false seed:1");			
+				
 				
 				if (containsClassifier(str_estimator)){
 					mini_batch_tree[es].set_target(binner.transform(this.target));
@@ -2850,61 +2587,21 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 					for (int es=0; es <level_grid.length; es++ ){
 						String splits[]=level_grid[es].split(" " + "+");	
 						String str_estimator=splits[0];
-						
-						if (str_estimator.contains("AdaboostForestRegressor")) {
-							mini_batch_tree[es]= new AdaboostForestRegressor(X_train);
-						} else if (str_estimator.contains("AdaboostRandomForestClassifier")) {
-							mini_batch_tree[es]= new AdaboostRandomForestClassifier(X_train);
-						}else if (str_estimator.contains("DecisionTreeClassifier")) {
-							mini_batch_tree[es]= new DecisionTreeClassifier(X_train);
-						}else if (str_estimator.contains("DecisionTreeRegressor")) {
-							mini_batch_tree[es]= new DecisionTreeRegressor(X_train);
-						}else if (str_estimator.contains("GradientBoostingForestClassifier")) {
-							mini_batch_tree[es]= new GradientBoostingForestClassifier(X_train);
-						}else if (str_estimator.contains("GradientBoostingForestRegressor")) {
-							mini_batch_tree[es]= new GradientBoostingForestRegressor(X_train);
-						}else if (str_estimator.contains("RandomForestClassifier")) {
-							mini_batch_tree[es]= new RandomForestClassifier(X_train);
-						}else if (str_estimator.contains("RandomForestRegressor")) {
-							mini_batch_tree[es]= new RandomForestRegressor(X_train);
-						}else if (str_estimator.contains("Vanilla2hnnregressor")) {
-							mini_batch_tree[es]= new Vanilla2hnnregressor(X_train);
-						}else if (str_estimator.contains("Vanilla2hnnclassifier")) {
-							mini_batch_tree[es]= new Vanilla2hnnclassifier(X_train);
-						}else if (str_estimator.contains("softmaxnnclassifier")) {
-							mini_batch_tree[es]= new softmaxnnclassifier(X_train);
-						}else if (str_estimator.contains("multinnregressor")) {
-							mini_batch_tree[es]= new multinnregressor(X_train);
-						}else if (str_estimator.contains("NaiveBayesClassifier")) {
-							mini_batch_tree[es]= new NaiveBayesClassifier(X_train);
-						}else if (str_estimator.contains("LSVR")) {
-							mini_batch_tree[es]= new LSVR(X_train);
-						}else if (str_estimator.contains("LSVC")) {
-							mini_batch_tree[es]= new LSVC(X_train);
-						}else if (str_estimator.contains("LogisticRegression")) {
-							mini_batch_tree[es]= new LogisticRegression(X_train);
-						}else if (str_estimator.contains("LinearRegression")) {
-							mini_batch_tree[es]= new LinearRegression(X_train);
-						}else if (str_estimator.contains("LibFmRegressor")) {
-							mini_batch_tree[es]= new LibFmRegressor(X_train);
-						}else if (str_estimator.contains("LibFmClassifier")) {
-							mini_batch_tree[es]= new LibFmClassifier(X_train);
-						}else if (str_estimator.contains("knnClassifier")) {
-							mini_batch_tree[es]= new knnClassifier(X_train);
-						}else if (str_estimator.contains("knnRegressor")) {
-							mini_batch_tree[es]= new knnRegressor(X_train);
-						}else if (str_estimator.contains("KernelmodelClassifier")) {
-							mini_batch_tree[es]= new KernelmodelClassifier(X_train);
-						}else if (str_estimator.contains("KernelmodelRegressor")) {
-							mini_batch_tree[es]= new KernelmodelRegressor(X_train);
-						}else if (str_estimator.contains("XgboostRegressor")) {
-							mini_batch_tree[es]= new XgboostRegressor(X_train);									
-						}else if (str_estimator.contains("XgboostClassifier")) {
-							mini_batch_tree[es]= new XgboostClassifier(X_train);									
+ 						int bags=find_bags(level_grid[es]);
+						if (containsClassifier(str_estimator)){
+							BaggingClassifier mod = new BaggingClassifier(X_train);
+							mod.set_model_parameters(level_grid[es]);
+							mini_batch_tree[es]=mod;
+							mini_batch_tree[es].AddClassnames(this.classes);
+						} else if (containsRegressor(str_estimator)){
+							BaggingRegressor mod = new BaggingRegressor(X_train);
+							mod.set_model_parameters(level_grid[es]);
+							mini_batch_tree[es]=mod;
 						} else {
-							throw new IllegalStateException(" The selected model '" + str_estimator + "' inside the '" + level_grid[es] + "' is not recognizable!" );
+							throw new IllegalStateException(" Only regressors and classifiers supported in StackNet for the meantime." );	
 						}
-						mini_batch_tree[es].set_params(level_grid[es]);
+						mini_batch_tree[es].set_params("estimators:" +bags +  " verbose:false seed:1");
+						
 						if (containsClassifier(str_estimator)){
 							mini_batch_tree[es].set_target(binner.transform(y_train));
 						}else {
@@ -3017,62 +2714,21 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 			for (int es=0; es <level_grid.length; es++ ){
 				String splits[]=level_grid[es].split(" " + "+");	
 				String str_estimator=splits[0];
-				
-				if (str_estimator.contains("AdaboostForestRegressor")) {
-					mini_batch_tree[es]= new AdaboostForestRegressor(data);
-				} else if (str_estimator.contains("AdaboostRandomForestClassifier")) {
-					mini_batch_tree[es]= new AdaboostRandomForestClassifier(data);
-				}else if (str_estimator.contains("DecisionTreeClassifier")) {
-					mini_batch_tree[es]= new DecisionTreeClassifier(data);
-				}else if (str_estimator.contains("DecisionTreeRegressor")) {
-					mini_batch_tree[es]= new DecisionTreeRegressor(data);
-				}else if (str_estimator.contains("GradientBoostingForestClassifier")) {
-					mini_batch_tree[es]= new GradientBoostingForestClassifier(data);
-				}else if (str_estimator.contains("GradientBoostingForestRegressor")) {
-					mini_batch_tree[es]= new GradientBoostingForestRegressor(data);
-				}else if (str_estimator.contains("RandomForestClassifier")) {
-					mini_batch_tree[es]= new RandomForestClassifier(data);
-				}else if (str_estimator.contains("RandomForestRegressor")) {
-					mini_batch_tree[es]= new RandomForestRegressor(data);
-				}else if (str_estimator.contains("Vanilla2hnnregressor")) {
-					mini_batch_tree[es]= new Vanilla2hnnregressor(data);
-				}else if (str_estimator.contains("Vanilla2hnnclassifier")) {
-					mini_batch_tree[es]= new Vanilla2hnnclassifier(data);
-				}else if (str_estimator.contains("softmaxnnclassifier")) {
-					mini_batch_tree[es]= new softmaxnnclassifier(data);
-				}else if (str_estimator.contains("multinnregressor")) {
-					mini_batch_tree[es]= new multinnregressor(data);
-				}else if (str_estimator.contains("NaiveBayesClassifier")) {
-					mini_batch_tree[es]= new NaiveBayesClassifier(data);
-				}else if (str_estimator.contains("LSVR")) {
-					mini_batch_tree[es]= new LSVR(data);
-				}else if (str_estimator.contains("LSVC")) {
-					mini_batch_tree[es]= new LSVC(data);
-				}else if (str_estimator.contains("LogisticRegression")) {
-					mini_batch_tree[es]= new LogisticRegression(data);
-				}else if (str_estimator.contains("LinearRegression")) {
-					mini_batch_tree[es]= new LinearRegression(data);
-				}else if (str_estimator.contains("LibFmRegressor")) {
-					mini_batch_tree[es]= new LibFmRegressor(data);
-				}else if (str_estimator.contains("LibFmClassifier")) {
-					mini_batch_tree[es]= new LibFmClassifier(data);
-				}else if (str_estimator.contains("knnClassifier")) {
-					mini_batch_tree[es]= new knnClassifier(data);
-				}else if (str_estimator.contains("knnRegressor")) {
-					mini_batch_tree[es]= new knnRegressor(data);
-				}else if (str_estimator.contains("KernelmodelClassifier")) {
-					mini_batch_tree[es]= new KernelmodelClassifier(data);
-				}else if (str_estimator.contains("KernelmodelRegressor")) {
-					mini_batch_tree[es]= new KernelmodelRegressor(data);
-				}else if (str_estimator.contains("XgboostRegressor")) {
-					mini_batch_tree[es]= new XgboostRegressor(data);									
-				}else if (str_estimator.contains("XgboostClassifier")) {
-					mini_batch_tree[es]= new XgboostClassifier(data);								
+				int bags=find_bags(level_grid[es]);
+				if (containsClassifier(str_estimator)){
+					BaggingClassifier mod = new BaggingClassifier(data);
+					mod.set_model_parameters(level_grid[es]);
+					mini_batch_tree[es]=mod;
+					mini_batch_tree[es].AddClassnames(this.classes);
+				} else if (containsRegressor(str_estimator)){
+					BaggingRegressor mod = new BaggingRegressor(data);
+					mod.set_model_parameters(level_grid[es]);
+					mini_batch_tree[es]=mod;
 				} else {
-					throw new IllegalStateException(" The selected model '" + str_estimator + "' inside the '" + level_grid[es] + "' is not recognizable!" );
+					throw new IllegalStateException(" Only regressors and classifiers supported in StackNet for the meantime." );	
 				}
-				mini_batch_tree[es].set_params(level_grid[es]);
-
+				mini_batch_tree[es].set_params("estimators:" +bags +  " verbose:false seed:1");	
+				
 				if (containsClassifier(str_estimator)){
 					mini_batch_tree[es].set_target(binner.transform(this.target));
 				}else {
@@ -3324,63 +2980,24 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 					for (int es=0; es <level_grid.length; es++ ){
 						String splits[]=level_grid[es].split(" " + "+");	
 						String str_estimator=splits[0];
-						
-						if (str_estimator.contains("AdaboostForestRegressor")) {
-							mini_batch_tree[es]= new AdaboostForestRegressor(X_train);
-						} else if (str_estimator.contains("AdaboostRandomForestClassifier")) {
-							mini_batch_tree[es]= new AdaboostRandomForestClassifier(X_train);
-						}else if (str_estimator.contains("DecisionTreeClassifier")) {
-							mini_batch_tree[es]= new DecisionTreeClassifier(X_train);
-						}else if (str_estimator.contains("DecisionTreeRegressor")) {
-							mini_batch_tree[es]= new DecisionTreeRegressor(X_train);
-						}else if (str_estimator.contains("GradientBoostingForestClassifier")) {
-							mini_batch_tree[es]= new GradientBoostingForestClassifier(X_train);
-						}else if (str_estimator.contains("GradientBoostingForestRegressor")) {
-							mini_batch_tree[es]= new GradientBoostingForestRegressor(X_train);
-						}else if (str_estimator.contains("RandomForestClassifier")) {
-							mini_batch_tree[es]= new RandomForestClassifier(X_train);
-						}else if (str_estimator.contains("RandomForestRegressor")) {
-							mini_batch_tree[es]= new RandomForestRegressor(X_train);
-						}else if (str_estimator.contains("Vanilla2hnnregressor")) {
-							mini_batch_tree[es]= new Vanilla2hnnregressor(X_train);
-						}else if (str_estimator.contains("Vanilla2hnnclassifier")) {
-							mini_batch_tree[es]= new Vanilla2hnnclassifier(X_train);
-						}else if (str_estimator.contains("softmaxnnclassifier")) {
-							mini_batch_tree[es]= new softmaxnnclassifier(X_train);
-						}else if (str_estimator.contains("multinnregressor")) {
-							mini_batch_tree[es]= new multinnregressor(X_train);
-						}else if (str_estimator.contains("NaiveBayesClassifier")) {
-							mini_batch_tree[es]= new NaiveBayesClassifier(X_train);
-						}else if (str_estimator.contains("LSVR")) {
-							mini_batch_tree[es]= new LSVR(X_train);
-						}else if (str_estimator.contains("LSVC")) {
-							mini_batch_tree[es]= new LSVC(X_train);
-						}else if (str_estimator.contains("LogisticRegression")) {
-							mini_batch_tree[es]= new LogisticRegression(X_train);
-						}else if (str_estimator.contains("LinearRegression")) {
-							mini_batch_tree[es]= new LinearRegression(X_train);
-						}else if (str_estimator.contains("LibFmRegressor")) {
-							mini_batch_tree[es]= new LibFmRegressor(X_train);
-						}else if (str_estimator.contains("LibFmClassifier")) {
-							mini_batch_tree[es]= new LibFmClassifier(X_train);
-						}else if (str_estimator.contains("knnClassifier")) {
-							mini_batch_tree[es]= new knnClassifier(X_train);
-						}else if (str_estimator.contains("knnRegressor")) {
-							mini_batch_tree[es]= new knnRegressor(X_train);
-						}else if (str_estimator.contains("KernelmodelClassifier")) {
-							mini_batch_tree[es]= new KernelmodelClassifier(X_train);
-						}else if (str_estimator.contains("KernelmodelRegressor")) {
-							mini_batch_tree[es]= new KernelmodelRegressor(X_train);
-						}else if (str_estimator.contains("XgboostRegressor")) {
-							mini_batch_tree[es]= new XgboostRegressor(X_train);									
-						}else if (str_estimator.contains("XgboostClassifier")) {
-							mini_batch_tree[es]= new XgboostClassifier(X_train);									
+						 
+ 						int bags=find_bags(level_grid[es]);
+						if (containsClassifier(str_estimator)){
+							BaggingClassifier mod = new BaggingClassifier(X_train);
+							mod.set_model_parameters(level_grid[es]);
+							mini_batch_tree[es]=mod;
+							mini_batch_tree[es].AddClassnames(this.classes);
+						} else if (containsRegressor(str_estimator)){
+							BaggingRegressor mod = new BaggingRegressor(X_train);
+							mod.set_model_parameters(level_grid[es]);
+							mini_batch_tree[es]=mod;
 						} else {
-							throw new IllegalStateException(" The selected model '" + str_estimator + "' inside the '" + level_grid[es] + "' is not recognizable!" );
+							throw new IllegalStateException(" Only regressors and classifiers supported in StackNet for the meantime." );	
 						}
-						mini_batch_tree[es].set_params(level_grid[es]);
+						mini_batch_tree[es].set_params("estimators:" +bags +  " verbose:false seed:1");
 
 						if (containsClassifier(str_estimator)){
+							//System.out.println(Arrays.toString(this.classes));
 							mini_batch_tree[es].set_target(binner.transform(y_train));
 						}else {
 							mini_batch_tree[es].set_target(y_train);
@@ -3487,61 +3104,21 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 			for (int es=0; es <level_grid.length; es++ ){
 				String splits[]=level_grid[es].split(" " + "+");	
 				String str_estimator=splits[0];
-				
-				if (str_estimator.contains("AdaboostForestRegressor")) {
-					mini_batch_tree[es]= new AdaboostForestRegressor(data);
-				} else if (str_estimator.contains("AdaboostRandomForestClassifier")) {
-					mini_batch_tree[es]= new AdaboostRandomForestClassifier(data);
-				}else if (str_estimator.contains("DecisionTreeClassifier")) {
-					mini_batch_tree[es]= new DecisionTreeClassifier(data);
-				}else if (str_estimator.contains("DecisionTreeRegressor")) {
-					mini_batch_tree[es]= new DecisionTreeRegressor(data);
-				}else if (str_estimator.contains("GradientBoostingForestClassifier")) {
-					mini_batch_tree[es]= new GradientBoostingForestClassifier(data);
-				}else if (str_estimator.contains("GradientBoostingForestRegressor")) {
-					mini_batch_tree[es]= new GradientBoostingForestRegressor(data);
-				}else if (str_estimator.contains("RandomForestClassifier")) {
-					mini_batch_tree[es]= new RandomForestClassifier(data);
-				}else if (str_estimator.contains("RandomForestRegressor")) {
-					mini_batch_tree[es]= new RandomForestRegressor(data);
-				}else if (str_estimator.contains("Vanilla2hnnregressor")) {
-					mini_batch_tree[es]= new Vanilla2hnnregressor(data);
-				}else if (str_estimator.contains("Vanilla2hnnclassifier")) {
-					mini_batch_tree[es]= new Vanilla2hnnclassifier(data);
-				}else if (str_estimator.contains("softmaxnnclassifier")) {
-					mini_batch_tree[es]= new softmaxnnclassifier(data);
-				}else if (str_estimator.contains("multinnregressor")) {
-					mini_batch_tree[es]= new multinnregressor(data);
-				}else if (str_estimator.contains("NaiveBayesClassifier")) {
-					mini_batch_tree[es]= new NaiveBayesClassifier(data);
-				}else if (str_estimator.contains("LSVR")) {
-					mini_batch_tree[es]= new LSVR(data);
-				}else if (str_estimator.contains("LSVC")) {
-					mini_batch_tree[es]= new LSVC(data);
-				}else if (str_estimator.contains("LogisticRegression")) {
-					mini_batch_tree[es]= new LogisticRegression(data);
-				}else if (str_estimator.contains("LinearRegression")) {
-					mini_batch_tree[es]= new LinearRegression(data);
-				}else if (str_estimator.contains("LibFmRegressor")) {
-					mini_batch_tree[es]= new LibFmRegressor(data);
-				}else if (str_estimator.contains("LibFmClassifier")) {
-					mini_batch_tree[es]= new LibFmClassifier(data);
-				}else if (str_estimator.contains("knnClassifier")) {
-					mini_batch_tree[es]= new knnClassifier(data);
-				}else if (str_estimator.contains("knnRegressor")) {
-					mini_batch_tree[es]= new knnRegressor(data);
-				}else if (str_estimator.contains("KernelmodelClassifier")) {
-					mini_batch_tree[es]= new KernelmodelClassifier(data);
-				}else if (str_estimator.contains("KernelmodelRegressor")) {
-					mini_batch_tree[es]= new KernelmodelRegressor(data);
-				}else if (str_estimator.contains("XgboostRegressor")) {
-					mini_batch_tree[es]= new XgboostRegressor(data);									
-				}else if (str_estimator.contains("XgboostClassifier")) {
-					mini_batch_tree[es]= new XgboostClassifier(data);						
+				int bags=find_bags(level_grid[es]);
+				if (containsClassifier(str_estimator)){
+					BaggingClassifier mod = new BaggingClassifier(data);
+					mod.set_model_parameters(level_grid[es]);
+					mini_batch_tree[es]=mod;
+					mini_batch_tree[es].AddClassnames(this.classes);
+				} else if (containsRegressor(str_estimator)){
+					BaggingRegressor mod = new BaggingRegressor(data);
+					mod.set_model_parameters(level_grid[es]);
+					mini_batch_tree[es]=mod;
 				} else {
-					throw new IllegalStateException(" The selected model '" + str_estimator + "' inside the '" + level_grid[es] + "' is not recognizable!" );
+					throw new IllegalStateException(" Only regressors and classifiers supported in StackNet for the meantime." );	
 				}
-				mini_batch_tree[es].set_params(level_grid[es]);
+				mini_batch_tree[es].set_params("estimators:" +bags +  " verbose:false seed:1");
+				
 				if (containsClassifier(str_estimator)){
 					mini_batch_tree[es].set_target(binner.transform(this.target));
 				}else {
@@ -3959,6 +3536,18 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 					has_classifier_in_last_layer=true;
 				}else if (str_estimator.contains("XgboostClassifier")) {
 					has_classifier_in_last_layer=true;					
+				}else if (str_estimator.contains("LightgbmClassifier")) {
+					has_classifier_in_last_layer=true;					
+				}else if (str_estimator.contains("H2OGbmClassifier")) {
+					has_classifier_in_last_layer=true;					
+				}else if (str_estimator.contains("H2ODeepLearningClassifier")) {
+					has_classifier_in_last_layer=true;					
+				}else if (str_estimator.contains("H2OGlmClassifier")) {
+					has_classifier_in_last_layer=true;					
+				}else if (str_estimator.contains("H2ODrfClassifier")) {
+					has_classifier_in_last_layer=true;					
+				}else if (str_estimator.contains("H2ONaiveBayesClassifier")) {
+					has_classifier_in_last_layer=true;					
 				} 
 				return has_classifier_in_last_layer;
 			}
@@ -3994,6 +3583,16 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 					has_regressor_in_last_layer=true;
 				}else if (str_estimator.contains("XgboostRegressor")) {
 					has_regressor_in_last_layer=true;					
+				}else if (str_estimator.contains("LightgbmRegressor")) {
+					has_regressor_in_last_layer=true;					
+				}else if (str_estimator.contains("H2OGbmRegressor")) {
+					has_regressor_in_last_layer=true;					
+				}else if (str_estimator.contains("H2ODeepLearningRegressor")) {
+					has_regressor_in_last_layer=true;					
+				}else if (str_estimator.contains("H2OGlmRegressor")) {
+					has_regressor_in_last_layer=true;					
+				}else if (str_estimator.contains("H2ODrfRegressor")) {
+					has_regressor_in_last_layer=true;					
 				}
 				return has_regressor_in_last_layer;
 			}			
@@ -4024,6 +3623,11 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 							x.contains("Vanilla2hnnregressor")	||
 							x.contains("LSVR")	||
 							x.contains("LinearRegression")	||
+							x.contains("LightgbmRegressor")	||
+							x.contains("H2OGbmRegressor")	||
+							x.contains("H2ODeepLearningRegressor")	||
+							x.contains("H2OGbmRegressor")	||
+							x.contains("H2ODrfRegressor")	||							
 							x.contains("LibFmRegressor")	||
 							x.contains("knnRegressor")	||
 							x.contains("XgboostRegressor")	||							
@@ -4154,6 +3758,25 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 					metr=Math.sqrt(metr/len);
 				return metr;
 			}
+			
+			/**
+			 * 
+			 * @param params : model parameters
+			 * @return : number of bags if specified (else 1 )
+			 */
+			public static int find_bags(String params ){
+				int bg=1;
+				try{
+					String []splits= params.split("bags:");
+					String []splits2= splits[1].split(" ");
+					bg=Integer.parseInt(splits2[0]);
+				} catch (Exception e){
+					bg=1;
+				}
+				
+				return bg;
+				
+			}
 			/**
 			 * 
 			 * @param preds : 2 dimensional predictions
@@ -4218,6 +3841,14 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 				return predict2d( f);
 			}
 			
+			@Override
+			public int getSeed() {
+				return this.seed;}
+			
+			@Override
+			public void set_target(fsmatrix fstarget){
+				
+			}
 			
 			}
 

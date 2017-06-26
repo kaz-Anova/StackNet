@@ -255,6 +255,7 @@ public class XgboostClassifier implements estimator,classifier {
 			    writer.append("max_depth=" +  this.max_depth + "\n");
 			    writer.append("nthread=" + this.threads + "\n");
 			    writer.append("num_round=" +  this.num_round + "\n");
+			    writer.append("seed=" +  this.seed + "\n");				    
 			    writer.append("max_leaves=" + this.max_leaves + "\n");
 			    writer.append("save_period=0" + "\n");
 			    if (this.verbose){
@@ -491,10 +492,14 @@ public class XgboostClassifier implements estimator,classifier {
 	private static final long serialVersionUID = -8611561535854392960L;
 	@Override
 	public double[][] predict_proba(double[][] data) {
-		 
+		
+		File directory = new File(this.usedir +  File.separator +  "models");
+		if (! directory.exists()){
+			directory.mkdir();
+		}
 		/*  check if the Create_Logic method is run properly
 		 */
-		if (n_classes<2 ||new File(this.usedir +  File.separator + this.model_name +".mod").exists()==false ){
+		if (n_classes<2 ||new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod").exists()==false ){
 			 throw new IllegalStateException("The fit method needs to be run successfully in " +
 										"order to create the logic before attempting scoring a new set");}  
 	
@@ -518,21 +523,21 @@ public class XgboostClassifier implements estimator,classifier {
 		smatrix X= new smatrix(data);
 		output out = new output();
 		out.verbose=false;
-		out.printsmatrix(X,this.usedir +  File.separator + this.model_name + ".test");//this.usedir +  File.separator + 
+		out.printsmatrix(X,this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test");//this.usedir +  File.separator +  "models"+File.separator + 
 		X=null;
 
 		System.gc();
 		
-		create_config_file_pred(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" ,
-				"test:data="+this.usedir +  File.separator + this.model_name + ".test",
-				"model_in=" +this.usedir +  File.separator + this.model_name +".mod",
-				this.usedir +  File.separator + this.model_name + ".pred"	
+		create_config_file_pred(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" ,
+				"test:data="+this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test",
+				"model_in=" +this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod",
+				this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred"	
 				);
 
 		//make subprocess
-		 create_xg_suprocess(this.usedir +  File.separator + this.model_name + ".conf" , false);
+		 create_xg_suprocess(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".conf" , false);
 		 
-		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
+		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
 		 if (this.n_classes==2){
 			 for (int i =0; i <predictions.length;i++ ){
 				 predictions[i][1]= Math.min(1.0,temp[i]);
@@ -541,7 +546,7 @@ public class XgboostClassifier implements estimator,classifier {
 			 }
 		 }else {
 			 if (temp.length!=this.n_classes*predictions.length){
-				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
+				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
 			 }
 			 int s=0;
 			 for (int i =0; i <predictions.length;i++ ){
@@ -554,11 +559,11 @@ public class XgboostClassifier implements estimator,classifier {
 		 
 		 
         // create new file
-		File f = new File(this.usedir +  File.separator + this.model_name + ".test" );
+		File f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test" );
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" );
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name + ".pred" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred" );
         f.delete();     
         temp=null;
 		System.gc();
@@ -570,7 +575,13 @@ public class XgboostClassifier implements estimator,classifier {
 
 	@Override
 	public double[][] predict_proba(fsmatrix data) {
-		if (n_classes<2 ||new File(this.usedir +  File.separator + this.model_name +".mod").exists()==false ){
+		
+		File directory = new File(this.usedir +  File.separator +  "models");
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+		
+		if (n_classes<2 ||new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod").exists()==false ){
 			 throw new IllegalStateException("The fit method needs to be run successfully in " +
 										"order to create the logic before attempting scoring a new set");}  
 	
@@ -593,21 +604,21 @@ public class XgboostClassifier implements estimator,classifier {
 		smatrix X= new smatrix(data);
 		output out = new output();
 		out.verbose=false;
-		out.printsmatrix(X,this.usedir +  File.separator + this.model_name + ".test");//this.usedir +  File.separator + 
+		out.printsmatrix(X,this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test");//this.usedir +  File.separator +  "models"+File.separator + 
 		X=null;
 		
 		System.gc();
 		
-		create_config_file_pred(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" ,
-				"test:data="+this.usedir +  File.separator + this.model_name + ".test",
-				"model_in=" +this.usedir +  File.separator + this.model_name +".mod",
-				this.usedir +  File.separator + this.model_name + ".pred"	
+		create_config_file_pred(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" ,
+				"test:data="+this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test",
+				"model_in=" +this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod",
+				this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred"	
 				);
 		
 		//make subprocess
-		 create_xg_suprocess(this.usedir +  File.separator + this.model_name + ".conf" , false);
+		 create_xg_suprocess(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".conf" , false);
 		 
-		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
+		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
 		 if (this.n_classes==2){
 			 for (int i =0; i <predictions.length;i++ ){
 				 predictions[i][1]= Math.min(1.0,temp[i]);
@@ -616,7 +627,7 @@ public class XgboostClassifier implements estimator,classifier {
 			 }
 		 }else {
 			 if (temp.length!=this.n_classes*predictions.length){
-				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
+				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
 			 }
 			 int s=0;
 			 for (int i =0; i <predictions.length;i++ ){
@@ -629,11 +640,11 @@ public class XgboostClassifier implements estimator,classifier {
 		 
 		 
 		// create new file
-		File f = new File(this.usedir +  File.separator + this.model_name + ".test" );
+		File f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test" );
 		f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" );
 		f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name + ".pred" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred" );
 		f.delete();     
 		temp=null;
 		System.gc();
@@ -647,10 +658,15 @@ public class XgboostClassifier implements estimator,classifier {
 	@Override
 	public double[][] predict_proba(smatrix data) {
 		
+		File directory = new File(this.usedir +  File.separator +  "models");
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+		
 		/*
 		 *  check if the Create_Logic method is run properly
 		 */
-		if (n_classes<2 ||new File(this.usedir +  File.separator + this.model_name +".mod").exists()==false ){
+		if (n_classes<2 ||new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod").exists()==false ){
 			 throw new IllegalStateException("The fit method needs to be run successfully in " +
 										"order to create the logic before attempting scoring a new set");}  
 
@@ -674,18 +690,18 @@ public class XgboostClassifier implements estimator,classifier {
 		
 		output out = new output();
 		out.verbose=false;
-		out.printsmatrix(data,this.usedir +  File.separator + this.model_name + ".test");//this.usedir +  File.separator + 
+		out.printsmatrix(data,this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test");//this.usedir +  File.separator +  "models"+File.separator + 
 		
-		create_config_file_pred(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" ,
-				"test:data="+this.usedir +  File.separator + this.model_name + ".test",
-				"model_in=" +this.usedir +  File.separator + this.model_name +".mod",
-				this.usedir +  File.separator + this.model_name + ".pred"	
+		create_config_file_pred(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" ,
+				"test:data="+this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test",
+				"model_in=" +this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod",
+				this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred"	
 				);
 		
 		//make subprocess
-		 create_xg_suprocess(this.usedir +  File.separator + this.model_name + ".conf" , false);
+		 create_xg_suprocess(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".conf" , false);
 		 
-		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
+		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
 		 if (this.n_classes==2){
 			 for (int i =0; i <predictions.length;i++ ){
 				 predictions[i][1]= Math.min(1.0,temp[i]);
@@ -694,7 +710,7 @@ public class XgboostClassifier implements estimator,classifier {
 			 }
 		 }else {
 			 if (temp.length!=this.n_classes*predictions.length){
-				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
+				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
 			 }
 			 int s=0;
 			 for (int i =0; i <predictions.length;i++ ){
@@ -707,11 +723,11 @@ public class XgboostClassifier implements estimator,classifier {
 		 
 		 
 		// create new file
-		File f = new File(this.usedir +  File.separator + this.model_name + ".test" );
+		File f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test" );
 		f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" );
 		f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name + ".pred" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred" );
 		f.delete();     
 		temp=null;		
 		System.gc();
@@ -740,10 +756,16 @@ public class XgboostClassifier implements estimator,classifier {
 
 	@Override
 	public double[] predict(fsmatrix data) {
+		
+		File directory = new File(this.usedir +  File.separator +  "models");
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+		
 		/*
 		 *  check if the Create_Logic method is run properly
 		 */
-		if (n_classes<2 ||new File(this.usedir +  File.separator + this.model_name +".mod").exists()==false ){
+		if (n_classes<2 ||new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod").exists()==false ){
 			 throw new IllegalStateException("The fit method needs to be run successfully in " +
 										"order to create the logic before attempting scoring a new set");}  
 	
@@ -768,21 +790,21 @@ public class XgboostClassifier implements estimator,classifier {
 		smatrix X= new smatrix(data);
 		output out = new output();
 		out.verbose=false;
-		out.printsmatrix(X,this.usedir +  File.separator + this.model_name + ".test");//this.usedir +  File.separator + 
+		out.printsmatrix(X,this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test");//this.usedir +  File.separator +  "models"+File.separator + 
 		X=null;
 
 		System.gc();
 		
-		create_config_file_pred(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" ,
-				"test:data="+this.usedir +  File.separator + this.model_name + ".test",
-				"model_in=" +this.usedir +  File.separator + this.model_name +".mod",
-				this.usedir +  File.separator + this.model_name + ".pred"	
+		create_config_file_pred(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" ,
+				"test:data="+this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test",
+				"model_in=" +this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod",
+				this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred"	
 				);
 
 		//make subprocess
-		 create_xg_suprocess(this.usedir +  File.separator + this.model_name + ".conf" , false);
+		 create_xg_suprocess(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".conf" , false);
 		 
-		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
+		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
 		 if (this.n_classes==2){
 			 for (int i =0; i <predictions.length;i++ ){
 				 prediction_probas[i][1]= Math.min(1.0,temp[i]);
@@ -791,7 +813,7 @@ public class XgboostClassifier implements estimator,classifier {
 			 }
 		 }else {
 			 if (temp.length!=this.n_classes*predictions.length){
-				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
+				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
 			 }
 			 int s=0;
 			 for (int i =0; i <predictions.length;i++ ){
@@ -804,11 +826,11 @@ public class XgboostClassifier implements estimator,classifier {
 		 
 		 
         // create new file
-		File f = new File(this.usedir +  File.separator + this.model_name + ".test" );
+		File f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test" );
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" );
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name + ".pred" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred" );
         f.delete();     
 		temp=null;       
 		System.gc();
@@ -842,10 +864,16 @@ public class XgboostClassifier implements estimator,classifier {
 
 	@Override
 	public double[] predict(smatrix data) {
+		
+		File directory = new File(this.usedir +  File.separator +  "models");
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+		
 		/*
 		 *  check if the Create_Logic method is run properly
 		 */
-		if (n_classes<2 ||new File(this.usedir +  File.separator + this.model_name +".mod").exists()==false ){
+		if (n_classes<2 ||new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod").exists()==false ){
 			 throw new IllegalStateException("The fit method needs to be run successfully in " +
 										"order to create the logic before attempting scoring a new set");}  
 
@@ -870,20 +898,20 @@ public class XgboostClassifier implements estimator,classifier {
 
 		output out = new output();
 		out.verbose=false;
-		out.printsmatrix(data,this.usedir +  File.separator + this.model_name + ".test");//this.usedir +  File.separator + 
+		out.printsmatrix(data,this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test");//this.usedir +  File.separator +  "models"+File.separator + 
 
 		System.gc();
 		
-		create_config_file_pred(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" ,
-				"test:data="+this.usedir +  File.separator + this.model_name + ".test",
-				"model_in=" +this.usedir +  File.separator + this.model_name +".mod",
-				this.usedir +  File.separator + this.model_name + ".pred"	
+		create_config_file_pred(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" ,
+				"test:data="+this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test",
+				"model_in=" +this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod",
+				this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred"	
 				);
 
 		//make subprocess
-		 create_xg_suprocess(this.usedir +  File.separator + this.model_name + ".conf" , false);
+		 create_xg_suprocess(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".conf" , false);
 		 
-		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
+		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
 		 if (this.n_classes==2){
 			 for (int i =0; i <predictions.length;i++ ){
 				 prediction_probas[i][1]= Math.min(1.0,temp[i]);
@@ -892,7 +920,7 @@ public class XgboostClassifier implements estimator,classifier {
 			 }
 		 }else {
 			 if (temp.length!=this.n_classes*predictions.length){
-				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
+				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
 			 }
 			 int s=0;
 			 for (int i =0; i <predictions.length;i++ ){
@@ -905,11 +933,11 @@ public class XgboostClassifier implements estimator,classifier {
 		 
 		 
         // create new file
-		File f = new File(this.usedir +  File.separator + this.model_name + ".test" );
+		File f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test" );
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" );
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name + ".pred" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred" );
         f.delete();     
 		temp=null;       
 		System.gc();
@@ -945,10 +973,16 @@ public class XgboostClassifier implements estimator,classifier {
 
 	@Override
 	public double[] predict(double[][] data) {
+		
+		File directory = new File(this.usedir +  File.separator +  "models");
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+		
 		/*
 		 *  check if the Create_Logic method is run properly
 		 */
-		if (n_classes<2 ||new File(this.usedir +  File.separator + this.model_name +".mod").exists()==false ){
+		if (n_classes<2 ||new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod").exists()==false ){
 			 throw new IllegalStateException("The fit method needs to be run successfully in " +
 										"order to create the logic before attempting scoring a new set");}   
 	
@@ -971,21 +1005,21 @@ public class XgboostClassifier implements estimator,classifier {
 		smatrix X= new smatrix(data);
 		output out = new output();
 		out.verbose=false;
-		out.printsmatrix(X,this.usedir +  File.separator + this.model_name + ".test");//this.usedir +  File.separator + 
+		out.printsmatrix(X,this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test");//this.usedir +  File.separator +  "models"+File.separator + 
 		X=null;
 
 		System.gc();
 		
-		create_config_file_pred(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" ,
-				"test:data="+this.usedir +  File.separator + this.model_name + ".test",
-				"model_in=" +this.usedir +  File.separator + this.model_name +".mod",
-				this.usedir +  File.separator + this.model_name + ".pred"	
+		create_config_file_pred(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" ,
+				"test:data="+this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test",
+				"model_in=" +this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod",
+				this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred"	
 				);
 
 		//make subprocess
-		 create_xg_suprocess(this.usedir +  File.separator + this.model_name + ".conf" , false);
+		 create_xg_suprocess(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".conf" , false);
 		 
-		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
+		 double temp []=io.input.Retrievecolumn(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred", ",", 0, 0.0, false, false);
 		 if (this.n_classes==2){
 			 for (int i =0; i <predictions.length;i++ ){
 				 prediction_probas[i][1]= Math.min(1.0,temp[i]);
@@ -994,7 +1028,7 @@ public class XgboostClassifier implements estimator,classifier {
 			 }
 		 }else {
 			 if (temp.length!=this.n_classes*predictions.length){
-				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
+				 throw new IllegalStateException(" There produced score in temporartu file " + this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred " + " is not of length n_class*length" );
 			 }
 			 int s=0;
 			 for (int i =0; i <predictions.length;i++ ){
@@ -1007,11 +1041,11 @@ public class XgboostClassifier implements estimator,classifier {
 		 
 		 
         // create new file
-		File f = new File(this.usedir +  File.separator + this.model_name + ".test" );
+		File f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".test" );
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" );
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name + ".pred" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".pred" );
         f.delete();     
 		temp=null;       
 		System.gc();
@@ -1065,6 +1099,8 @@ public class XgboostClassifier implements estimator,classifier {
 	
 	@Override
 	public void fit(double[][] data) {
+		
+		
 		// make sensible checks
 		if (data==null || data.length<=0){
 			throw new IllegalStateException(" Main data object is null or has too few cases" );
@@ -1085,7 +1121,12 @@ public class XgboostClassifier implements estimator,classifier {
 			usedir=System.getProperty("user.dir"); // working directory
 			
 		}
-
+		
+		File directory = new File(this.usedir +  File.separator + "models");
+		
+		if (! directory.exists()){
+			directory.mkdir();
+		}
 		if ( !booster.equals("gbtree")  && !booster.equals("gblinear") ){
 			throw new IllegalStateException(" booster has to be between 'gbtree' and gblinear' " );	
 		}
@@ -1191,7 +1232,9 @@ public class XgboostClassifier implements estimator,classifier {
 			    	fstarget[i]=mapper.get(Starget[i]);
 			    }    
 			
-		}		
+		}	else {
+			fstarget=this.target;	
+		}	
 		
 		
 		
@@ -1232,30 +1275,32 @@ public class XgboostClassifier implements estimator,classifier {
 		System.out.println(X.GetColumnDimension() + X.GetRowDimension());
 		output out = new output();
 		out.verbose=false;
-		out.printsmatrix(X, fstarget,this.usedir +  File.separator + this.model_name + ".train");//this.usedir +  File.separator + 
+		out.printsmatrix(X, fstarget,this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".train");//this.usedir +  File.separator +  "models"+File.separator + 
 		X=null;
 		fstarget=null;
 		fsdataset=null;
 		sdataset=null;
 		System.gc();
 		
-		create_config_file(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" ,
-				"data="+this.usedir +  File.separator + this.model_name + ".train",
-				"model_out=" +this.usedir +  File.separator + this.model_name +".mod");
+		create_config_file(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" ,
+				"data="+this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".train",
+				"model_out=" +this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod");
 
 		//make subprocess
-		 create_xg_suprocess(this.usedir +  File.separator + this.model_name + ".conf" , true);
+		 create_xg_suprocess(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".conf" , true);
 		 
         // create new file
-		File f = new File(this.usedir +  File.separator + this.model_name + ".train" );
+		File f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".train" );
         // tries to delete a non-existing file
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" );
         // tries to delete a non-existing file
         f.delete();	
 	}
 	@Override
 	public void fit(fsmatrix data) {
+		
+		
 		// make sensible checks
 		if (data==null || data.GetRowDimension()<=0){
 			throw new IllegalStateException(" Main data object is null or has too few cases" );
@@ -1275,6 +1320,12 @@ public class XgboostClassifier implements estimator,classifier {
 		if (this.usedir.equals("")){
 			usedir=System.getProperty("user.dir"); // working directory
 			
+		}
+		
+		File directory = new File(this.usedir +  File.separator + "models");
+		
+		if (! directory.exists()){
+			directory.mkdir();
 		}
 
 		if ( !booster.equals("gbtree")  && !booster.equals("gblinear") ){
@@ -1382,7 +1433,9 @@ public class XgboostClassifier implements estimator,classifier {
 			    	fstarget[i]=mapper.get(Starget[i]);
 			    }    
 			
-		}		
+		}	else {
+			fstarget=this.target;	
+		}	
 		
 		if (weights==null) {
 			/*
@@ -1420,25 +1473,25 @@ public class XgboostClassifier implements estimator,classifier {
 		smatrix X= new smatrix(data);
 		output out = new output();
 		out.verbose=false;
-		out.printsmatrix(X, fstarget,this.usedir +  File.separator + this.model_name + ".train");//this.usedir +  File.separator + 
+		out.printsmatrix(X, fstarget,this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".train");//this.usedir +  File.separator +  "models"+File.separator + 
 		X=null;
 		fstarget=null;
 		fsdataset=null;
 		sdataset=null;
 		System.gc();
 		
-		create_config_file(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" ,
-				"data="+this.usedir +  File.separator + this.model_name + ".train",
-				"model_out=" +this.usedir +  File.separator + this.model_name +".mod");
+		create_config_file(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" ,
+				"data="+this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".train",
+				"model_out=" +this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod");
 
 		//make subprocess
-		 create_xg_suprocess(this.usedir +  File.separator + this.model_name + ".conf" , true);
+		 create_xg_suprocess(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".conf" , true);
 
 	        // create new file
-			File f = new File(this.usedir +  File.separator + this.model_name + ".train" );
+			File f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".train" );
 	        // tries to delete a non-existing file
 	        f.delete();
-			f = new File(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" );
+			f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" );
 	        // tries to delete a non-existing file
 	        f.delete();
 		
@@ -1446,6 +1499,9 @@ public class XgboostClassifier implements estimator,classifier {
 	
 	@Override
 	public void fit(smatrix data) {
+		
+
+		
 		// make sensible checks
 		if (data==null || data.GetRowDimension()<=0){
 			throw new IllegalStateException(" Main data object is null or has too few cases" );
@@ -1464,6 +1520,12 @@ public class XgboostClassifier implements estimator,classifier {
 		if (this.usedir.equals("")){
 			usedir=System.getProperty("user.dir"); // working directory
 			
+		}
+		
+		File directory = new File(this.usedir +  File.separator + "models");
+		
+		if (! directory.exists()){
+			directory.mkdir();
 		}
 
 		if ( !booster.equals("gbtree")  && !booster.equals("gblinear") ){
@@ -1571,7 +1633,9 @@ public class XgboostClassifier implements estimator,classifier {
 			    	fstarget[i]=mapper.get(Starget[i]);
 			    }    
 			
-		}		
+		}	else {
+			fstarget=this.target;	
+		}	
 		
 		
 		
@@ -1611,27 +1675,27 @@ public class XgboostClassifier implements estimator,classifier {
 
 		output out = new output();
 		out.verbose=false;
-		out.printsmatrix(data, fstarget,this.usedir +  File.separator + this.model_name + ".train");//this.usedir +  File.separator + 
+		out.printsmatrix(data, fstarget,this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".train");//this.usedir +  File.separator +  "models"+File.separator + 
 		data=null;
 		fstarget=null;
 		fsdataset=null;
 		sdataset=null;
 		System.gc();
 		
-		create_config_file(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" ,
-				"data="+this.usedir +  File.separator + this.model_name + ".train",
-				"model_out=" +this.usedir +  File.separator + this.model_name +".mod");
+		create_config_file(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" ,
+				"data="+this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".train",
+				"model_out=" +this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod");
 
 		//make subprocess
-		 create_xg_suprocess(this.usedir +  File.separator + this.model_name + ".conf" , true);
+		 create_xg_suprocess(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".conf" , true);
 		sdataset=null;
 		System.gc();
 		
         // create new file
-		File f = new File(this.usedir +  File.separator + this.model_name + ".train" );
+		File f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".train" );
         // tries to delete a non-existing file
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name.replace(" ", "") + ".conf" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name.replace(" ", "") + ".conf" );
         // tries to delete a non-existing file
         f.delete();
 		
@@ -1715,11 +1779,11 @@ public class XgboostClassifier implements estimator,classifier {
 	    System.out.println("num_round: " +  this.num_round );
 	    System.out.println("max_leaves: " + this.max_leaves );
 	    if (this.verbose){
-	    	System.out.println("silent: 0");
+	    	System.out.println("verbose: true");
 	    }else {
-	    	System.out.println("silent: 1");
+	    	System.out.println("verbose: false");
 	    }
-		if (new File(this.usedir +  File.separator + this.model_name +".mod").exists()){
+		if (new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod").exists()){
 			System.out.println("Trained: True");	
 		} else {
 			System.out.println("Trained: False");
@@ -1738,7 +1802,7 @@ public class XgboostClassifier implements estimator,classifier {
 
 	@Override
 	public boolean isfitted() {
-		if (new File(this.usedir +  File.separator + this.model_name +".mod").exists()){
+		if (new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name +".mod").exists()){
 			return true;	
 		} else {
 			return false;
@@ -1758,16 +1822,21 @@ public class XgboostClassifier implements estimator,classifier {
 
 	@Override
 	public void reset() {
-
+		
+		File directory = new File(this.usedir +  File.separator +  "models");
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+		
 		n_classes=0;
 		threads=1;
 		columndimension=0;
         // create new file
-		File f = new File(this.usedir +  File.separator + this.model_name + ".train" );
+		File f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".train" );
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name + ".conf" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".conf" );
         f.delete();
-		f = new File(this.usedir +  File.separator + this.model_name + ".mod" );
+		f = new File(this.usedir +  File.separator +  "models"+File.separator + this.model_name + ".mod" );
         f.delete();  
 
         booster = "gbtree";
@@ -1821,6 +1890,7 @@ public class XgboostClassifier implements estimator,classifier {
 				else if (metric.equals("colsample_bytree")) {this.colsample_bytree=Double.parseDouble(value);}
 				else if (metric.equals("subsample")) {this.subsample=Double.parseDouble(value);}	
 				else if (metric.equals("num_round")) {this.num_round=Integer.parseInt(value);}
+				else if (metric.equals("min_child_weight")) {this.min_child_weight=Double.parseDouble(value);}
 				else if (metric.equals("scale_pos_weight")) {this.scale_pos_weight=Double.parseDouble(value);}	
 				else if (metric.equals("eta")) {this.eta=Double.parseDouble(value);}					
 				else if (metric.equals("max_leaves")) {this.max_leaves=Integer.parseInt(value);}				
@@ -1863,7 +1933,9 @@ public class XgboostClassifier implements estimator,classifier {
 	public void setSeed(int seed) {
 		this.seed=seed;}	
 	
-
+	@Override
+	public int getSeed() {
+		return this.seed;}
 
 			
 }

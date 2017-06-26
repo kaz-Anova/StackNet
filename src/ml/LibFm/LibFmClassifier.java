@@ -2352,5 +2352,7 @@ return predictions;
 		}
 		this.target=data;
 	}
-	
+	@Override
+	public int getSeed() {
+		return this.seed;}
 }

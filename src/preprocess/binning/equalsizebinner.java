@@ -22,6 +22,7 @@ SOFTWARE.
 
 package preprocess.binning;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -33,8 +34,13 @@ import exceptions.IllegalStateException;
  *Implements binning of a variable based on equal population
  *
  */
-public class equalsizebinner {
 
+public class equalsizebinner implements Serializable {
+
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = -8759630571881379877L;
 	/**
 	 * Number of bins to create based on equal populations
 	 */
@@ -91,7 +97,7 @@ public class equalsizebinner {
 			bins=bin;
 		}
 	
-		int calculate_bin_size=(int)((double)(new_array.length)/(double)(bins)); /// every how many rows we have the next bin
+		int calculate_bin_size=(int)Math.floor(((double)(new_array.length)/(double)(bins))); /// every how many rows we have the next bin
 		Arrays.sort(new_array); //sort array
 		//some default values
 	    int row_index=0;
@@ -101,8 +107,12 @@ public class equalsizebinner {
 		ArrayList<String []> bin_details_str= new ArrayList<String []>();		
 
 
-	    for  (int s=0; s< bins-1; s++){
+	    for  (int s=0; s< bins; s++){
 	    	 row_index+=calculate_bin_size;
+	    	 
+	    	 if (row_index>=new_array.length){
+	    		 row_index=new_array.length-1;
+	    	 }
 	    	 double value=new_array[row_index];
 	    	 if (value>previous_value){
 
@@ -114,24 +124,29 @@ public class equalsizebinner {
 		    	   index_holder+=1 ;		           
 	    		  
 	    	 }
+	    	 if (row_index==new_array.length-1){
+	    		 break;
+	    	 }
 	    }
 	    // last values
 	    
-		  double [] newarray=new double [] {maximum_value,index_holder+1};
-		  String [] newarraystr=new String [] {maximum_value + "",">" +maximum_value };	 
+		  //double [] newarray=new double [] {maximum_value,index_holder};
+		 // String [] newarraystr=new String [] {maximum_value + "",">" +maximum_value };	 
 		   
-	    bin_details.add(newarray);
-	    bin_details_str.add(newarraystr)    ;
+	    //bin_details.add(newarray);
+	    //bin_details_str.add(newarraystr)    ;
 	    
 	    // passes the results onto an array
 	    bin_holder= new double [bin_details.size()][2];
 	    strig_bin_holder= new String [bin_details_str.size()][2];	
-	    
+	    System.out.println(" Binning parameters ");
 	    for (int j=0; j <bin_holder.length; j++ ){
 	    	bin_holder[j]=bin_details.get(j);
-	    	strig_bin_holder[j]=bin_details_str.get(j);	    	
+	    	strig_bin_holder[j]=bin_details_str.get(j);
+	    	System.out.println(Arrays.toString(strig_bin_holder[j]));
 	    }
 	    
+	    bins=this.bin_holder.length;
 		
 	}
 	
@@ -163,7 +178,7 @@ public class equalsizebinner {
 	        		 }
 	        	  }
 	        	  if (isin==false){
-	        		  binned_array[s]=other; 
+	        		  binned_array[s]=bin_holder[bin_holder.length-1][1]; 
 	        	  }
 	          }
 	               	
@@ -203,7 +218,7 @@ public class equalsizebinner {
 	        		 }
 	        	  }
 	        	  if (isin==false){
-	        		  binned_array[s]=other; 
+	        		  binned_array[s]=(int) bin_holder[bin_holder.length-1][1]; 
 	        	  }
 	          }
 	               	
@@ -241,7 +256,7 @@ public class equalsizebinner {
 	        		 }
 	        	  }
 	        	  if (isin==false){
-	        		  binned_array[s]=other +""; 
+	        		  binned_array[s]=strig_bin_holder[strig_bin_holder.length-1][1]; 
 	        	  }
 	          }
 	               	

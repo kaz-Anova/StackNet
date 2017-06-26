@@ -64,6 +64,9 @@ public interface regressor extends estimator {
 		 * @return predictions 
 		 */	
 		double[] predict_Row2d(smatrix f, int start, int end);
-	
-
+		/**
+		 * 
+		 * @param fstarget : target variable in fixed-size matrix
+		 */
+		public void set_target(fsmatrix fstarget);
 }

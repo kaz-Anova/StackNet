@@ -3893,4 +3893,7 @@ public class binaryLSVC implements estimator,classifier,Runnable {
 		}
 		this.target=data;
 	}
+	@Override
+	public int getSeed() {
+		return this.seed;}
 }

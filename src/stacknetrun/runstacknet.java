@@ -479,7 +479,7 @@ public class runstacknet {
 				try {
 					Serialized_Object.save(model_file, (Serializable) stacknet);
 				} catch (IOException e1) {
-					System.out.println("model could not be exported at " + model_file);
+					System.out.println("model could not be exported at " + model_file  + " because " + e1.getMessage());
 				}
 				
 				// check if there is a test file. if there is one, then it gets loaded and predictions are made
@@ -532,7 +532,7 @@ public class runstacknet {
 					try {
 						Serialized_Object.save(model_file, (Serializable) stacknetreg);
 					} catch (IOException e1) {
-						System.out.println("model could not be exported at " + model_file);
+						System.out.println("model could not be exported at " + model_file + " because " + e1.getMessage());
 					}
 					
 					// check if there is a test file. if there is one, then it gets loaded and predictions are made
@@ -1017,8 +1017,8 @@ public class runstacknet {
 		
 	}
 	
-	
-
+System.exit(-1);
 }
+	
 }	
 	

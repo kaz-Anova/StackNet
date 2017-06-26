@@ -388,7 +388,6 @@ public class input {
 	* <p> This method reads a file and print various information about the columns
 	*/
 
-	        @SuppressWarnings("resource")
 			public  void getfileinfo (String n, String delimeter, int xfirstlines, boolean hasheaders, boolean hasconsecutivedel) {
 
 	            File x= new File(n);
@@ -1635,7 +1634,7 @@ public class input {
 		                    		if (model_OK){
 		                    			models_list.get(models_list.size()-1).add(line);
 		                    		} else {
-		                    			throw new IllegalStateException("Line " + row_counter + " : " +  line + " does not contain a valid StackNet input model, please cehck the spelling - It is case sensitive. ");
+		                    			throw new IllegalStateException("Line " + row_counter + " : " +  line + " does not contain a valid StackNet input model, please check the spelling - It is case sensitive. ");
 		                    		}
 		                    	} else {
 		                    		if (models_list.get(models_list.size()-1).size()>0){
@@ -1730,7 +1729,30 @@ public class input {
 						is_valid=true;
 					}else if (str_estimator.contains("XgboostRegressor")) {
 						is_valid=true;
-					} 
+					}else if (str_estimator.contains("LightgbmClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("LightgbmRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("H2OGbmClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("H2OGbmRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("H2ODeepLearningClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("H2ODeepLearningRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("H2ODrfClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("H2ODrfRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("H2OGlmClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("H2OGlmRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("H2ONaiveBayesClassifier")) {
+						is_valid=true;
+					}
+					
 					return is_valid;
 	        }
 	        /**

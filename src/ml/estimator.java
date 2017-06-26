@@ -134,6 +134,11 @@ public interface estimator extends Serializable,Runnable{
 	public void setSeed(int seed);
 	/**
 	 * 
+	 *@return seed 
+	 */
+	public int getSeed();
+	/**
+	 * 
 	 * @param data : data to create the constructor
 	 */
 	public void setdata(double data [][]);
@@ -179,5 +184,10 @@ public interface estimator extends Serializable,Runnable{
 	 * @param data : target varible as 1d
 	 */
 	public void set_target(double data []);
+	/**
+	 * @param names : Classes' names
+	 * <p> method to add order and names to the classes to be classified
+	 */
+	public void AddClassnames(String names[]);
 	
 }

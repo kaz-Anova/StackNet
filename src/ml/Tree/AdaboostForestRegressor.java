@@ -2137,6 +2137,19 @@ public class AdaboostForestRegressor implements estimator,regressor {
 					
 				}
 			}
+			
+			@Override
+			public int getSeed() {
+				return this.seed;}
+			
+			@Override
+			public void AddClassnames(String names[]){
+				//none
+			}
+			@Override
+			public void set_target(fsmatrix fstarget){
+				this.fstarget=fstarget;
+			}
 }
 
 	  

@@ -1,29 +1,20 @@
 package utilis;
+
+import java.io.Serializable;
+
 /**
  * 
  * Detects operartional system . Retrieved from here : https://gist.github.com/kiuz/816e24aa787c2d102dd0
  *
  */
-public class detectos {
+public class detectos implements Serializable{
 
-    private static String OS = System.getProperty("os.name").toLowerCase();
-
-    public static void main(String[] args) {
-
-        System.out.println(OS);
-
-        if (isWindows()) {
-            System.out.println("This is Windows");
-        } else if (isMac()) {
-            System.out.println("This is Mac");
-        } else if (isUnix()) {
-            System.out.println("This is Unix or Linux");
-        } else if (isSolaris()) {
-            System.out.println("This is Solaris");
-        } else {
-            System.out.println("Your OS is not support!!");
-        }
-    }
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7673449933038592997L;
+	
+	private static String OS = System.getProperty("os.name").toLowerCase();
 
     public static boolean isWindows() {
         return (OS.indexOf("win") >= 0);

@@ -1340,7 +1340,7 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		// make sensible checks on the target data
 		if ( (target==null || target.length!=data.length) && (Starget==null || Starget.length!=data.length) ){
 			throw new IllegalStateException(" target array needs to be provided with the same length as the data" );
-		} else if (target!=null && (classes==null ||  classes.length<=1) ){
+		} else if (target!=null  ){
 				
 			// check if values only 1 and zero
 			HashSet<Double> has= new HashSet<Double> ();
@@ -1703,7 +1703,7 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		// make sensible checks on the target data
 		if ( (target==null || target.length!=data.GetRowDimension()) && (Starget==null || Starget.length!=data.GetRowDimension()) ){
 			throw new IllegalStateException(" target array needs to be provided with the same length as the data" );
-		} else if (target!=null && (classes==null ||  classes.length<=1) ){
+		} else if (target!=null  ){
 				
 			// check if values only 1 and zero
 			HashSet<Double> has= new HashSet<Double> ();
@@ -2061,7 +2061,7 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 		// make sensible checks on the target data
 		if ( (target==null || target.length!=data.GetRowDimension()) && (Starget==null || Starget.length!=data.GetRowDimension()) ){
 			throw new IllegalStateException(" target array needs to be provided with the same length as the data" );
-		} else if (target!=null && (classes==null ||  classes.length<=1) ){
+		} else if (target!=null  ){
 				
 			// check if values only 1 and zero
 			HashSet<Double> has= new HashSet<Double> ();
@@ -2839,7 +2839,9 @@ public class GradientBoostingForestClassifier implements estimator,classifier {
 
 					}
 			}
-			
+				@Override
+				public int getSeed() {
+					return this.seed;}
 			}
 			  
 
