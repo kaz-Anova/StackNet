@@ -246,9 +246,9 @@ Small Note: The user would need to delete the '.mod' files from inside the `mode
 
 All the required jars are already packaged within the StackNet jar, however the user may find them inside the repo too. 
 
-No special installation is required , but experimentally system protection might be blocking it , therefore make certain that the StackNet.jar is in the exceptions of firewall.
+No special installation is required , but experimentally system protection might be blocking it , therefore make certain that the StackNet.jar is in the exceptions (firewall).
 
-Additionally the first time STackNet uses an H2o Algorithm within the ensemble it takes more time (as with every other time) because it sets up a cluster . 
+Additionally the first time StackNet uses an H2o Algorithm within the ensemble it takes more time (in comparison to every other time) because it sets up a cluster . 
 
 ### Command Line Parameters
 
