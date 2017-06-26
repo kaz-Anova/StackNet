@@ -130,7 +130,7 @@ UseConstant | If true it uses an intercept.
 maxim_Iteration | Maximum number of iterations (int) .
 shuffle | True to train on random rows. 
 
-### LSVC (Linear Support Vector Machine)
+### LSVC
 
 ```
 LSVC Type:Liblinear usescale:True C:1.0 RegularizationType:L2 shuffle:true UseConstant:true l1C:1.0 maxim_Iteration:100 seed:1 threads:1 bags:1 verbose:false
@@ -222,7 +222,7 @@ booster | 'gbtree' or 'gblinear'.
 alpha |controls overfitting (double). 
 lambda |controls overfitting (double). 
 
-### LightgbmClassifier(**NEW**)
+### LightgbmClassifier
 
 The original parameters can be found [here](https://github.com/Microsoft/LightGBM/blob/master/docs/Parameters.md) 
 
@@ -262,7 +262,7 @@ two_round | if true it saves memory but takes more time.
 uniform_drop | Specify whether to use uniform dropout.
 boolean	xgboost_dart_mode | true use xgboost dart mode or not.
 
-### H2OGbmClassifier(**NEW**)
+### H2OGbmClassifier
 
 ```
 H2OGbmClassifier ntrees:100 learn_rate:0.01 nbins:255 balance_classes:false max_depth:4 col_sample_rate_per_tree:0.5 col_sample_rate:1.0 sample_rate:0.9 min_rows:1 seed:1 threads:1 bags:1 verbose:false
@@ -280,7 +280,7 @@ balance_classes | whether to oversample the minority classes to balance the clas
 min_rows | minimum number of cases in a node.
 nbins | The number of bins for the histogram to build.
 
-### H2ODeepLearningClassifier(**NEW**)
+### H2ODeepLearningClassifier
 
 ```
 H2ODeepLearningClassifier activation:Rectifier input_dropout_ratio:0.1 shuffle:true tandardize:false weight_init:UniformAdaptive sample_rate:1.0 l1:0 l2:0.00001 max_w2:1.0 mini_batch_size:1 fast_mode:false adaptive_rate:true rho:0.9 epsilon:1e-8 balance_classes:false epochs:10 dropouts:0.5,0.5 hidden:100,50 col_sample_rate:1.0 sample_rate:0.9 min_rows:1 seed:1 threads:1 bags:1 verbose:false
@@ -314,7 +314,7 @@ shuffle | true to enable shuffling of training data (on each node).
 tandardize | true to standardize the input data.
 weight_init | The distribution from which initial weights are to be drawn. Has to be 'UniformAdaptive', 'Uniform' or 'Normal'
 
-### H2ODrfClassifier(**NEW**)
+### H2ODrfClassifier
 
 ```
 H2ODrfClassifier ntrees:100 nbins:255 balance_classes:false max_depth:4 col_sample_rate_per_tree:0.5 sample_rate:0.9 min_rows:1 seed:1 threads:1 bags:1 verbose:false
@@ -330,7 +330,7 @@ balance_classes | whether to oversample the minority classes to balance the clas
 min_rows | minimum number of cases in a node.
 nbins | The number of bins for the histogram to build.
 
-### H2OGlmClassifier(**NEW**)
+### H2OGlmClassifier
 
 ```
 H2OGlmClassifier alpha:0 lambda:0.00001 balance_classes:false standardize:false max_iterations:50 beta_epsilon:0.00001 bjective_epsilon:0.00001 seed:1 threads:1 bags:1 verbose:false
@@ -346,7 +346,7 @@ bjective_epsilon | tolerance of the objective function
 balance_classes | true to Specify whether to oversample the minority classes to balance the class distribution.
 standardize | true to standardize input features or not
 
-### H2ONaiveBayesClassifier(**NEW**)
+### H2ONaiveBayesClassifier
 
 ```
 H2ONaiveBayesClassifier alpha:0 lambda:0.00001 balance_classes:false standardize:false max_iterations:50 beta_epsilon:0.00001 bjective_epsilon:0.00001 seed:1 threads:1 bags:1 verbose:false
@@ -475,7 +475,7 @@ UseConstant | If true it uses an intercept.
 maxim_Iteration | Maximum number of iterations (int) .
 shuffle | True to train on random rows. 
 
-### LSVR (Linear Support Vector Machine)
+### LSVR
 
 ```
 LSVR Type:Liblinear usescale:True C:1.0 learn_rate:0.1 smooth:0.1 RegularizationType:L2 Objective:L2 shuffle:true UseConstant:true l1C:1.0 maxim_Iteration:100 seed:1 threads:1 bags:1 verbose:false
@@ -538,7 +538,7 @@ tau | Tau value for QUANTILE (double).
 UseConstant | If true it uses an intercept.
 shuffle | True to train on random rows.
 
-### XgboostRegressor(**NEW**)
+### XgboostRegressor
 
 The original parameters can be found [here](https://github.com/dmlc/xgboost/blob/master/doc/parameter.md) 
 
@@ -563,7 +563,7 @@ alpha |controls overfitting (double).
 lambda |controls overfitting (double). 
 
 
-### LightgbmRegressor(**NEW**)
+### LightgbmRegressor
 
 The original parameters can be found [here](https://github.com/Microsoft/LightGBM/blob/master/docs/Parameters.md) 
 
@@ -606,7 +606,7 @@ two_round | if true it saves memory but takes more time.
 uniform_drop | Specify whether to use uniform dropout.
 boolean	xgboost_dart_mode | true use xgboost dart mode or not.
 
-### H2OGbmRegressor(**NEW**)
+### H2OGbmRegressor
 
 ```
 H2OGbmRegressor ntrees:100 tweedie_power:1.2 quantile_alpha:0.1 objective:auto learn_rate:0.01 nbins:255 balance_classes:false max_depth:4 col_sample_rate_per_tree:0.5 col_sample_rate:1.0 sample_rate:0.9 min_rows:1 seed:1 threads:1 bags:1 verbose:false
@@ -628,7 +628,7 @@ quantile_alpha | Only applicable if Quantile is specified for distribution) Spec
 objective | The objective has to be one of [auto, gamma gaussian huber laplace  poisson quantile tweedie].
 
 
-### H2ODeepLearningRegressor(**NEW**)
+### H2ODeepLearningRegressor
 
 ```
 H2ODeepLearningRegressor activation:Rectifier tweedie_power:1.2 quantile_alpha:0.1 objective:auto loss:Automatic input_dropout_ratio:0.1 shuffle:true tandardize:false weight_init:UniformAdaptive sample_rate:1.0 l1:0 l2:0.00001 max_w2:1.0 mini_batch_size:1 fast_mode:false adaptive_rate:true rho:0.9 epsilon:1e-8 balance_classes:false epochs:10 dropouts:0.5,0.5 hidden:100,50 col_sample_rate:1.0 sample_rate:0.9 min_rows:1 seed:1 threads:1 bags:1 verbose:false
@@ -667,7 +667,7 @@ objective | The objective has to be of [auto, gamma ,gaussian ,huber ,laplace ,p
 loss | The loss has to be one of [Automatic ,Absolute, Huber, Quadratic or Quantile]
 
 
-### H2ODrfRegressor(**NEW**)
+### H2ODrfRegressor
 
 ```
 H2ODrfRegressor ntrees:100 nbins:255 tweedie_power:1.2 quantile_alpha:0.1 objective:auto balance_classes:false max_depth:4 col_sample_rate_per_tree:0.5 sample_rate:0.9 min_rows:1 seed:1 threads:1 bags:1 verbose:false
@@ -686,7 +686,7 @@ tweedie_power | Only applicable if Tweedie is specified for distribution) Specif
 quantile_alpha | Only applicable if Quantile is specified for distribution) Specify the quantile to be used for Quantile Regression.
 objective | The objective has to be one of [auto, ,gamma ,gaussian ,huber ,laplace ,poisson ,quantile ,tweedie].
 
-### H2OGlmRegressor(**NEW**)
+### H2OGlmRegressor
 
 ```
 H2OGlmRegressor alpha:0 lambda:0.00001 balance_classes:false standardize:false max_iterations:50 beta_epsilon:0.00001 bjective_epsilon:0.00001 seed:1 threads:1 bags:1 verbose:false
