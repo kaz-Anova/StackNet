@@ -520,7 +520,7 @@ shuffle | True to train on random rows.
 This is a neural network with 2 hidden layers. It is heavily based on the equivalent one in the [kaggler](https://pypi.python.org/pypi/Kaggler) python package.
 
 ```
-Multinnregressor usescale:True maxim_Iteration:50 Objective:RMSE tau:0.5 UseConstant:true C:0.000001 shuffle:true tolerance:0.01 learn_rate:0.01 smooth:0.1 h1:20 h2:20 connection_nonlinearity:Relu init_values:0.02 seed:1 threads:1 bags:1 verbose:false
+multinnregressor usescale:True maxim_Iteration:50 Objective:RMSE tau:0.5 UseConstant:true C:0.000001 shuffle:true tolerance:0.01 learn_rate:0.01 smooth:0.1 h1:20 h2:20 connection_nonlinearity:Relu init_values:0.02 seed:1 threads:1 bags:1 verbose:false
 ```
 
 Parameter | Explanation
