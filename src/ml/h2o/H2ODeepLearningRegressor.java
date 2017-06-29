@@ -170,7 +170,7 @@ public class H2ODeepLearningRegressor implements estimator,regressor {
 	 */
 	public double rate=0.1;	
 	/**
-	 * Learning rate annealing reduces the learning rate to �freeze� into local minima in the optimization landscape
+	 * Learning rate annealing reduces the learning rate to "freeze" into local minima in the optimization landscape
 	 */
 	public double rate_annealing=1e-6 ;	
 	/**
