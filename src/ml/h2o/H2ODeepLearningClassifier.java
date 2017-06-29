@@ -82,11 +82,11 @@ public class H2ODeepLearningClassifier implements estimator,classifier {
 	/**
 	 * Parameter for internal use to allow the system to print in the console
 	 */
-	private PrintStream originalStream = System.out;
+	private transient PrintStream originalStream = System.out;
 	/**
 	 * Parameter for internal use to block the system to print in the console
 	 */
-	private PrintStream dummyStream  = new PrintStream(new OutputStream(){
+	private transient PrintStream dummyStream  = new PrintStream(new OutputStream(){
 	    public void write(int b) {}
 		});
 	/**
@@ -150,7 +150,7 @@ public class H2ODeepLearningClassifier implements estimator,classifier {
 	 */
 	public double rate=0.1;	
 	/**
-	 * Learning rate annealing reduces the learning rate to “freeze” into local minima in the optimization landscape
+	 * Learning rate annealing reduces the learning rate to ï¿½freezeï¿½ into local minima in the optimization landscape
 	 */
 	public double rate_annealing=1e-6 ;	
 	/**
