@@ -72,11 +72,11 @@ public class H2ODrfRegressor implements estimator,regressor {
 	/**
 	 * Parameter for internal use to allow the system to print in the console
 	 */
-	private PrintStream originalStream = System.out;
+	private transient PrintStream originalStream = System.out;
 	/**
 	 * Parameter for internal use to block the system to print in the console
 	 */
-	private PrintStream dummyStream  = new PrintStream(new OutputStream(){
+	private transient PrintStream dummyStream  = new PrintStream(new OutputStream(){
 	    public void write(int b) {}
 		});
 	/**
