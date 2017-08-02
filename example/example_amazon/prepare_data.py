@@ -407,8 +407,8 @@ def create_4way_interractions(path=""):
     train=csr_matrix(train)    
     fromsparsetofile(path + "train.sparse", train, deli1=" ", deli2=":",ytarget=y)    
     fromsparsetofile(path + "test.sparse", test, deli1=" ", deli2=":",ytarget=None)      
-    print train.shape
-    print test.shape
+    print (train.shape)
+    print (test.shape)
     
   
     print ("counts")   
@@ -418,7 +418,7 @@ def create_4way_interractions(path=""):
                 temp=np.array(result[f]).tolist()
                 for k in temp:
                     cases[k]+=1
-                print f, len(cases) 
+                print (f, len(cases)) 
                 
                 train_df[f]=train_df[f].apply(lambda x: cases[x])
                 test_df[f]=test_df[f].apply(lambda x: cases[x])     
@@ -511,7 +511,7 @@ def create_likelihoods_with_counts(path=""):
                 temp=np.array(result[f]).tolist()
                 for k in temp:
                     cases[k]+=1
-                print f, len(cases) 
+                print (f, len(cases)) 
                 
                 train_df[f]=train_df[f].apply(lambda x: cases[x])
                 test_df[f]=test_df[f].apply(lambda x: cases[x])  
