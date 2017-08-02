@@ -17,7 +17,7 @@ To get the top the top score , we start with the StackNet model based on the 5wa
 
 1. Data is downloaded from [here](https://www.kaggle.com/c/amazon-employee-access-challenge) 
 2. Run with python the **prepare_data.py** script to create the modelling data. 
-3. Assuming you have the **StackNet.jar** in the same folder with these files and **param_amazon_linear.txt** is also in the same folder, run this in the command line : *java -Xmx3048m -jar StackNet.jar train train_file=train.sparse test_file=test.sparse params=param_amazon_linear.txt pred_file=amazon_linear_pred.csv test_target=false verbose=true Threads=1 sparse=true folds=5 seed=1 metric=auc* 
+3. Assuming you have the **StackNet.jar** in the same folder with these files and **param_amazon_linear.txt** is also in the same folder, run this in the command line : *java -Xmx3048m -jar StackNet.jar train task=classification train_file=train.sparse test_file=test.sparse params=param_amazon_linear.txt pred_file=amazon_linear_pred.csv test_target=false verbose=true Threads=1 sparse=true folds=5 seed=1 metric=auc* 
 4. The performance of the models is as follows:
 
 model | auc
@@ -39,7 +39,7 @@ RoC of best Logistic model:
 The RandomForest Meta Classifier in level 2 had **AUC of 0.901** which is about **0.008 gain** from the top performing model.
 
 The second part will use the data per fold 
-5. Execute from the command line : *java -Xmx3048m -jar StackNet.jar train data_prefix=amazon_counts test_file=amazon_counts_test.txt  pred_file=amazon_count_pred.csv  verbose=true Threads=1 folds=5 seed=1 metric=auc*
+5. Execute from the command line : *java -Xmx3048m -jar StackNet.jar train task=classification data_prefix=amazon_counts test_file=amazon_counts_test.txt  pred_file=amazon_count_pred.csv  verbose=true Threads=1 folds=5 seed=1 metric=auc*
 
 
 model | auc
