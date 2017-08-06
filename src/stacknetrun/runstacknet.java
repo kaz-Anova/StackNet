@@ -763,25 +763,16 @@ public class runstacknet {
 		try {
 			stacknet = (StackNetClassifier) Serialized_Object.load(model_file);
 			task="classification";
-		} catch (ClassNotFoundException e1) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			//System.out.println("Loading  " + model_file + " has failed due to " + e1.getMessage());
-			//System.exit(-1);
 		}
 		try {
 			stacknetreg = (StackNetRegressor) Serialized_Object.load(model_file);
 			task="regression";
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			//System.out.println("Loading  " + model_file + " has failed due to " + e1.getMessage());
-			//System.exit(-1);
-		}		
+		} catch (Exception e) {
+			System.out.format(" Loading Stacknet failed due to : " + e.getMessage());
+		}
+		
 		if (stacknetreg==null && stacknet==null){
 			System.out.println("failed to Load  " + model_file );
 			System.exit(-1);

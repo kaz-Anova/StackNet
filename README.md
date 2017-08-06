@@ -4,6 +4,30 @@ This repository contains StackNet Meta modelling methodology (and software) whic
 
 StackNet is empowered by [H2O](https://github.com/h2oai/h2o-3)'s [agorithms](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science.html)
 
+StackNet and other topics can now  be discussed on [FaceBook](https://www.facebook.com/StackNet/) too :
+
+##Contents
+
+-    [What is StackNet](#what-is-stacknet)
+-    [How does it work](#how-does-it-work)
+-    [The Modes](#the-modes)
+-    [Some Notes about StackNet](#some-notes-about-stacknet)
+-    [Algorithms contained](#algorithms-contained)
+-    [Algorithm's Tuning parameters](#algorithms-tuning-parameters)
+-    [Run StackNet](#run-stacknet)
+-    [Installations](#installations)
+-    [Command Line Parameters](#command-line-parameters)
+-    [Data Format](#data-format)
+-    [Commandline Train Statement](#commandline-train-statement)
+-    [Commandline predict Statement](#commandline-predict-statement)
+-    [Examples](#examples)
+-    [Run StackNet from within Java code](#run-stacknet-from-within-java-code)
+-    [Potential Next Steps](#potential-next-steps)
+-    [Reference](#reference)
+-    [News](#news)
+-    [Special Thanks](#special-thanks)
+
+
 ![Alt text](/images/StackNet_Logo.png?raw=true "StackNet Logo")
 
 ## What is StackNet
@@ -102,6 +126,8 @@ StackNet is made available now with a handful of classifiers and regressors. The
 
 ## Algorithms contained
 
+
+### Native
 -    [AdaboostForestRegressor](/parameters/PARAMETERS.MD#adaboostforestregressor)
 -    [AdaboostRandomForestClassifier](/parameters/PARAMETERS.MD#adaboostrandomforestclassifier)
 -    [DecisionTreeClassifier](/parameters/PARAMETERS.MD#decisiontreeclassifier)
@@ -122,29 +148,60 @@ StackNet is made available now with a handful of classifiers and regressors. The
 -    [LibFmRegressor](/parameters/PARAMETERS.MD#libfmregressor)
 -    [LibFmClassifier](/parameters/PARAMETERS.MD#libfmclassifier)
 
-Not fully developed
+### Native - Not fully developed
 
 -    knnClassifier 
 -    knnRegressor 
 -    KernelmodelClassifier 
 -    KernelmodelRegressor
 
-Wrappers
+### Wrappers
 -    [XgboostRegressor](/parameters/PARAMETERS.MD#xgboostregressor)
 -    [XgboostClassifier](/parameters/PARAMETERS.MD#xgboostclassifier)
--    [LightgbmRegressor](/parameters/PARAMETERS.MD#lightgbmregressor)(**New**)
--    [LightgbmClassifier](/parameters/PARAMETERS.MD#lightgbmclassifier)(**New**)
+-    [LightgbmRegressor](/parameters/PARAMETERS.MD#lightgbmregressor)
+-    [LightgbmClassifier](/parameters/PARAMETERS.MD#lightgbmclassifier)
+-    [FRGFRegressor](/parameters/PARAMETERS.MD#FRGFRegressor)(**New**)
+-    [FRGFClassifier](/parameters/PARAMETERS.MD#FRGFClassifier)(**New**)
 
-H2O(**New**)
--  [H2ODeepLearningClassifier](/parameters/PARAMETERS.MD#h2odeeplearningclassifier)(**New**)
--  [H2ODeepLearningRegressor](/parameters/PARAMETERS.MD#h2odeeplearningregressor)(**New**)
--  [H2ODrfClassifier](/parameters/PARAMETERS.MD#h2odrfclassifier)(**New**)
--  [H2ODrfRegressor](/parameters/PARAMETERS.MD#h2odrfregressor)(**New**)
--  [H2OGbmClassifier](/parameters/PARAMETERS.MD#h2ogbmclassifier)(**New**)
--  [H2OGbmRegressor](/parameters/PARAMETERS.MD#h2ogbmregressor)(**New**)
--  [H2OGlmClassifier](/parameters/PARAMETERS.MD#h2oglmclassifier)(**New**)
--  [H2OGlmRegressor](/parameters/PARAMETERS.MD#h2oglmregressor)(**New**)
--  [H2ONaiveBayesClassifier](/parameters/PARAMETERS.MD#h2onaivebayesclassifier)(**New**)
+### H2O
+-  [H2ODeepLearningClassifier](/parameters/PARAMETERS.MD#h2odeeplearningclassifier)
+-  [H2ODeepLearningRegressor](/parameters/PARAMETERS.MD#h2odeeplearningregressor)
+-  [H2ODrfClassifier](/parameters/PARAMETERS.MD#h2odrfclassifier)
+-  [H2ODrfRegressor](/parameters/PARAMETERS.MD#h2odrfregressor)
+-  [H2OGbmClassifier](/parameters/PARAMETERS.MD#h2ogbmclassifier)
+-  [H2OGbmRegressor](/parameters/PARAMETERS.MD#h2ogbmregressor)
+-  [H2OGlmClassifier](/parameters/PARAMETERS.MD#h2oglmclassifier)
+-  [H2OGlmRegressor](/parameters/PARAMETERS.MD#h2oglmregressor)
+-  [H2ONaiveBayesClassifier](/parameters/PARAMETERS.MD#h2onaivebayesclassifier)
+
+### Python
+
+#### Sklearn(**New**)
+-  [SklearnAdaBoostClassifier](/parameters/PARAMETERS.MD#SklearnAdaBoostClassifier)(**New**)
+-  [SklearnAdaBoostRegressor](/parameters/PARAMETERS.MD#SklearnAdaBoostRegressor)(**New**)
+-  [SklearnDecisionTreeClassifier](/parameters/PARAMETERS.MD#SklearnDecisionTreeClassifier)(**New**)
+-  [SklearnDecisionTreeRegressor](/parameters/PARAMETERS.MD#SklearnDecisionTreeRegressor)(**New**)
+-  [SklearnExtraTreesClassifier](/parameters/PARAMETERS.MD#SklearnExtraTreesClassifier)(**New**)
+-  [SklearnExtraTreesRegressor](/parameters/PARAMETERS.MD#SklearnExtraTreesRegressor)(**New**)
+-  [SklearnknnClassifier](/parameters/PARAMETERS.MD#SklearnknnClassifier)(**New**)
+-  [SklearnknnRegressor](/parameters/PARAMETERS.MD#SklearnknnRegressor)(**New**)
+-  [SklearnMLPClassifier](/parameters/PARAMETERS.MD#SklearnMLPClassifier)(**New**)
+-  [SklearnMLPRegressor](/parameters/PARAMETERS.MD#SklearnMLPRegressor)(**New**)
+-  [SklearnRandomForestClassifier](/parameters/PARAMETERS.MD#SklearnRandomForestClassifier)(**New**)
+-  [SklearnRandomForestRegressor](/parameters/PARAMETERS.MD#SklearnRandomForestRegressor)(**New**)
+-  [SklearnSGDClassifier](/parameters/PARAMETERS.MD#SklearnSGDClassifier)(**New**)
+-  [SklearnSGDRegressor](/parameters/PARAMETERS.MD#SklearnSGDRegressor)(**New**)
+-  [SklearnsvmClassifier](/parameters/PARAMETERS.MD#SklearnsvmClassifier)(**New**)
+-  [SklearnsvmRegressor](/parameters/PARAMETERS.MD#SklearnsvmRegressor)(**New**)
+
+
+#### Keras(**New**)
+-  [KerasnnClassifier](/parameters/PARAMETERS.MD#KerasnnClassifier)(**New**)
+-  [KerasnnRegressor](/parameters/PARAMETERS.MD#KerasnnRegressor)(**New**)
+
+#### Generic for user defined scripts (**New**)
+-  [PythonGenericClassifier](/parameters/PARAMETERS.MD#PythonGenericClassifier)(**New**)
+-  [PythonGenericRegressor](/parameters/PARAMETERS.MD#PythonGenericRegressor)(**New**)
 
 ## Algorithm's Tuning parameters
 
@@ -163,13 +220,17 @@ The basic format is:
 Java –jar stacknet.jar [train or predict] [task=regression or classification]  [parameter = value]
 ```
 
+## Installations
+
+This sections explains how to install the different external tools StackNet uses in its ensemble.
+
 ### Install Xgboost
 
 Awesome xgboost can be used as a subprocess now in StackNet. This would require privileges to save and change files where the .jar is executed.
 
 It is already pre-compiled for windows(64), mac and linux. 
 
-~~just unzip the **lib.zip** and~~ verify that the 'lib' folder in the same directory where the StackNet.jar file is. By default it should be there when you do `git clone`
+**verify that the 'lib' folder in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
 
 for linux you most probably need to change privileges for the executable : 
 ```
@@ -201,13 +262,13 @@ Small Note: The user would need to delete the '.mod' files from inside the `mode
 
 **IMPORTANT NOTE:** This implementation does not include all Xgboost's features and the user is advised to use it directly from source to exploit its full potential. Also the version included is 6.0 and it is not certain whether it will be updated in the future as it required manual work to find all libraries and files required that need to be included for it to run. The performance and memory consumption will also be worse than running it directly from source. Additionally the descritpion of the parameters may not match the one in the offcial website, hence it is advised to use [xgboost's online parameter thread in github](https://github.com/dmlc/xgboost/blob/master/doc/parameter.md) for more information about them.
 
-### Install lightGBM (**NEW**)
+### Install lightGBM
 
 [lightGBM](https://github.com/Microsoft/LightGBM) can be used as a subprocess now in StackNet. This would require privileges to save and change files where the .jar is executed.
 
 It is already pre-compiled for windows(64), mac and linux. 
 
-Verify that the 'lib' folder in the same directory where the StackNet.jar file is. By default it should be there when you do `git clone`
+**Verify that the 'lib' folder in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
 
 for linux you most probably need to change privileges for the executable : 
 ```
@@ -250,11 +311,86 @@ No special installation is required , but experimentally system protection might
 
 Additionally the first time StackNet uses an H2o Algorithm within the ensemble it takes more time (in comparison to every other time) because it sets up a cluster . 
 
-### Command Line Parameters
+### Install Fast_rgf (**NEW**)
+
+[fast_rgf](https://github.com/baidu/fast_rgf) can be used as a subprocess now in StackNet. This would require privileges to save and change files where the .jar is executed.
+
+It is already pre-compiled for windows(64), mac and linux. 
+
+**Verify that the 'lib' folder in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
+
+for linux you most probably need to change privileges for the executable : 
+```
+cd lib/
+cd linux/
+cd frgf/
+chmod +x forest_train
+chmod +x forest_predict
+```
+You can test that it works with :
+`./forest_train`
+
+It should print something in the form of:
+
+```
+using up to x threads
+```
+
+In windows and mac the behaviour should be similar. After executing `forest_train` from inside the `lib/your_operation_system/frgf/` you should see the:
+
+`using up to x threads...`
+
+If you don't see this, then you need to compile it manually and drop the executables inside `lib/your_operation_system/frgf/` .
+
+If you need to make the compilling manually for windows, you may find useful to download cmake fom :
+
+[Install cmake](https://cmake.org/download/)
+
+and use **mingw32-make.exe** as a compiler. 
+
+Small Note: The user would need to delete the '.mod' files from inside the `model/` folder when no longer need them. StackNet does not do that automatically as it is not possible to determine when they are not needed anymore.  
+
+**IMPORTANT NOTE:** This implementation does not include all fast_rgf's features and the user is advised to use it directly from source to exploit its full potential. it is not certain whether it will be updated in the future as it required manual work to find all libraries and files required that need to be included for it to run. The performance and memory consumption will also be worse than running it directly from source. Additionally the descritpion of the parameters may not match the one in the offcial website, hence it is advised to use [fast_rgf's online parameter thread in github](https://github.com/baidu/fast_rgf/tree/master/examples) for more information about them.
+
+### Install Sklearn Algorithms(**NEW**)
+
+To install [Sklearn](http://scikit-learn.org/stable/) in StackNet you need **python higher-equal-to 2.7**. Python needs to be found on **PATH** as StackNet makes subprocesses in the command line. This would require privileges to save and change files where the .jar is executed.
+
+**verify that the 'lib' folder in the same directory where the StackNet.jar file is**
+
+Once Python is installed and can be found on PATH, the user needs to isntall **sklearn version 0.18.2** .
+
+The following should do the trick in linux and mac. 
+
+```
+pip install scipy
+pip install sklearn
+```
+
+For an easier installation in winodws, the user could download [Anaconda](https://www.continuum.io/downloads) and make certain to check the **Add Anaconda's python to PATH** when it shows up during the installation.
+
+All sklearn python scripts executed by StackNet are put in `lib/python/`
+
+### Install Python Generic Algorithms(**NEW**)
+
+This a new feature that allows the user to run his/her own models as long as all libraries required can be found in his/her system when calling python. Assuming python is installed as explained in sklearn version above the user may have a look inside **lib/python/**.
+
+The scripts **PythonGenericRegressor0.py** and **PythonGenericClassifier0.py** are sample scripts that show how to format these models. the '0' is the main hyper parameter (called index) of the model PythonGenericRegressor (or PythonGenericClassifier). The data gets loaded in sparse format, but aftee this the user could add whetver he/she wants.
+
+One could make many scritps and name them PythonGenericRegressor1,PythonGenericRegressor2...PythonGenericRegressorN and call them as:
+
+```
+PythonGenericRegressor index:1 seed:1 verbose:False 
+PythonGenericRegressor index:2 seed:1 verbose:False 
+PythonGenericRegressor index:N seed:1 verbose:False 
+``` 
+Once again **Verify that the 'lib' folder in the same directory where the StackNet.jar file is**.
+
+## Command Line Parameters
 
 Command | Explanation
 --- | ---
-task  | (**NEW**) could be either **regression** or **classification**.</li>
+task  | could be either **regression** or **classification**.</li>
 sparse  | True if the data to be imported are in sparse format (libsvm) or dense (false) 
 has_head   | True if train_file and test_file have headers else false
 model | Name of the output model file. 
@@ -271,7 +407,7 @@ threads | Number of models to run in parallel. This is independent of any extra 
 metric | Metric to output in cross validation for each model-neuron. can be logloss, accuracy or auc (for binary only) for classification and rmse ,rsquared or mae for regerssion .defaults to 'logloss' for classification and 'rmse' for regression. 
 stackdata | True for restacking else false
 seed | Integer for randomised procedures 
-bins | (**NEW**) A parameter that allows classifiers to be used in regression problems. It first bins (digitises) the target variable and then runs classifiers on the transformed variable. Defaults to 2</li>. 
+bins | A parameter that allows classifiers to be used in regression problems. It first bins (digitises) the target variable and then runs classifiers on the transformed variable. Defaults to 2</li>. 
 folds | Number of folds for re-usable kfold
 
 ### Parameters' File
@@ -323,26 +459,28 @@ A **train** method needs at least a **train_file** and a **params_file**. It als
 
 A **predict** method needs at least a **test_file** and a **model_file**. 
 
-### Training example:
 
-## general
-Java –jar stacknet.jar **_train_** **task=classification** **sparse**=false **has_head**=true **model**=model **pred_file**=pred.csv **train_file**=sample_train.csv **test_file**= sample_test.csv **test_target**=true **params**=params.txt **verbose**=true **threads**=7 **metric**=logloss **stackdata**=false **seed**=1 **folds**=5
+
+## Commandline Train Statement
+Java –jar stacknet.jar **_train_** **task=classification** **sparse**=false **has_head**=true **model**=model **pred_file**=pred.csv **train_file**=sample_train.csv **test_file**= sample_test.csv **test_target**=true **params**=params.txt **verbose**=true **threads**=7 **metric**=logloss **stackdata**=false **seed**=1 **folds**=5 **bins**=3
 
 Note that you can have train and test at the same time. In that case after training, it scores the test data. 
 
-## Other
+## Commandline predict Statement
+
+Java -jar stacknet.jar **_predict_** **sparse**=false **has_head**=true **model**=model **pred_file**=pred.csv **test_file**=sample_test.csv **test_target**=true **verbose**=true  **metric**=logloss
+
+
+## Examples
 
 - [Kaggle-Quora-sparse](/example/Quora_kaggle_sparse/README.MD)
 - [Kaggle-TwoSigma](/example/twosigma_kaggle/EXAMPLE.MD)
 - [Kaggle-TwoSigma Random Forest using the Library](/example/twosigma_kaggle_java_rf/EXAMPLE.MD)
 - [Kaggle-Amazon Classification challenge and use of data_prefix](/example/example_amazon/EXAMPLE.MD)
 
-### Predict example:
-
-Java -jar stacknet.jar **_predict_** **sparse**=false **has_head**=true **model**=model **pred_file**=pred.csv **test_file**=sample_test.csv **test_target**=true **verbose**=true  **metric**=logloss
 
 
-## Run StackNet from within (Java) code
+## Run StackNet from within Java code
 
 
 If we wanted to build a 3-level stacknet on a binary target with desne data, we start with initializing a _StackNetClassifier_ Object:
@@ -417,8 +555,9 @@ double preds [][]=StackNet.predict_proba(X_test);
 
 - ~~Add StackNetRegressor~~ Done. 
 - Add [H<sub>2</sub>O](http://h2o-release.s3.amazonaws.com/h2o/master/3908/index.html)
-- increase coverage in general with well-known and well-performing ml tools
+- increase coverage in general with well-known and well-performing ml tools (original libfm, libffm, vowpal wabbit)
 - Add data pre-processing steps
+- Make a python wrapper
 
 ## Reference
 
@@ -428,7 +567,11 @@ Marios Michailidis (2017), StackNet, StackNet Meta Modelling Framework, url http
 
 ## News
 
-StackNet model will be presented at [infiniteconf 2017]( https://skillsmatter.com/conferences/7983-infiniteconf-2017-the-conference-on-big-data-data-science-and-engineering#program ) [6th-7th July]
+StackNet model was presented at [infiniteconf 2017]( https://skillsmatter.com/conferences/7983-infiniteconf-2017-the-conference-on-big-data-data-science-and-engineering#program ) [6th-7th July] and the video is available there if you sign up
+New [facebook page](https://www.facebook.com/StackNet/) to discuss StackNet and other open source data science topics.
+StackNet and Sracking was explained in [kaggle's blog](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/)
+The is an Ask Me Anything (AMA) [thread in kaggle](https://www.kaggle.com/general/34802) with useful material about stacking and StackNet.
+A workshop with StackNet will take place in [ODSC in London](https://www.odsc.com/london/speakers) October 12-14 .
 
 ## Special Thanks
 

@@ -2185,7 +2185,7 @@ public class LightgbmClassifier implements estimator,classifier {
 				else if (metric.equals("lambda_l2")) {this.lambda_l2=Double.parseDouble(value);}				
 				else if (metric.equals("feature_fraction")) {this.feature_fraction=Double.parseDouble(value);}
 				else if (metric.equals("bagging_fraction")) {this.bagging_fraction=Double.parseDouble(value);}	
-				else if (metric.equals("num_rnum_iterationsound")) {this.num_iterations=Integer.parseInt(value);}
+				else if (metric.equals("num_iterations")) {this.num_iterations=Integer.parseInt(value);}
 				else if (metric.equals("scale_pos_weight")) {this.scale_pos_weight=Double.parseDouble(value);}	
 				else if (metric.equals("learning_rate")) {this.learning_rate=Double.parseDouble(value);}
 				else if (metric.equals("sigmoid")) {this.sigmoid=Double.parseDouble(value);}				

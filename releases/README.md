@@ -1,5 +1,16 @@
 # Versions
 
+## V0.3 version 06/08/2017
+
+1.	Added Python subprocesses. The user needs to install python himself/herself and have python available on PATH  
+2.	Added 22 new algorthms in total (Regerssors and Classifiers)
+3.	Added various algorithms based on Sklearn compatible with version 0.18.2. Specifically : SklearnAdaBoostClassifier, SklearnAdaBoostRegressor, SklearnDecisionTreeClassifier, SklearnDecisionTreeRegressor, SklearnExtraTreesClassifier, SklearnExtraTreesRegressor, SklearnknnClassifier, SklearnknnRegressor, SklearnMLPClassifier, SklearnMLPRegressor, SklearnRandomForestClassifier, SklearnRandomForestRegressor, SklearnSGDClassifier, SklearnSGDRegressor, SklearnsvmClassifier, SklearnsvmRegressor
+4.	Added support for keras' algorithms through python, compatible with version 2.0.6. It was tested with tehano 0.9.0, but it should work with tf too. The user is responsible for installing keras and for optimizing its backend (and make sure it is available through python). Specifically added KerasnnRegressor or KerasnnClassifier.
+5.	Added support for user-defined python scripts. The user can name them as PythonGenericRegressor[index] or PythonGenericClassifier[index] and put them inside lib/python (see PythonGenericClassifier0 example to understand the right structure). He/She could then call it within the parameters as `PythonGenericClassifier index:0`.
+6.	Added [Fast_rgf](https://github.com/baidu/fast_rgf) and sepcifically FRGFClassifier and FRGFRegressor
+7.	Fixed a back for failling to cast StackNetClassifier as StackNetRegressor when `task=predict`.
+8.	Added the display of average metric for all models at the end of each level (eg. average logloss of all folds for each model) 
+
 ## V0.2 version 25/06/2017
 
 1.	Added `bagging` as ab extra hyper parameter in each model . It could be specified as `bags:3` 

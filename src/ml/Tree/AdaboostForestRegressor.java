@@ -1950,7 +1950,8 @@ public class AdaboostForestRegressor implements estimator,regressor {
 				else if (metric.equals("max_depth")) {this.max_depth=Integer.parseInt(value);}
 				else if (metric.equals("Objective")) {this.Objective=value;}
 				else if (metric.equals("threads")) {this.threads=Integer.parseInt(value);}
-				else if (metric.equals("rounding")) {this.rounding=Double.parseDouble(value);}					
+				else if (metric.equals("rounding")) {this.rounding=Double.parseDouble(value);}	
+				else if (metric.equals("weight_thresold")) {this.weight_thresold=Double.parseDouble(value);}				
 				else if (metric.equals("offset")) {this.offset=Double.parseDouble(value);}						
 				else if (metric.equals("max_tree_size")) {this.max_tree_size=Integer.parseInt(value);}
 				else if (metric.equals("gamma")) {this.gamma=Double.parseDouble(value);}

@@ -1973,14 +1973,11 @@ public class H2ODeepLearningClassifier implements estimator,classifier {
 				else if (metric.equals("momentum_start")) {this.momentum_start=Double.parseDouble(value);}	
 				else if (metric.equals("momentum_ramp")) {this.momentum_ramp=Double.parseDouble(value);}	
 				else if (metric.equals("momentum_stable")) {this.momentum_stable=Double.parseDouble(value);}					
-				
-				
 				else if (metric.equals("shuffle")) {this.shuffle=(value.toLowerCase().equals("true")?true:false)   ;}				
 				else if (metric.equals("standardize")) {this.standardize=(value.toLowerCase().equals("true")?true:false)   ;}				
 				else if (metric.equals("fast_mode")) {this.fast_mode=(value.toLowerCase().equals("true")?true:false)   ;}				
 				else if (metric.equals("adaptive_rate")) {this.adaptive_rate=(value.toLowerCase().equals("true")?true:false)   ;}				
-				else if (metric.equals("nesterov_accelerated_gradient")) {this.nesterov_accelerated_gradient=(value.toLowerCase().equals("true")?true:false)   ;}				
-								
+				else if (metric.equals("nesterov_accelerated_gradient")) {this.nesterov_accelerated_gradient=(value.toLowerCase().equals("true")?true:false)   ;}						
 				else if (metric.equals("hidden")) {this.hidden=value;}				
 				else if (metric.equals("droupouts")) {this.droupouts=value;}			
 				else if (metric.equals("weight_init")) {this.weight_init=value;}				

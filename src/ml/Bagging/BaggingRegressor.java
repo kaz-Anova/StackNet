@@ -38,6 +38,7 @@ import ml.Tree.AdaboostForestRegressor;
 import ml.Tree.DecisionTreeRegressor;
 import ml.Tree.GradientBoostingForestRegressor;
 import ml.Tree.RandomForestRegressor;
+import ml.fastrgf.FRGFRegressor;
 import ml.h2o.H2ODeepLearningRegressor;
 import ml.h2o.H2ODrfRegressor;
 import ml.h2o.H2OGbmRegressor;
@@ -46,6 +47,16 @@ import ml.knn.knnRegressor;
 import ml.lightgbm.LightgbmRegressor;
 import ml.nn.Vanilla2hnnregressor;
 import ml.nn.multinnregressor;
+import ml.python.PythonGenericRegressor;
+import ml.python.keras.KerasnnRegressor;
+import ml.python.sklearn.SklearnAdaBoostRegressor;
+import ml.python.sklearn.SklearnDecisionTreeRegressor;
+import ml.python.sklearn.SklearnExtraTreesRegressor;
+import ml.python.sklearn.SklearnMLPRegressor;
+import ml.python.sklearn.SklearnRandomForestRegressor;
+import ml.python.sklearn.SklearnSGDRegressor;
+import ml.python.sklearn.SklearnknnRegressor;
+import ml.python.sklearn.SklearnsvmRegressor;
 import ml.stacknet.StackNetClassifier;
 import ml.xgboost.XgboostRegressor;
 
@@ -1308,6 +1319,35 @@ public class BaggingRegressor implements estimator,regressor {
 			model= new H2OGlmRegressor(fsdataset);									
 			}else if (model_parameters.contains("H2ODrfRegressor")) {
 			model= new H2ODrfRegressor(fsdataset);				
+			}else if (model_parameters.contains("FRGFRegressor")) {
+			model= new FRGFRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnAdaBoostRegressor")) {
+				model= new SklearnAdaBoostRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnDecisionTreeRegressor")) {
+				model= new SklearnDecisionTreeRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnExtraTreesRegressor")) {
+				model= new SklearnExtraTreesRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnknnRegressor")) {
+				model= new SklearnknnRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnMLPRegressor")) {
+				model= new SklearnMLPRegressor(fsdataset);								
+			}else if (model_parameters.contains("SklearnRandomForestRegressor")) {
+			model= new SklearnRandomForestRegressor(fsdataset);							
+			}else if (model_parameters.contains("SklearnSGDRegressor")) {
+			model= new SklearnSGDRegressor(fsdataset);									
+			}else if (model_parameters.contains("SklearnsvmRegressor")) {
+			model= new SklearnsvmRegressor(fsdataset);	
+			}else if (model_parameters.contains("KerasnnRegressor")) {
+			model= new KerasnnRegressor(fsdataset);									
+			}else if (model_parameters.contains("PythonGenericRegressor")) {
+			model= new PythonGenericRegressor(fsdataset);				
+
+			
+			
+			
+			
+			
+			
 			
 			} else {
 				throw new IllegalStateException(" The selected model '" + model_parameters + " is not recognizable as valid classifier" );
@@ -1480,7 +1520,29 @@ public class BaggingRegressor implements estimator,regressor {
 			}else if (model_parameters.contains("H2OGlmRegressor")) {
 			model= new H2OGlmRegressor(fsdataset);									
 			}else if (model_parameters.contains("H2ODrfRegressor")) {
-			model= new H2ODrfRegressor(fsdataset);				
+			model= new H2ODrfRegressor(fsdataset);	
+			}else if (model_parameters.contains("FRGFRegressor")) {
+			model= new FRGFRegressor(fsdataset);			
+			}else if (model_parameters.contains("SklearnAdaBoostRegressor")) {
+				model= new SklearnAdaBoostRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnDecisionTreeRegressor")) {
+				model= new SklearnDecisionTreeRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnExtraTreesRegressor")) {
+				model= new SklearnExtraTreesRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnknnRegressor")) {
+				model= new SklearnknnRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnMLPRegressor")) {
+				model= new SklearnMLPRegressor(fsdataset);								
+			}else if (model_parameters.contains("SklearnRandomForestRegressor")) {
+			model= new SklearnRandomForestRegressor(fsdataset);							
+			}else if (model_parameters.contains("SklearnSGDRegressor")) {
+			model= new SklearnSGDRegressor(fsdataset);									
+			}else if (model_parameters.contains("SklearnsvmRegressor")) {
+			model= new SklearnsvmRegressor(fsdataset);	
+			}else if (model_parameters.contains("KerasnnRegressor")) {
+			model= new KerasnnRegressor(fsdataset);									
+			}else if (model_parameters.contains("PythonGenericRegressor")) {
+			model= new PythonGenericRegressor(fsdataset);				
 			
 			} else {
 				throw new IllegalStateException(" The selected model '" + model_parameters + " is not recognizable as valid classifier" );
@@ -1654,7 +1716,30 @@ public class BaggingRegressor implements estimator,regressor {
 			}else if (model_parameters.contains("H2OGlmRegressor")) {
 			model= new H2OGlmRegressor(sdataset);									
 			}else if (model_parameters.contains("H2ODrfRegressor")) {
-			model= new H2ODrfRegressor(sdataset);				
+			model= new H2ODrfRegressor(sdataset);
+			}else if (model_parameters.contains("FRGFRegressor")) {
+			model= new FRGFRegressor(sdataset);		
+			}else if (model_parameters.contains("SklearnAdaBoostRegressor")) {
+				model= new SklearnAdaBoostRegressor(sdataset);
+			}else if (model_parameters.contains("SklearnDecisionTreeRegressor")) {
+				model= new SklearnDecisionTreeRegressor(sdataset);
+			}else if (model_parameters.contains("SklearnExtraTreesRegressor")) {
+				model= new SklearnExtraTreesRegressor(sdataset);
+			}else if (model_parameters.contains("SklearnknnRegressor")) {
+				model= new SklearnknnRegressor(sdataset);
+			}else if (model_parameters.contains("SklearnMLPRegressor")) {
+				model= new SklearnMLPRegressor(sdataset);								
+			}else if (model_parameters.contains("SklearnRandomForestRegressor")) {
+			model= new SklearnRandomForestRegressor(sdataset);							
+			}else if (model_parameters.contains("SklearnSGDRegressor")) {
+			model= new SklearnSGDRegressor(sdataset);									
+			}else if (model_parameters.contains("SklearnsvmRegressor")) {
+			model= new SklearnsvmRegressor(sdataset);	
+			}else if (model_parameters.contains("KerasnnRegressor")) {
+			model= new KerasnnRegressor(sdataset);									
+			}else if (model_parameters.contains("PythonGenericRegressor")) {
+			model= new PythonGenericRegressor(sdataset);				
+			
 			
 			} else {
 				throw new IllegalStateException(" The selected model '" + model_parameters + " is not recognizable as valid classifier" );

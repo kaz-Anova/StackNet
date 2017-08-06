@@ -1750,8 +1750,56 @@ public class input {
 					}else if (str_estimator.contains("H2OGlmRegressor")) {
 						is_valid=true;
 					}else if (str_estimator.contains("H2ONaiveBayesClassifier")) {
+						is_valid=true;					
+					}else if (str_estimator.contains("SklearnAdaBoostClassifier")) {
 						is_valid=true;
-					}
+					}else if (str_estimator.contains("SklearnAdaBoostRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnDecisionTreeClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnDecisionTreeRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnExtraTreesClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnExtraTreesRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnknnClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnknnRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnMLPClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnMLPRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnRandomForestClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnRandomForestRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnSGDClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnSGDRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnsvmClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("SklearnsvmRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("KerasnnRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("KerasnnClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("PythonGenericClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("PythonGenericRegressor")) {
+						is_valid=true;
+					}else if (str_estimator.contains("FRGFClassifier")) {
+						is_valid=true;
+					}else if (str_estimator.contains("FRGFRegressor")) {
+						is_valid=true;
+					}						
+						
+						
+						
+						
 					
 					return is_valid;
 	        }

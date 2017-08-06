@@ -2122,6 +2122,70 @@ public static double [][] putfiletoarraydoublestatic(String x) {
           
           return column;
     }
+        
+        
+        /**
+         * 
+         * @param n : The file to 'Open'.
+         * @param delimeter : the type of delimiter to split the file int different columns. Typical ones would be commas, tabs, semicolons etc.
+         * @param col : The column to retrieve starting from 0. Ay value lower than zero gives 0.
+         * @param nullvalue : Replace null values with the double here.
+         * @param hasheaders : True if we want the first line to be regarded as header
+         * @param verbose : Print details about the imported file.
+         * @return A column as double array 
+         * <p> Method to read a file and retrieve the specified column as int array
+         */     
+        
+        public static int[]Retrievecolumnint(String n, String delimeter, int col,
+        		int nullvalue,boolean hasheaders, boolean verbose) {
+            String line;
+            File x= new File(n);
+            
+            int rowcount=readcsv.getrowcount(n); 
+            if (hasheaders==false){
+            	rowcount++;
+                }
+            //If less than zero, ammend to zzero
+            if (col<0){
+            	col=0;
+            }     
+            int ro=0;
+            int column [] = new int [rowcount]  ;
+            try {
+                    FileInputStream fis = new FileInputStream(x);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(fis,"UTF-8"));
+                    if (hasheaders){
+                    br.readLine();
+                    }
+                    
+                    while ((line = br.readLine()) != null) {
+                            String[] tokens = line.split(delimeter,-1);
+
+                            	if (tokens[col].equals("") ||tokens[col].equals("NA") ){
+                            		tokens[col]=nullvalue +"";
+                            		//System.out.println("change at " + line_count +" line at " + i);
+                            	}
+                            	column[ro]=(int)((Double.parseDouble(tokens[col])));
+                            
+                                    ro++; }
+
+              //Close the buffer reader
+                    br.close();
+            } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("error at: " + ro);
+            }
+
+          if ( verbose==true){
+           	 System.out.println(" The file" + x + " was loaded successfully with :");
+           	 System.out.println(" Rows : " + rowcount);
+           	 System.out.println(" Columns (excluding target) : 1");
+           	 System.out.println(" Delimeter was  : " + delimeter);
+            }  
+          
+          return column;
+    }
+
 
         /**
          * 

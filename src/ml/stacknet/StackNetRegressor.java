@@ -485,7 +485,8 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 			
 			String [] level_grid=parameters[level];
 			estimator[] mini_batch_tree= new estimator[level_grid.length];
-			
+			double metric_averages[]=new double [level_grid.length]; //holds stats for the level
+			int model_count=0;
 			Thread[] thread_array= new Thread[(this.threads>level_grid.length)?level_grid.length: this.threads];
 			estimator [] estimators= new estimator[(this.threads>level_grid.length)?level_grid.length: this.threads];
 			int count_of_live_threads=0;
@@ -640,18 +641,22 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 										
 											double rms=rmse(predictions,y_cv);
 											System.out.println(" rmse : " + rms);
+											metric_averages[model_count]+=rms;
 										} else if (this.metric.equals("mae")){
 											
 												double mae=mae(predictions,y_cv);
 												System.out.println(" mae : " + mae);
+												metric_averages[model_count]+=mae;
 										} else if (this.metric.equals("rsquared")){
 											
 											double rsq=rsquared(predictions,y_cv);
-											System.out.println(" rsquared : " + rsq);										
+											System.out.println(" rsquared : " + rsq);
+											metric_averages[model_count]+=rsq;
 										}
 									} else {
 										double log=logloss (predictions,binner.transform(y_cv) ); // the logloss for the current fold	
 										System.out.println(" logloss : " + log);
+										metric_averages[model_count]+=log;
 										
 									}
 						
@@ -666,7 +671,7 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 								}
 								
 							
-								
+								model_count+=1;		
 							}							
 							
 							System.gc();
@@ -682,7 +687,7 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 						System.out.println("Done with fold: " + (f+1) + "/" + this.folds);
 						
 					}
-				
+					model_count=0;
 			}
 			if (this.print){
 				
@@ -698,6 +703,11 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 
 			
 			if (this.verbose){
+				
+				for (int jj=0; jj< metric_averages.length;jj++ ){
+					System.out.println(" Average of all folds model " +jj + " : "  + metric_averages[jj]/this.folds);
+				}
+				
 				System.out.println(" Level: " +  (level+1)+ " start output modelling ");
 			}
 			
@@ -944,10 +954,10 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 				
 				
 			}
-			
+			int model_count=0;
 			String [] level_grid=parameters[level];
 			estimator[] mini_batch_tree= new estimator[level_grid.length];
-			
+			double metric_averages[]=new double [level_grid.length]; //holds stats for the level			
 			Thread[] thread_array= new Thread[(this.threads>level_grid.length)?level_grid.length: this.threads];
 			estimator [] estimators= new estimator[(this.threads>level_grid.length)?level_grid.length: this.threads];
 			int count_of_live_threads=0;
@@ -1112,18 +1122,22 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 										
 											double rms=rmse(predictions,y_cv);
 											System.out.println(" rmse : " + rms);
+											metric_averages[model_count]+=rms;
 										} else if (this.metric.equals("mae")){
 											
 												double mae=mae(predictions,y_cv);
 												System.out.println(" mae : " + mae);
+												metric_averages[model_count]+=mae;
  										} else if (this.metric.equals("rsquared")){
 											
 											double rsq=rsquared(predictions,y_cv);
-											System.out.println(" rsquared : " + rsq);												
+											System.out.println(" rsquared : " + rsq);	
+											metric_averages[model_count]+=rsq;
 										}
 									} else {
 										double log=logloss (predictions,binner.transform(y_cv) ); // the logloss for the current fold	
 										System.out.println(" logloss : " + log);
+										metric_averages[model_count]+=log;
 										
 									}
 						
@@ -1135,7 +1149,7 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 									column_counter+=1;
 								}
 								
-							
+								model_count+=1;	
 								
 							}							
 							
@@ -1153,7 +1167,7 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 						System.out.println("Done with fold: " + (f+1) + "/" + this.folds);
 						
 					}
-				
+					model_count=0;
 			}
 			if (this.print){
 				
@@ -1168,6 +1182,11 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 
 			
 			if (this.verbose){
+				
+				for (int jj=0; jj< metric_averages.length;jj++ ){
+					System.out.println(" Average of all folds model " +jj + " : "  + metric_averages[jj]/this.folds);
+				}
+				
 				System.out.println(" Level: " +  (level+1)+ " start output modelling ");
 			}
 			if (level==0){
@@ -2134,10 +2153,10 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 				
 				
 			}
-			
+			int model_count=0;
 			String [] level_grid=parameters[level];
 			estimator[] mini_batch_tree= new estimator[level_grid.length];
-			
+			double metric_averages[]=new double [level_grid.length]; //holds stats for the level			
 			Thread[] thread_array= new Thread[(this.threads>level_grid.length)?level_grid.length: this.threads];
 			estimator [] estimators= new estimator[(this.threads>level_grid.length)?level_grid.length: this.threads];
 			int count_of_live_threads=0;
@@ -2245,18 +2264,22 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 										
 											double rms=rmse(predictions,y_cv);
 											System.out.println(" rmse : " + rms);
+											metric_averages[model_count]+=rms;
 										} else if (this.metric.equals("mae")){
 											
 												double mae=mae(predictions,y_cv);
 												System.out.println(" mae : " + mae);
+												metric_averages[model_count]+=mae;
  										} else if (this.metric.equals("rsquared")){
 											
 											double rsq=rsquared(predictions,y_cv);
 											System.out.println(" rsquared : " + rsq);
+											metric_averages[model_count]+=rsq;
 										}
 									} else {
 										double log=logloss (predictions,binner.transform(y_cv) ); // the logloss for the current fold	
 										System.out.println(" logloss : " + log);
+										metric_averages[model_count]+=log;
 										
 									}
 						
@@ -2280,14 +2303,14 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 							estimators= new estimator[(this.threads>level_grid.length)?level_grid.length: this.threads];
 						}
 						
-						
+						model_count+=1;		
 		
 					}
 					if (this.verbose==true){
 						System.out.println("Done with fold: " + (f+1) + "/" + this.folds);
 						
 					}
-				
+					model_count=0;
 			}
 			
 			if (this.print){
@@ -2304,6 +2327,12 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 			// we print file
 
 			if (this.verbose){
+				
+				for (int jj=0; jj< metric_averages.length;jj++ ){
+					System.out.println(" Average of all folds model " +jj + " : "  + metric_averages[jj]/this.folds);
+				}
+				
+				
 				System.out.println(" Level: " +  (level+1)+ " start output modelling ");
 			}
 			
@@ -2529,10 +2558,10 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 				
 				
 			}
-			
+			int model_count=0;
 			String [] level_grid=parameters[level];
 			estimator[] mini_batch_tree= new estimator[level_grid.length];
-			
+			double metric_averages[]=new double [level_grid.length]; //holds stats for the level			
 			Thread[] thread_array= new Thread[(this.threads>level_grid.length)?level_grid.length: this.threads];
 			estimator [] estimators= new estimator[(this.threads>level_grid.length)?level_grid.length: this.threads];
 			int count_of_live_threads=0;
@@ -2643,19 +2672,23 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 										
 											double rms=rmse(predictions,y_cv);
 											System.out.println(" rmse : " + rms);
+											metric_averages[model_count]+=rms;
 										} else if (this.metric.equals("mae")){
 											
 												double mae=mae(predictions,y_cv);
 												System.out.println(" mae : " + mae);
+												metric_averages[model_count]+=mae;
 												
  										} else if (this.metric.equals("rsquared")){
 											
 											double rsq=rsquared(predictions,y_cv);
-											System.out.println(" rsquared : " + rsq);		
+											System.out.println(" rsquared : " + rsq);	
+											metric_averages[model_count]+=rsq;
 										}
 									} else {
 										double log=logloss (predictions,binner.transform(y_cv) ); // the logloss for the current fold	
 										System.out.println(" logloss : " + log);
+										metric_averages[model_count]+=log;
 										
 									}
 						
@@ -2679,14 +2712,14 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 							estimators= new estimator[(this.threads>level_grid.length)?level_grid.length: this.threads];
 						}
 						
-						
+						model_count+=1;	
 				
 					}
 					if (this.verbose==true){
 						System.out.println("Done with fold: " + (f+1) + "/" + this.folds);
 						
 					}
-				
+					model_count=0;
 			}
 			if (this.print){
 				
@@ -2702,6 +2735,11 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 
 			
 			if (this.verbose){
+				
+				for (int jj=0; jj< metric_averages.length;jj++ ){
+					System.out.println(" Average of all folds model " +jj + " : "  + metric_averages[jj]/this.folds);
+				}
+				
 				System.out.println(" Level: " +  (level+1)+ " start output modelling ");
 			}
 			
@@ -2922,10 +2960,10 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 				
 				
 			}
-			
+			int model_count=0;
 			String [] level_grid=parameters[level];
 			estimator[] mini_batch_tree= new estimator[level_grid.length];
-			
+			double metric_averages[]=new double [level_grid.length]; //holds stats for the level			
 			Thread[] thread_array= new Thread[(this.threads>level_grid.length)?level_grid.length: this.threads];
 			estimator [] estimators= new estimator[(this.threads>level_grid.length)?level_grid.length: this.threads];
 			int count_of_live_threads=0;
@@ -3036,19 +3074,22 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 										
 											double rms=rmse(predictions,y_cv);
 											System.out.println(" rmse : " + rms);
+											metric_averages[model_count]+=rms;
 										} else if (this.metric.equals("mae")){
 											
 												double mae=mae(predictions,y_cv);
 												System.out.println(" mae : " + mae);
+												metric_averages[model_count]+=mae;
  										} else if (this.metric.equals("rsquared")){
 											
 											double rsq=rsquared(predictions,y_cv);
 											System.out.println(" rsquared : " + rsq);
+											metric_averages[model_count]+=rsq;
 										}
 									} else {
 										double log=logloss (predictions,binner.transform(y_cv) ); // the logloss for the current fold	
 										System.out.println(" logloss : " + log);
-										
+										metric_averages[model_count]+=log;
 									}
 						
 							}
@@ -3060,7 +3101,7 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 								}
 								
 							
-								
+								model_count+=1;	
 							}							
 							
 							System.gc();
@@ -3072,7 +3113,7 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 						
 
 					}
-					
+					model_count=0;
 					if (this.verbose==true){
 						System.out.println("Done with fold: " + (f+1) + "/" + this.folds);
 						
@@ -3092,6 +3133,11 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 
 			
 			if (this.verbose){
+				
+				for (int jj=0; jj< metric_averages.length;jj++ ){
+					System.out.println(" Average of all folds model " +jj + " : "  + metric_averages[jj]/this.folds);
+				}
+				
 				System.out.println(" Level: " +  (level+1)+ " start output modelling ");
 			}
 			
@@ -3548,7 +3594,29 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 					has_classifier_in_last_layer=true;					
 				}else if (str_estimator.contains("H2ONaiveBayesClassifier")) {
 					has_classifier_in_last_layer=true;					
-				} 
+				}else if (str_estimator.contains("SklearnAdaBoostClassifier")) {
+					has_classifier_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnDecisionTreeClassifier")) {
+					has_classifier_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnExtraTreesClassifier")) {
+					has_classifier_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnknnClassifier")) {
+					has_classifier_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnMLPClassifier")) {
+					has_classifier_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnRandomForestClassifier")) {
+					has_classifier_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnSGDClassifier")) {
+					has_classifier_in_last_layer=true;			
+				}else if (str_estimator.contains("SklearnsvmClassifier")) {
+					has_classifier_in_last_layer=true;
+				}else if (str_estimator.contains("KerasnnClassifier")) {
+					has_classifier_in_last_layer=true;
+				}else if (str_estimator.contains("PythonGenericClassifier")) {
+					has_classifier_in_last_layer=true;
+				}else if (str_estimator.contains("FRGFClassifier")) {
+					has_classifier_in_last_layer=true;
+				}
 				return has_classifier_in_last_layer;
 			}
 			
@@ -3593,6 +3661,28 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 					has_regressor_in_last_layer=true;					
 				}else if (str_estimator.contains("H2ODrfRegressor")) {
 					has_regressor_in_last_layer=true;					
+				}else if (str_estimator.contains("SklearnAdaBoostRegressor")) {
+					has_regressor_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnDecisionTreeRegressor")) {
+					has_regressor_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnExtraTreesRegressor")) {
+					has_regressor_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnknnRegressor")) {
+					has_regressor_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnMLPRegressor")) {
+					has_regressor_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnRandomForestRegressor")) {
+					has_regressor_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnSGDRegressor")) {
+					has_regressor_in_last_layer=true;
+				}else if (str_estimator.contains("SklearnsvmRegressor")) {
+					has_regressor_in_last_layer=true;
+				}else if (str_estimator.contains("PythonGenericRegressor")) {
+					has_regressor_in_last_layer=true;
+				}else if (str_estimator.contains("KerasnnRegressor")) {
+					has_regressor_in_last_layer=true;					
+				}else if (str_estimator.contains("FRGFRegressor")) {
+					has_regressor_in_last_layer=true;					
 				}
 				return has_regressor_in_last_layer;
 			}			
@@ -3630,7 +3720,18 @@ public class StackNetRegressor implements estimator,regressor, Serializable {
 							x.contains("H2ODrfRegressor")	||							
 							x.contains("LibFmRegressor")	||
 							x.contains("knnRegressor")	||
-							x.contains("XgboostRegressor")	||							
+							x.contains("XgboostRegressor")	||
+							x.contains("SklearnAdaBoostRegressor")	||
+							x.contains("SklearnDecisionTreeRegressor")	||
+							x.contains("SklearnExtraTreesRegressor")	||
+							x.contains("SklearnknnRegressor")	||								
+							x.contains("SklearnMLPRegressor")	||
+							x.contains("SklearnRandomForestRegressor")	||
+							x.contains("SklearnsvmRegressor")	||		
+							x.contains("SklearnSGDRegressor")	||
+							x.contains("KerasnnRegressor")	||							
+							x.contains("PythonGenericRegressor")	||								
+							x.contains("FRGFRegressor")	||	
 							x.contains("KernelmodelRegressor")
 							) {
 						no++;
