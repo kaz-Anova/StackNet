@@ -160,8 +160,8 @@ StackNet is made available now with a handful of classifiers and regressors. The
 -    [XgboostClassifier](/parameters/PARAMETERS.MD#xgboostclassifier)
 -    [LightgbmRegressor](/parameters/PARAMETERS.MD#lightgbmregressor)
 -    [LightgbmClassifier](/parameters/PARAMETERS.MD#lightgbmclassifier)
--    [FRGFRegressor](/parameters/PARAMETERS.MD#FRGFRegressor)(**New**)
--    [FRGFClassifier](/parameters/PARAMETERS.MD#FRGFClassifier)(**New**)
+-    [FRGFRegressor](/parameters/PARAMETERS.MD#frgfegressor)(**New**)
+-    [FRGFClassifier](/parameters/PARAMETERS.MD#frgfClassifier)(**New**)
 
 ### H2O
 -  [H2ODeepLearningClassifier](/parameters/PARAMETERS.MD#h2odeeplearningclassifier)
@@ -177,31 +177,31 @@ StackNet is made available now with a handful of classifiers and regressors. The
 ### Python
 
 #### Sklearn(**New**)
--  [SklearnAdaBoostClassifier](/parameters/PARAMETERS.MD#SklearnAdaBoostClassifier)(**New**)
--  [SklearnAdaBoostRegressor](/parameters/PARAMETERS.MD#SklearnAdaBoostRegressor)(**New**)
--  [SklearnDecisionTreeClassifier](/parameters/PARAMETERS.MD#SklearnDecisionTreeClassifier)(**New**)
--  [SklearnDecisionTreeRegressor](/parameters/PARAMETERS.MD#SklearnDecisionTreeRegressor)(**New**)
--  [SklearnExtraTreesClassifier](/parameters/PARAMETERS.MD#SklearnExtraTreesClassifier)(**New**)
--  [SklearnExtraTreesRegressor](/parameters/PARAMETERS.MD#SklearnExtraTreesRegressor)(**New**)
--  [SklearnknnClassifier](/parameters/PARAMETERS.MD#SklearnknnClassifier)(**New**)
--  [SklearnknnRegressor](/parameters/PARAMETERS.MD#SklearnknnRegressor)(**New**)
--  [SklearnMLPClassifier](/parameters/PARAMETERS.MD#SklearnMLPClassifier)(**New**)
--  [SklearnMLPRegressor](/parameters/PARAMETERS.MD#SklearnMLPRegressor)(**New**)
--  [SklearnRandomForestClassifier](/parameters/PARAMETERS.MD#SklearnRandomForestClassifier)(**New**)
--  [SklearnRandomForestRegressor](/parameters/PARAMETERS.MD#SklearnRandomForestRegressor)(**New**)
--  [SklearnSGDClassifier](/parameters/PARAMETERS.MD#SklearnSGDClassifier)(**New**)
--  [SklearnSGDRegressor](/parameters/PARAMETERS.MD#SklearnSGDRegressor)(**New**)
--  [SklearnsvmClassifier](/parameters/PARAMETERS.MD#SklearnsvmClassifier)(**New**)
--  [SklearnsvmRegressor](/parameters/PARAMETERS.MD#SklearnsvmRegressor)(**New**)
+-  [SklearnAdaBoostClassifier](/parameters/PARAMETERS.MD#sklearnadaboostclassifier)(**New**)
+-  [SklearnAdaBoostRegressor](/parameters/PARAMETERS.MD#sklearnadaboostregressor)(**New**)
+-  [SklearnDecisionTreeClassifier](/parameters/PARAMETERS.MD#sklearndecisiontreeclassifier)(**New**)
+-  [SklearnDecisionTreeRegressor](/parameters/PARAMETERS.MD#sklearndecisiontreeregressor)(**New**)
+-  [SklearnExtraTreesClassifier](/parameters/PARAMETERS.MD#sklearnextratreesclassifier)(**New**)
+-  [SklearnExtraTreesRegressor](/parameters/PARAMETERS.MD#sklearnextratreesregressor)(**New**)
+-  [SklearnknnClassifier](/parameters/PARAMETERS.MD#sklearnknnclassifier)(**New**)
+-  [SklearnknnRegressor](/parameters/PARAMETERS.MD#sklearnknnregressor)(**New**)
+-  [SklearnMLPClassifier](/parameters/PARAMETERS.MD#sklearnmlpclassifier)(**New**)
+-  [SklearnMLPRegressor](/parameters/PARAMETERS.MD#sklearnmlpregressor)(**New**)
+-  [SklearnRandomForestClassifier](/parameters/PARAMETERS.MD#sklearnrandomforestclassifier)(**New**)
+-  [SklearnRandomForestRegressor](/parameters/PARAMETERS.MD#sklearnrandomforestregressor)(**New**)
+-  [SklearnSGDClassifier](/parameters/PARAMETERS.MD#sklearnsgdclassifier)(**New**)
+-  [SklearnSGDRegressor](/parameters/PARAMETERS.MD#sklearnsgdregressor)(**New**)
+-  [SklearnsvmClassifier](/parameters/PARAMETERS.MD#sklearnsvmclassifier)(**New**)
+-  [SklearnsvmRegressor](/parameters/PARAMETERS.MD#sklearnsvmregressor)(**New**)
 
 
 #### Keras(**New**)
--  [KerasnnClassifier](/parameters/PARAMETERS.MD#KerasnnClassifier)(**New**)
--  [KerasnnRegressor](/parameters/PARAMETERS.MD#KerasnnRegressor)(**New**)
+-  [KerasnnClassifier](/parameters/PARAMETERS.MD#kerasnnclassifier)(**New**)
+-  [KerasnnRegressor](/parameters/PARAMETERS.MD#kerasnnregressor)(**New**)
 
 #### Generic for user defined scripts (**New**)
--  [PythonGenericClassifier](/parameters/PARAMETERS.MD#PythonGenericClassifier)(**New**)
--  [PythonGenericRegressor](/parameters/PARAMETERS.MD#PythonGenericRegressor)(**New**)
+-  [PythonGenericClassifier](/parameters/PARAMETERS.MD#pythongenericclassifier)(**New**)
+-  [PythonGenericRegressor](/parameters/PARAMETERS.MD#pythongenericregressor)(**New**)
 
 ## Algorithm's Tuning parameters
 
