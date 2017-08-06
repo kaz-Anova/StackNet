@@ -6,7 +6,7 @@ StackNet is empowered by [H2O](https://github.com/h2oai/h2o-3)'s [agorithms](htt
 
 StackNet and other topics can now  be discussed on [FaceBook](https://www.facebook.com/StackNet/) too :
 
-##Contents
+## Contents
 
 -    [What is StackNet](#what-is-stacknet)
 -    [How does it work](#how-does-it-work)
@@ -230,7 +230,7 @@ Awesome xgboost can be used as a subprocess now in StackNet. This would require 
 
 It is already pre-compiled for windows(64), mac and linux. 
 
-**verify that the 'lib' folder in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
+**verify that the 'lib' folder os in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
 
 for linux you most probably need to change privileges for the executable : 
 ```
@@ -268,7 +268,7 @@ Small Note: The user would need to delete the '.mod' files from inside the `mode
 
 It is already pre-compiled for windows(64), mac and linux. 
 
-**Verify that the 'lib' folder in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
+**Verify that the 'lib' folder is in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
 
 for linux you most probably need to change privileges for the executable : 
 ```
@@ -317,7 +317,7 @@ Additionally the first time StackNet uses an H2o Algorithm within the ensemble i
 
 It is already pre-compiled for windows(64), mac and linux. 
 
-**Verify that the 'lib' folder in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
+**Verify that the 'lib' folder is in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
 
 for linux you most probably need to change privileges for the executable : 
 ```
@@ -354,11 +354,11 @@ Small Note: The user would need to delete the '.mod' files from inside the `mode
 
 ### Install Sklearn Algorithms(**NEW**)
 
-To install [Sklearn](http://scikit-learn.org/stable/) in StackNet you need **python higher-equal-to 2.7**. Python needs to be found on **PATH** as StackNet makes subprocesses in the command line. This would require privileges to save and change files where the .jar is executed.
+To install [Sklearn](http://scikit-learn.org/stable/) in StackNet you need **python higher-equal-to 2.7**. Python needs to be found in **PATH** as StackNet makes subprocesses in the command line. This would require privileges to save and change files where the .jar is executed.
 
-**verify that the 'lib' folder in the same directory where the StackNet.jar file is**
+**verify that the 'lib' folder is in the same directory where the StackNet.jar file is**
 
-Once Python is installed and can be found on PATH, the user needs to isntall **sklearn version 0.18.2** .
+Once Python is installed and can be found on PATH, the user needs to isnstall **sklearn version 0.18.2** .
 
 The following should do the trick in linux and mac. 
 
@@ -367,15 +367,15 @@ pip install scipy
 pip install sklearn
 ```
 
-For an easier installation in winodws, the user could download [Anaconda](https://www.continuum.io/downloads) and make certain to check the **Add Anaconda's python to PATH** when it shows up during the installation.
+For an easier installation in windows, the user could download [Anaconda](https://www.continuum.io/downloads) and make certain to check the **Add Anaconda's python to PATH** when it shows up during the installation.
 
 All sklearn python scripts executed by StackNet are put in `lib/python/`
 
 ### Install Python Generic Algorithms(**NEW**)
 
-This a new feature that allows the user to run his/her own models as long as all libraries required can be found in his/her system when calling python. Assuming python is installed as explained in sklearn version above the user may have a look inside **lib/python/**.
+This a new feature that allows the user to run his/her own models as long as all libraries required can be found in his/her system when calling python. Assuming python is installed as explained in sklearn version above, the user may have a look inside **lib/python/**.
 
-The scripts **PythonGenericRegressor0.py** and **PythonGenericClassifier0.py** are sample scripts that show how to format these models. the '0' is the main hyper parameter (called index) of the model PythonGenericRegressor (or PythonGenericClassifier). The data gets loaded in sparse format, but aftee this the user could add whetver he/she wants.
+The scripts **PythonGenericRegressor0.py** and **PythonGenericClassifier0.py** are sample scripts that show how to format these models. The '0' is the main hyper parameter (called index) of the model PythonGenericRegressor (or PythonGenericClassifier). The data gets loaded in sparse format, but after this the user could add whetver he/she wants.
 
 One could make many scritps and name them PythonGenericRegressor1,PythonGenericRegressor2...PythonGenericRegressorN and call them as:
 
@@ -567,11 +567,11 @@ Marios Michailidis (2017), StackNet, StackNet Meta Modelling Framework, url http
 
 ## News
 
-StackNet model was presented at [infiniteconf 2017]( https://skillsmatter.com/conferences/7983-infiniteconf-2017-the-conference-on-big-data-data-science-and-engineering#program ) [6th-7th July] and the video is available there if you sign up
-New [facebook page](https://www.facebook.com/StackNet/) to discuss StackNet and other open source data science topics.
-StackNet and Sracking was explained in [kaggle's blog](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/)
-The is an Ask Me Anything (AMA) [thread in kaggle](https://www.kaggle.com/general/34802) with useful material about stacking and StackNet.
-A workshop with StackNet will take place in [ODSC in London](https://www.odsc.com/london/speakers) October 12-14 .
+- StackNet model was presented at [infiniteconf 2017]( https://skillsmatter.com/conferences/7983-infiniteconf-2017-the-conference-on-big-data-data-science-and-engineering#program ) [6th-7th July] and the video is available there if you sign up
+- New [facebook page](https://www.facebook.com/StackNet/) to discuss StackNet and other open source data science topics.
+- StackNet and Sracking was explained in [kaggle's blog](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/)
+- The is an Ask Me Anything (AMA) [thread in kaggle](https://www.kaggle.com/general/34802) with useful material about stacking and StackNet.
+- A workshop with StackNet will take place in [ODSC in London](https://www.odsc.com/london/speakers) October 12-14 .
 
 ## Special Thanks
 
