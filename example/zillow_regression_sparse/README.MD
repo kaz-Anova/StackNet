@@ -26,7 +26,7 @@ The architecture of this ensemble is illustrated bellow.
 10. your predictions are now saved in **pred2.csv** in the base directory.
 11. You can generate a submission via executing the **create_submission.py** as `python create_submission.py`. It will be saved to *output_dataset2.csv*
 12. From now on, everything is optional. You can get a score of 0.0643+ (top 3% at the time) if you blend with the output of [another script](https://www.kaggle.com/davidfumo/boosted-trees-lb-0-0643707/output).
-13. Download **sub20170821221910.csv** from the link in (12) and place it into the base directory.
+13. Download **sub20170821_221910.csv** from the link in (12) and place it into the base directory.
 14. You can generate a submission combining the 2 submissions via executing the **combine_subs.py** as `python combine_subs.py`. It will be saved to *output_dataset2_merged.csv*
 
 This is how your base directory needs to look like after everything is done: 
