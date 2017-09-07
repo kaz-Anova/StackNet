@@ -1100,7 +1100,7 @@ coef | Independent term in kernel function.It is only significant in poly and si
 use_scale | true to use absmaxscaling.
 use_dense | True to Use dense data. If your data is in dense format, do select true as all files get loaded as sparse by default in python-based modules. 
 
-### SklearnsvmRegressor
+### KerasnnRegressor
 
 The original parameters can be found sparsely in [keras' documentation](https://keras.io/) 
 

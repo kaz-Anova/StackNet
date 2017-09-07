@@ -477,6 +477,7 @@ Java -jar stacknet.jar **_predict_** **sparse**=false **has_head**=true **model*
 - [Kaggle-TwoSigma](/example/twosigma_kaggle/EXAMPLE.MD)
 - [Kaggle-TwoSigma Random Forest using the Library](/example/twosigma_kaggle_java_rf/EXAMPLE.MD)
 - [Kaggle-Amazon Classification challenge and use of data_prefix](/example/example_amazon/EXAMPLE.MD)
+- [Kaggle-Zillow regerssion example]((/example/zillow_regression_sparse/EXAMPLE.MD)
 
 
 
