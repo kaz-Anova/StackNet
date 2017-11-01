@@ -442,8 +442,8 @@ It is already pre-compiled for windows(64) and linux.
 
 **Mac** was more difficult than expected and generally there is a lack of expertise working with Mac. If someone could help here, please email me at kazanovassoftware@gmail.com. 
 
-For mac You have to install vowpal wabbit from source and drop the executable in `lib/mac/vw/`. Consider [the following link] (https://github.com/JohnLangford/vowpal_wabbit#mac-os-x-specific-info). `brew install vowpal-wabbit` will most probably do the trick.
-If that does not work, you may execture the`lib/mac/vw/script.sh`. This is not advised though as it will override some files you may have already installed - use it as a last resort.
+For mac, you have to install vowpal wabbit from source and drop the executable in `lib/mac/vw/`. Consider [the following link](https://github.com/JohnLangford/vowpal_wabbit#mac-os-x-specific-info). `brew install vowpal-wabbit` will most probably do the trick.
+If that does not work, you may execute the`lib/mac/vw/script.sh`. This is not advised though as it will override some files you may have already installed - use it as a last resort.
 
 **Verify that the 'lib' folder is in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
 
@@ -490,7 +490,8 @@ for linux and mac you most probably need to change privileges for the executable
 cd lib/
 cd linux/
 cd libffm/
-chmod +x libffm
+chmod +x ffm-train
+chmod +x ffm-predict
 ```
 You can test that it works with :
 `./ffm-train`
