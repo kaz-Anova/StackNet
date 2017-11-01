@@ -543,7 +543,7 @@ test_file | Name of the test file.
 output_name | Prefix of the models to be printed per iteration. This is to allow the Meta features of each iteration to be printed. Defaults to nothing.
 data_prefix |  prefix to be used when the user supplies own pairs of [X_train,X_cv] datasets for each fold as well as an X file for the whole training data. This is particularly useful for when likelihood features are needed or generally features than must be computed within cv.  Each train/valid pair is identified by prefix_train[fold_index_starting_from_zero].txt/prefix_cv[fold_index_starting_from_zero].txt and prefix_train.txt for the final set. For example if prefix=mystack and folds=2 then stacknet is expecting 2 pairs of train/cv files. e.g [[mystack_train0.txt,mystack_cv0.txt],[mystack_train1.txt,mystack_cv1.txt]]. It also expects a [mystack_train.txt]  for the final train set. These files can be either dense or sparse ( when 'sparse=True') and need to have the target variable in the beginning. If you use **output_name** to extract the predictions, these will be stacked vertically in the same order as the cv files. 
 indices_name |  A prefix. When given any value it prints a .csv file for each fold with the corresponding train(0) and valiation(1) indices stacked vertically .The format is “row_index,[0 if train else 1 for validation]”. First it prints the train indices and then the validation indices in exactly the same order as they appear when modelling inside StackNet.
-input_index (**New**) |  Name of file to load in order to form the train and cv indices during kfold cross validation. This overrides the internal process for generating kfolds and ignores the given folds. Each row needs to contain an integer in that file. Row size of the file needs to be the same as the `train_file`. It should not contain headers. one line=one integer - the indice of the validation fold the case belongs to. 
+input_index (**New**) |  Name of file to load in order to form the train and cv indices during kfold cross validation. This overrides the internal process for generating kfolds and ignores the given folds. Each row needs to contain an integer in that file. Row size of the file needs to be the same as the `train_file`. It should not contain headers. one line=one integer - the indice of the validation fold the case belongs to.[There is an example](/example/manual_index/EXAMPLE.MD)
 include_target (**New**) |  True to enable printing the target column in the output file for train holdout predictions (when `output_name` is not empty).
 test_target | True if the test file has a target variable in the beginning (left) else false (only predictors in the file).
 params | Parameter file where each line is a model. empty lines correspond to the creation of new levels 
@@ -624,6 +624,8 @@ Java -jar stacknet.jar **_predict_** **sparse**=false **has_head**=true **model*
 - [Kaggle-TwoSigma Random Forest using the Library](/example/twosigma_kaggle_java_rf/EXAMPLE.MD)
 - [Kaggle-Amazon Classification challenge and use of data_prefix](/example/example_amazon/EXAMPLE.MD)
 - [Kaggle-Zillow regerssion example](/example/zillow_regression_sparse/README.MD)
+- [Example_with_index](/example/manual_index/EXAMPLE.MD)
+
 
 
 
@@ -714,7 +716,7 @@ Marios Michailidis (2017), StackNet, StackNet Meta Modelling Framework, url http
 
 ## News
 
-- StackNet model was presented at [infiniteconf 2017]( https://skillsmatter.com/conferences/7983-infiniteconf-2017-the-conference-on-big-data-data-science-and-engineering#program ) [6th-7th July] and the video is available there if you sign up
+- StackNet model was presented at [infiniteconf 2017](https://skillsmatter.com/conferences/7983-infiniteconf-2017-the-conference-on-big-data-data-science-and-engineering#program ) [6th-7th July] and the video is available there if you sign up
 - New [facebook page](https://www.facebook.com/StackNet/) to discuss StackNet and other open source data science topics.
 - StackNet and Sracking was explained in [kaggle's blog](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/)
 - The is an Ask Me Anything (AMA) [thread in kaggle](https://www.kaggle.com/general/34802) with useful material about stacking and StackNet.
