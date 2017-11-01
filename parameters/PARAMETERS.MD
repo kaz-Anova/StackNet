@@ -582,7 +582,7 @@ standardize | true to standardize input features or not
 
 Wraps the original implementation of [ibFM](http://libfm.org/), made from Steffen Rendle. The reason this implementation is made, is because internal results show that it has better performance (as in accuracy) than StackNet's internal implementation and has more training methods than just sgd. 
 This implementation may not include all libFM features plus it actually uses a version of it **that had a bug(!)** on purpose. You can find more information about why this was chosen in the following [python wrapper for libFM](https://github.com/jfloff/pywFM). It basically had this bug that was allowing you to get the parameters of the trained models for all training methods. These parameters are now extracted once a model has been trained and the scoring uses only these parameters (e.g. not the libFM executable). 
-Don't forget to acknowledge libFM if you publish results produced with this software. Also take note of its licence GNU (e.g you cannot use for commercial applications). More information can be found on [libFM's repo on github](https://github.com/srendle/libfm).
+Don't forget to acknowledge libFM if you publish results produced with this software. Also take note of its licence GNU. More information can be found on [libFM's repo on github](https://github.com/srendle/libfm).
 
 ```
 OriginalLibFMClassifier type:als lfeatures:4 learn_rate:0.01 maxim_Iteration:10 init_values:0.01 c:1 c2:1 threads:1 usescale:false seed:1 verbose:true bags:1 
@@ -1224,7 +1224,7 @@ dense_max_buckets | Maximum bins for dense data.
 
 Wraps the original implementation of [ibFM](http://libfm.org/), made from Steffen Rendle. The reason this implementation is made, is because internal results show that it has better performance (as in accuracy) than StackNet's internal implementation and has more training methods than just sgd. 
 This implementation may not include all libFM features plus it actually uses a version of it **that had a bug(!)** on purpose. You can find more information about why this was chosen in the following [python wrapper for libFM](https://github.com/jfloff/pywFM). It basically had this bug that was allowing you to get the parameters of the trained models for all training methods. These parameters are now extracted once a model has been trained and the scoring uses only these parameters (e.g. not the libFM executable). 
-Don't forget to acknowledge libFM if you publish results produced with this software. Also take note of its licence GNU (e.g you cannot use for commercial applications). More information can be found on [libFM's repo on github](https://github.com/srendle/libfm).
+Don't forget to acknowledge libFM if you publish results produced with this software. Also take note of its licence GNU. More information can be found on [libFM's repo on github](https://github.com/srendle/libfm).
 
 ```
 OriginalLibFMRegressor type:als lfeatures:4 learn_rate:0.01 maxim_Iteration:10 init_values:0.01 c:1 c2:1 threads:1 usescale:false seed:1 verbose:true bags:1 
