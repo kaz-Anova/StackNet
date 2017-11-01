@@ -362,13 +362,13 @@ public class FRGFRegressor implements estimator,regressor {
 	 */
 	private smatrix sdataset;	
 	/**
-	 * Default constructor for LinearRegression with no data
+	 * Default constructor with no data
 	 */
 	public FRGFRegressor(){
 	
 	}	
 	/**
-	 * Default constructor for LinearRegression with double data
+	 * Default constructor with double data
 	 */
 	public FRGFRegressor(double data [][]){
 		
@@ -379,7 +379,7 @@ public class FRGFRegressor implements estimator,regressor {
 	}
 	
 	/**
-	 * Default constructor for LinearRegression with fsmatrix data
+	 * Default constructor with fsmatrix data
 	 */
 	public FRGFRegressor(fsmatrix data){
 		
@@ -389,7 +389,7 @@ public class FRGFRegressor implements estimator,regressor {
 		fsdataset=data;
 	}
 	/**
-	 * Default constructor for LinearRegression with smatrix data
+	 * Default constructor with smatrix data
 	 */
 	public FRGFRegressor(smatrix data){
 		

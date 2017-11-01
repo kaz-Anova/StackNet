@@ -48,7 +48,7 @@ import ml.classifier;
 import ml.estimator;
 
 /**
-*<p>Wraps another kaggle's favourite  <a href="https://github.com/Microsoft/LightGBM">LightGBM</a>).
+*<p>Wraps another kaggle's favourite  <a href="https://github.com/Microsoft/LightGBM">LightGBM</a>.
 *This particular instance is allowing only classification results. LightGBM models are being trained via a subprocess based on the operating systems
 *executing the class. <b>It is expected that files will be created and their size will vary based on the volumne of the training data.</b></p>
 *
@@ -487,13 +487,13 @@ public class LightgbmClassifier implements estimator,classifier {
 	 */
 	private smatrix sdataset;	
 	/**
-	 * Default constructor for LinearRegression with no data
+	 * Default constructor with no data
 	 */
 	public LightgbmClassifier(){
 	
 	}	
 	/**
-	 * Default constructor for LinearRegression with double data
+	 * Default constructor with double data
 	 */
 	public LightgbmClassifier(double data [][]){
 		
@@ -504,7 +504,7 @@ public class LightgbmClassifier implements estimator,classifier {
 	}
 	
 	/**
-	 * Default constructor for LinearRegression with fsmatrix data
+	 * Default constructor with fsmatrix data
 	 */
 	public LightgbmClassifier(fsmatrix data){
 		
@@ -514,7 +514,7 @@ public class LightgbmClassifier implements estimator,classifier {
 		fsdataset=data;
 	}
 	/**
-	 * Default constructor for LinearRegression with smatrix data
+	 * Default constructor with smatrix data
 	 */
 	public LightgbmClassifier(smatrix data){
 		

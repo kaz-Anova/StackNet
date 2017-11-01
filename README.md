@@ -32,7 +32,7 @@ StackNet and other topics can now  be discussed on [FaceBook](https://www.facebo
 
 ## What is StackNet
 
-StackNet is a computational, scalable and analytical framework implemented with a software implementation in Java that resembles a feedforward neural network and uses Wolpert's stacked generalization [1] in multiple levels to improve accuracy in classification problems. In contrast to feedforward neural networks, rather than being trained through back propagation, the network is built iteratively one layer at a time (using stacked generalization), each of which uses the final target as its target.
+StackNet is a computational, scalable and analytical framework implemented with a software implementation in Java that resembles a feedforward neural network and uses Wolpert's stacked generalization [1] in multiple levels to improve accuracy in machine learning problems. In contrast to feedforward neural networks, rather than being trained through back propagation, the network is built iteratively one layer at a time (using stacked generalization), each of which uses the final target as its target.
 
 The Sofware is made available under MIT licence.
 
@@ -160,8 +160,14 @@ StackNet is made available now with a handful of classifiers and regressors. The
 -    [XgboostClassifier](/parameters/PARAMETERS.MD#xgboostclassifier)
 -    [LightgbmRegressor](/parameters/PARAMETERS.MD#lightgbmregressor)
 -    [LightgbmClassifier](/parameters/PARAMETERS.MD#lightgbmclassifier)
--    [FRGFRegressor](/parameters/PARAMETERS.MD#frgfegressor)(**New**)
--    [FRGFClassifier](/parameters/PARAMETERS.MD#frgfClassifier)(**New**)
+-    [FRGFRegressor](/parameters/PARAMETERS.MD#frgfegressor)
+-    [FRGFClassifier](/parameters/PARAMETERS.MD#frgfClassifier)
+-    [OriginalLibFMClassifier](/parameters/PARAMETERS.MD#originallibfmclassifier)(**New**)
+-    [OriginalLibFMRegressor](/parameters/PARAMETERS.MD#originallibfmregressor)(**New**)
+-    [VowpaLWabbitClassifier](/parameters/PARAMETERS.MD#vowpalwabbitclassifier)(**New**)
+-    [VowpaLWabbitRegressor](/parameters/PARAMETERS.MD#vowpalwabbitregressor)(**New**)
+-    [libffmClassifier](/parameters/PARAMETERS.MD#libffmclassifier)(**New**)
+
 
 ### H2O
 -  [H2ODeepLearningClassifier](/parameters/PARAMETERS.MD#h2odeeplearningclassifier)
@@ -177,31 +183,31 @@ StackNet is made available now with a handful of classifiers and regressors. The
 ### Python
 
 #### Sklearn(**New**)
--  [SklearnAdaBoostClassifier](/parameters/PARAMETERS.MD#sklearnadaboostclassifier)(**New**)
--  [SklearnAdaBoostRegressor](/parameters/PARAMETERS.MD#sklearnadaboostregressor)(**New**)
--  [SklearnDecisionTreeClassifier](/parameters/PARAMETERS.MD#sklearndecisiontreeclassifier)(**New**)
--  [SklearnDecisionTreeRegressor](/parameters/PARAMETERS.MD#sklearndecisiontreeregressor)(**New**)
--  [SklearnExtraTreesClassifier](/parameters/PARAMETERS.MD#sklearnextratreesclassifier)(**New**)
--  [SklearnExtraTreesRegressor](/parameters/PARAMETERS.MD#sklearnextratreesregressor)(**New**)
--  [SklearnknnClassifier](/parameters/PARAMETERS.MD#sklearnknnclassifier)(**New**)
--  [SklearnknnRegressor](/parameters/PARAMETERS.MD#sklearnknnregressor)(**New**)
--  [SklearnMLPClassifier](/parameters/PARAMETERS.MD#sklearnmlpclassifier)(**New**)
--  [SklearnMLPRegressor](/parameters/PARAMETERS.MD#sklearnmlpregressor)(**New**)
--  [SklearnRandomForestClassifier](/parameters/PARAMETERS.MD#sklearnrandomforestclassifier)(**New**)
--  [SklearnRandomForestRegressor](/parameters/PARAMETERS.MD#sklearnrandomforestregressor)(**New**)
--  [SklearnSGDClassifier](/parameters/PARAMETERS.MD#sklearnsgdclassifier)(**New**)
--  [SklearnSGDRegressor](/parameters/PARAMETERS.MD#sklearnsgdregressor)(**New**)
--  [SklearnsvmClassifier](/parameters/PARAMETERS.MD#sklearnsvmclassifier)(**New**)
--  [SklearnsvmRegressor](/parameters/PARAMETERS.MD#sklearnsvmregressor)(**New**)
+-  [SklearnAdaBoostClassifier](/parameters/PARAMETERS.MD#sklearnadaboostclassifier)
+-  [SklearnAdaBoostRegressor](/parameters/PARAMETERS.MD#sklearnadaboostregressor)
+-  [SklearnDecisionTreeClassifier](/parameters/PARAMETERS.MD#sklearndecisiontreeclassifier)
+-  [SklearnDecisionTreeRegressor](/parameters/PARAMETERS.MD#sklearndecisiontreeregressor)
+-  [SklearnExtraTreesClassifier](/parameters/PARAMETERS.MD#sklearnextratreesclassifier)
+-  [SklearnExtraTreesRegressor](/parameters/PARAMETERS.MD#sklearnextratreesregressor)
+-  [SklearnknnClassifier](/parameters/PARAMETERS.MD#sklearnknnclassifier)
+-  [SklearnknnRegressor](/parameters/PARAMETERS.MD#sklearnknnregressor)
+-  [SklearnMLPClassifier](/parameters/PARAMETERS.MD#sklearnmlpclassifier)
+-  [SklearnMLPRegressor](/parameters/PARAMETERS.MD#sklearnmlpregressor)
+-  [SklearnRandomForestClassifier](/parameters/PARAMETERS.MD#sklearnrandomforestclassifier)
+-  [SklearnRandomForestRegressor](/parameters/PARAMETERS.MD#sklearnrandomforestregressor)
+-  [SklearnSGDClassifier](/parameters/PARAMETERS.MD#sklearnsgdclassifier)
+-  [SklearnSGDRegressor](/parameters/PARAMETERS.MD#sklearnsgdregressor)
+-  [SklearnsvmClassifier](/parameters/PARAMETERS.MD#sklearnsvmclassifier)
+-  [SklearnsvmRegressor](/parameters/PARAMETERS.MD#sklearnsvmregressor)
 
 
-#### Keras(**New**)
--  [KerasnnClassifier](/parameters/PARAMETERS.MD#kerasnnclassifier)(**New**)
--  [KerasnnRegressor](/parameters/PARAMETERS.MD#kerasnnregressor)(**New**)
+#### Keras
+-  [KerasnnClassifier](/parameters/PARAMETERS.MD#kerasnnclassifier)
+-  [KerasnnRegressor](/parameters/PARAMETERS.MD#kerasnnregressor)
 
 #### Generic for user defined scripts (**New**)
--  [PythonGenericClassifier](/parameters/PARAMETERS.MD#pythongenericclassifier)(**New**)
--  [PythonGenericRegressor](/parameters/PARAMETERS.MD#pythongenericregressor)(**New**)
+-  [PythonGenericClassifier](/parameters/PARAMETERS.MD#pythongenericclassifier)
+-  [PythonGenericRegressor](/parameters/PARAMETERS.MD#pythongenericregressor)
 
 ## Algorithm's Tuning parameters
 
@@ -232,7 +238,7 @@ It is already pre-compiled for windows(64), mac and linux.
 
 **verify that the 'lib' folder os in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
 
-for linux you most probably need to change privileges for the executable : 
+for linux and mac you most probably need to change privileges for the executable : 
 ```
 cd lib/
 cd linux/
@@ -270,7 +276,7 @@ It is already pre-compiled for windows(64), mac and linux.
 
 **Verify that the 'lib' folder is in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
 
-for linux you most probably need to change privileges for the executable : 
+for linux and mac you most probably need to change privileges for the executable : 
 ```
 cd lib/
 cd linux/
@@ -311,7 +317,7 @@ No special installation is required , but experimentally system protection might
 
 Additionally the first time StackNet uses an H2o Algorithm within the ensemble it takes more time (in comparison to every other time) because it sets up a cluster . 
 
-### Install Fast_rgf (**NEW**)
+### Install Fast_rgf
 
 [fast_rgf](https://github.com/baidu/fast_rgf) can be used as a subprocess now in StackNet. This would require privileges to save and change files where the .jar is executed.
 
@@ -319,7 +325,7 @@ It is already pre-compiled for windows(64), mac and linux.
 
 **Verify that the 'lib' folder is in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
 
-for linux you most probably need to change privileges for the executable : 
+for linux and mac you most probably need to change privileges for the executable : 
 ```
 cd lib/
 cd linux/
@@ -352,7 +358,7 @@ Small Note: The user would need to delete the '.mod' files from inside the `mode
 
 **IMPORTANT NOTE:** This implementation does not include all fast_rgf's features and the user is advised to use it directly from source to exploit its full potential. it is not certain whether it will be updated in the future as it required manual work to find all libraries and files required that need to be included for it to run. The performance and memory consumption will also be worse than running it directly from source. Additionally the descritpion of the parameters may not match the one in the offcial website, hence it is advised to use [fast_rgf's online parameter thread in github](https://github.com/baidu/fast_rgf/tree/master/examples) for more information about them.
 
-### Install Sklearn Algorithms(**NEW**)
+### Install Sklearn Algorithms
 
 To install [Sklearn](http://scikit-learn.org/stable/) in StackNet you need **python higher-equal-to 2.7**. Python needs to be found in **PATH** as StackNet makes subprocesses in the command line. This would require privileges to save and change files where the .jar is executed.
 
@@ -371,7 +377,7 @@ For an easier installation in windows, the user could download [Anaconda](https:
 
 All sklearn python scripts executed by StackNet are put in `lib/python/`
 
-### Install Python Generic Algorithms(**NEW**)
+### Install Python Generic Algorithms
 
 This a new feature that allows the user to run his/her own models as long as all libraries required can be found in his/her system when calling python. Assuming python is installed as explained in sklearn version above, the user may have a look inside **lib/python/**.
 
@@ -385,6 +391,142 @@ PythonGenericRegressor index:2 seed:1 verbose:False
 PythonGenericRegressor index:N seed:1 verbose:False 
 ``` 
 Once again **Verify that the 'lib' folder in the same directory where the StackNet.jar file is**.
+
+### Install original libfm
+
+[libFM](https://github.com/srendle/libfm) can be used as a subprocess now in StackNet. This would require privileges to save and change files where the .jar is executed.
+
+It is already pre-compiled for windows(64), mac and linux. Note for windows libfm is compiled with [cygwin](https://www.cygwin.com/)
+
+**Verify that the 'lib' folder is in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
+
+for linux and mac you most probably need to change privileges for the executable : 
+```
+cd lib/
+cd linux/
+cd libfm/
+chmod +x libfm
+```
+You can test that it works with :
+`./libfm`
+
+It should print something in the form of:
+
+```
+libFM
+  Version: 1.4.2
+   ...
+   ...
+```
+
+In windows and mac the behaviour should be similar. After executing `libfm` from inside the `lib/your_operation_system/libfm/` you should see the same.
+
+If you don't see this, **then you need to compile it manually** and drop the executables inside `lib/your_operation_system/libfm/`.
+
+You may find the follwing sources usefull:
+
+[libfm manual](http://www.libfm.org/libfm-1.42.manual.pdf)
+
+**IMPORTANT NOTE:** This implementation may not include all libFM features plus it actually uses a version of it **that had a bug** on purpose. You can find more information about why this was chosen in the following [python wrapper for libFM](https://github.com/jfloff/pywFM). It basically had this bug that was allowing you to get the parameters of the trained models for all training methods. These parameters are now extracted once a model has been trained and the scoring uses only these parameters (e.g. not the libFM executable). 
+
+Also, multiclass problems are formed as binary 1-vs-all.
+
+Bear in mind the [licence of libfm](https://github.com/srendle/libfm/blob/master/license.txt). If you find it useful, cite the following paper :
+Rendle, S. (2012). Factorization machines with libfm. *ACM Transactions on Intelligent Systems and Technology (TIST)*, 3(3), 57.Chicago .  [Link](http://www.csie.ntu.edu.tw/~b97053/paper/Factorization%20Machines%20with%20libFM.pdf) 
+
+### Install vowpal wabbit
+
+[vowpal wabbit](https://github.com/JohnLangford/vowpal_wabbit) can be used as a subprocess now in StackNet. This would require privileges to save and change files where the .jar is executed.
+
+It is already pre-compiled for windows(64) and linux.
+
+**Mac** was more difficult than expected and generally there is a lack of expertise working with Mac. If someone could help here, please email me at kazanovassoftware@gmail.com. 
+
+For mac You have to install vowpal wabbit from source and drop the executable in `lib/mac/vw/`. Consider [the following link] (https://github.com/JohnLangford/vowpal_wabbit#mac-os-x-specific-info). `brew install vowpal-wabbit` will most probably do the trick.
+If that does not work, you may execture the`lib/mac/vw/script.sh`. This is not advised though as it will override some files you may have already installed - use it as a last resort.
+
+**Verify that the 'lib' folder is in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
+
+for linux and mac you most probably need to change privileges for the executable : 
+```
+cd lib/
+cd linux/
+cd vw/
+chmod +x vw
+```
+You can test that it works with :
+`./vw`
+
+It should print something in the form of:
+
+```
+	Num weight bits = 18
+	learning rate = 0.5
+	initial_t = 0
+    ...
+```
+
+In windows and mac the behaviour should be similar. After executing `vw` from inside the `lib/your_operation_system/vw/` you should see the same.
+
+If you don't see this, **then you need to compile it manually** and drop the executables inside `lib/your_operation_system/vw/`.
+
+You may find the follwing sources usefull:
+
+[Download suggestions](https://github.com/JohnLangford/vowpal_wabbit/wiki/Download)
+
+**IMPORTANT NOTE:** This implementation may not include all Vowpal Wabbit features and the user is advised to use it directly from the source. Also the version may not be the final and it is not certain whether it will be updated in the future as it required manual work to find all libraries and files required that need to be included for it to run. The performance and memory consumption will also be worse than running directly. Additionally the descritpion of the parameters may not match the one in the website, hence it is advised to use [VW's online parameter thread in github](https://github.com/JohnLangford/vowpal_wabbit/wiki/Command-line-arguments) for more information about them.
+
+
+### Install libffm
+
+[libffm](https://github.com/guestwalk/libffm) can be used as a subprocess now in StackNet. This would require privileges to save and change files where the .jar is executed.
+
+It is already pre-compiled for windows(64), mac and linux. 
+
+**Verify that the 'lib' folder is in the same directory where the StackNet.jar file is**. By default it should be there when you do `git clone`
+
+for linux and mac you most probably need to change privileges for the executable : 
+```
+cd lib/
+cd linux/
+cd libffm/
+chmod +x libffm
+```
+You can test that it works with :
+`./ffm-train`
+
+It should print something in the form of:
+
+```
+usage: ffm-train [options] training_set_file [model_file]
+
+options:
+-l <lambda>: set regularization parameter (default 0.00002)
+-k <factor>: set number of latent factors (default 4)
+-t <iteration>: set number of iterations (default 15)
+```
+You should also test that it works with :
+`./ffm-predict`
+
+It should print:
+
+```
+usage: ffm-predict test_file model_file output_file
+```
+
+In windows and mac the behaviour should be similar. After executing `ffm-train` or `ffm-predict` from inside the `lib/your_operation_system/libffm/` you should see the same results.
+
+If you don't see this, then you need to compile it manually and drop the executables inside `lib/your_operation_system/libffm/` .
+
+You may find the follwing sources usefull:
+
+[Install libffm](https://github.com/guestwalk/libffm) . Search for `Installation ...` and `OpenMP and SSE ...`
+
+Small Note: The user would need to delete the '.mod' files from inside the `model/` folder when no longer need them. StackNet does not do that automatically as it is not possible to determine when they are not needed anymore.  
+
+**IMPORTANT NOTE:** This implementation may not include all libffm features and the user is advised to use it directly from the source. Also the version may not be the final and it is not certain whether it will be updated in the future as it required manual work to find all libraries and files required that need to be included for it to run. The performance and memory consumption will also be worse than running directly . Additionally the descritpion of the parameters may not match the one in the website, hence it is advised to use libffm online parameter thread in github for more information about them. 
+Also, multiclass problems are formed as binary 1-vs-all.
+
 
 ## Command Line Parameters
 
@@ -400,6 +542,8 @@ test_file | Name of the test file.
 output_name | Prefix of the models to be printed per iteration. This is to allow the Meta features of each iteration to be printed. Defaults to nothing.
 data_prefix |  prefix to be used when the user supplies own pairs of [X_train,X_cv] datasets for each fold as well as an X file for the whole training data. This is particularly useful for when likelihood features are needed or generally features than must be computed within cv.  Each train/valid pair is identified by prefix_train[fold_index_starting_from_zero].txt/prefix_cv[fold_index_starting_from_zero].txt and prefix_train.txt for the final set. For example if prefix=mystack and folds=2 then stacknet is expecting 2 pairs of train/cv files. e.g [[mystack_train0.txt,mystack_cv0.txt],[mystack_train1.txt,mystack_cv1.txt]]. It also expects a [mystack_train.txt]  for the final train set. These files can be either dense or sparse ( when 'sparse=True') and need to have the target variable in the beginning. If you use **output_name** to extract the predictions, these will be stacked vertically in the same order as the cv files. 
 indices_name |  A prefix. When given any value it prints a .csv file for each fold with the corresponding train(0) and valiation(1) indices stacked vertically .The format is “row_index,[0 if train else 1 for validation]”. First it prints the train indices and then the validation indices in exactly the same order as they appear when modelling inside StackNet.
+input_index (**New**) |  Name of file to load in order to form the train and cv indices during kfold cross validation. This overrides the internal process for generating kfolds and ignores the given folds. Each row needs to contain an integer in that file. Row size of the file needs to be the same as the `train_file`. It should not contain headers. one line=one integer - the indice of the validation fold the case belongs to. 
+include_target (**New**) |  True to enable printing the target column in the output file for train holdout predictions (when `output_name` is not empty).
 test_target | True if the test file has a target variable in the beginning (left) else false (only predictors in the file).
 params | Parameter file where each line is a model. empty lines correspond to the creation of new levels 
 verbose | True if we need StackNet to output its progress else false 
@@ -413,6 +557,7 @@ folds | Number of folds for re-usable kfold
 ### Parameters' File
 
 In The parameter file, each line is a model. When there is an empty line then any new algorithm is used in the next level.  This is a sample format. 
+Note this file accepts comments (`#`). Anything on the right of the `#` symbol is ignored.(**New**)
 
 ```
 LogisticRegression C:1 Type:Liblinear maxim_Iteration:100 scale:true verbose:false

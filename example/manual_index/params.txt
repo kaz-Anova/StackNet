@@ -1,0 +1,12 @@
+#layer 1
+OriginalLibFMRegressor type:mcmc lfeatures:2 learn_rate:0.01 maxim_Iteration:1000 init_values:0.03 c:0.1 c2:1 usescale:True threads:1 seed:1 verbose:false bags:1 
+LibFmRegressor Objective:RMSE lfeatures:2 learn_rate:0.1 maxim_Iteration:100 init_values:0.1 C:0.001 C2:0.001 shuffle:true usescale:True  smooth:0.01 seed:1 threads:1 bags:1 verbose:false
+VowpaLWabbitRegressor use_ftrl:True learning_rate:0.1 decay_learning_rate:0.97 nn:2 bit_precision:20 ftrl_alpha:0.7 ftrl_beta:0.1 power_t:0.5 initial_t:0.9 l1:0.0001 l2:0.001 passes:50 threads:1 make2way:false make3way:false use_dropout:false use_meanfield:false seed:1 verbose:false bags:1  
+VowpaLWabbitClassifier use_ftrl:True learning_rate:0.8 decay_learning_rate:0.97 nn:40 bit_precision:18 ftrl_alpha:0.1 ftrl_beta:0.1 power_t:0.9 initial_t:0.9 l1:0.01 l2:0.01 passes:10 threads:1 make2way:false make3way:false use_dropout:true use_meanfield:false seed:1 verbose:false bags:1  
+OriginalLibFMClassifier type:mcmc lfeatures:2 learn_rate:0.01 maxim_Iteration:1000 init_values:0.03 c:0.1 c2:1 usescale:True threads:1 seed:1 verbose:false bags:1 
+libffmClassifier factor:4 iteration:100 learn_rate:0.2 opt:1,2,3,10 lambda:0.00001 threads:1 use_norm:false seed:1 verbose:false bags:1  
+
+#layer 2
+LinearRegression Type:Routine C:0.00001 shuffle:true seed:1 threads:1 verbose:false
+
+

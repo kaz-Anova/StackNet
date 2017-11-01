@@ -42,7 +42,7 @@ import ml.estimator;
 import ml.regressor;
 
 /**
-*<p>>Wraps another kaggle's favourite  <a href="https://github.com/Microsoft/LightGBM">LightGBM</a>).
+*<p>>Wraps another kaggle's favourite  <a href="https://github.com/Microsoft/LightGBM">LightGBM</a>.
 *This particular instance is allowing only regression results. LightGBM models are being trained via a subprocess based on the operating systems
 *executing the class. <b>It is expected that files will be created and their size will vary based on the volume of the training data.</b></p>
 *
@@ -444,13 +444,13 @@ public class LightgbmRegressor implements estimator,regressor {
 	 */
 	private smatrix sdataset;	
 	/**
-	 * Default constructor for LinearRegression with no data
+	 * Default constructor with no data
 	 */
 	public LightgbmRegressor(){
 	
 	}	
 	/**
-	 * Default constructor for LinearRegression with double data
+	 * Default constructor with double data
 	 */
 	public LightgbmRegressor(double data [][]){
 		
@@ -461,7 +461,7 @@ public class LightgbmRegressor implements estimator,regressor {
 	}
 	
 	/**
-	 * Default constructor for LinearRegression with fsmatrix data
+	 * Default constructor with fsmatrix data
 	 */
 	public LightgbmRegressor(fsmatrix data){
 		
@@ -471,7 +471,7 @@ public class LightgbmRegressor implements estimator,regressor {
 		fsdataset=data;
 	}
 	/**
-	 * Default constructor for LinearRegression with smatrix data
+	 * Default constructor with smatrix data
 	 */
 	public LightgbmRegressor(smatrix data){
 		
@@ -2211,6 +2211,9 @@ public class LightgbmRegressor implements estimator,regressor {
 				else if (metric.equals("skip_drop")) {this.skip_drop=Double.parseDouble(value);}				
 				else if (metric.equals("top_rate")) {this.top_rate=Double.parseDouble(value);}				
 				else if (metric.equals("other_rate")) {this.other_rate=Double.parseDouble(value);}	
+				else if (metric.equals("objective")) {this.Objective=value;}				
+				
+				
 				else if (metric.equals("categorical_feature")) {this.categorical_feature=value;}	
 				else if (metric.equals("uniform_drop")) {this.uniform_drop=(value.toLowerCase().equals("true")?true:false)   ;}
 				else if (metric.equals("xgboost_dart_mode")) {this.xgboost_dart_mode=(value.toLowerCase().equals("true")?true:false)   ;}

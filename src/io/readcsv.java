@@ -27,6 +27,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
 import Stats.DescriptiveStatistics;
+import utilis.map.intint.IntIntMapminus4a;
 
 /**
  * 
@@ -640,7 +641,52 @@ public static double [][] putfiletoarraydoublestatic(String x) {
                    
              }     
 
+		        /**
+		         * 
+		         * @param n : The file to 'Open'.
+		         * <p> Method read and return vw predictions
+		         */
 
+						public static double [][]  getvowpalpreds(String n) {
+		                	File x= new File(n);
+		                	 String line;
+		                	 double datasdoubles [][]= null;
+		                     int rowcount=readcsv.getrowcount(n);   
+		                     rowcount++;
+	                
+		                    new Vector<String>();
+		                     try {
+		                             FileInputStream fis = new FileInputStream(x);
+		                             BufferedReader br = new BufferedReader(new InputStreamReader(fis,"UTF-8"));
+		                             int ro=0;
+		                             line = br.readLine();
+		                             String[] tokens = line.split(" ",-1);
+		                             int columncount=tokens.length;
+		                             datasdoubles = new double [rowcount][columncount]  ;
+		                             for  (int i =0 ; i<columncount; i ++ ) {
+		                            	 datasdoubles[ro][i]=Double.parseDouble(tokens[i].split(":")[1]);
+		                             }
+		                             ro++;
+		                            // Map the first Row
+		                 
+
+		                             while ((line = br.readLine()) != null) {
+		                                      tokens = line.split(" ",-1);
+		 		                             for  (int i =0 ; i<columncount; i ++ ) {
+				                            	 datasdoubles[ro][i]=Double.parseDouble(tokens[i].split(":")[1]);
+		                                     }
+		                                     ro++;  }
+		                       //Close the buffer reader
+		                             br.close();
+		                             fis.close();
+		                     } catch (Exception e) {
+		                             e.printStackTrace();
+		                     }
+		   
+		                    
+		                     return datasdoubles;
+		                   
+		             } 
 
 /**
  * 
@@ -2186,6 +2232,109 @@ public static double [][] putfiletoarraydoublestatic(String x) {
           return column;
     }
 
+        /**
+         * 
+         * @param n : The file to 'Open'.
+         * <p> Method to read a file and retrieve Kfolds
+         */     
+        
+        public static int[][][] get_kfolder(String n) {
+            String line;
+            File x= new File(n);
+            
+            int rowcount=readcsv.getrowcount(n); 
+            rowcount++;
+            
+    		//IntIntMapminus4a row_Values=new IntIntMapminus4a(rowcount, 0.5F);
+			// check if values only 1 and zero
+			HashSet<Integer> row_Values= new HashSet<Integer> ();
+			/*
+			if (has.size()<=1){
+				throw new IllegalStateException(" target array needs to have more 2 or more classes" );	
+			}
+			double uniquevalues[]= new double[has.size()];
+			
+			int k=0;
+		    for (Iterator<Double> it = has.iterator(); it.hasNext(); ) {
+		    	uniquevalues[k]= it.next();
+		    	k++;
+		    	}
+		    // sort values
+		    Arrays.sort(uniquevalues);
+    		*/
+    		/*
+    		for (int b=start; b < end ;b++ ){
+    			column_Values.put(data.mainelementpile[b], b);
+    		}
+    		*/
+            int ro=0;
+            int all_cases [] = new int [rowcount]  ;
+            try {
+                    FileInputStream fis = new FileInputStream(x);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(fis,"UTF-8"));
+                    
+                    while ((line = br.readLine()) != null) {
+                    	int cv_index=0;
+        	    		try{
+        	    			cv_index=Integer.parseInt(line);
+        	    		}catch (Exception e){
+        	    			throw new IllegalStateException(" file  " + n + " needs to contain only integers");	
+        	    		}
+        	    		row_Values.add(cv_index);
+        	    		all_cases[ro]=cv_index;
+        	    		ro++;
+        	    		}
+              //Close the buffer reader
+                    br.close();
+            } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("error at: " + ro);
+            }
+            if (row_Values.size()<=1){
+            	throw new IllegalStateException(" There needs to be more than 1 unique values to generated train and test splits."  );	
+            }
+			int uniquevalues[]= new int[row_Values.size()];
+			
+			int k=0;
+		    for (Iterator<Integer> it = row_Values.iterator(); it.hasNext(); ) {
+		    	uniquevalues[k]= it.next();
+		    	k++;
+		    	}
+		    // sort values
+		    Arrays.sort(uniquevalues); 
+		    int kfolder [][][]= new int [uniquevalues.length][2][];
+		    for (int s=0; s < uniquevalues.length; s++){
+		    	int unique_value=uniquevalues[s];
+		    	int train_count=0;
+		    	int test_count=0;
+		    	for (int i=0; i < all_cases.length; i++){
+		    		if (all_cases[i]==unique_value){
+		    			test_count++;
+		    		}else {
+		    			train_count++;
+		    		}
+		    	}
+		    	int train_cases [] = new int [train_count];		
+		    	int test_cases [] = new int [test_count];	
+		    	train_count=0;
+		    	test_count=0;		
+		    	for (int i=0; i < all_cases.length; i++){
+		    		if (all_cases[i]==unique_value){
+		    			test_cases[test_count]=i;
+		    			test_count++;
+		    		}else {
+		    			train_cases[train_count]=i;
+		    			train_count++;
+		    		}		    		    		
+		    	
+		    	}
+	    		kfolder[s][0]=train_cases;
+	    		kfolder[s][1]=test_cases;	
+            
+		    }
+          
+          return kfolder;
+    }
 
         /**
          * 
@@ -2404,7 +2553,6 @@ public static double [][] putfiletoarraydoublestatic(String x) {
         }
         
         /**
-         * 
          * @param File  The file to Open
          * @return Scans the given file and brings back the row count
          */

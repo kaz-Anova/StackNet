@@ -133,7 +133,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 	  */
 	 public int lfeatures=4;
 	/**
-	 * The cosntant value
+	 * The constant value
 	 */
 	private double[] constant;
 	/**
@@ -325,7 +325,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		//convert to probability
     		final_product= 1. / (1. + Math.exp(-final_product));
@@ -391,7 +391,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		//convert to probability
     		final_product= 1. / (1. + Math.exp(-final_product));
@@ -454,7 +454,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		//convert to probability
     		final_product= 1. / (1. + Math.exp(-final_product));
@@ -522,7 +522,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		//convert to probability
     		final_product= 1. / (1. + Math.exp(-final_product));
@@ -586,7 +586,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		//convert to probability
     		final_product= 1. / (1. + Math.exp(-final_product));
@@ -649,7 +649,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		//convert to probability
     		final_product= 1. / (1. + Math.exp(-final_product));
@@ -713,7 +713,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		//convert to probability
 		final_product= 1. / (1. + Math.exp(-final_product));
@@ -773,7 +773,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		//convert to probability
 		final_product= 1. / (1. + Math.exp(-final_product));
@@ -828,7 +828,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		//convert to probability
 		final_product= 1. / (1. + Math.exp(-final_product));
@@ -889,7 +889,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		//convert to probability
     		final_product= 1. / (1. + Math.exp(-final_product));
@@ -951,7 +951,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		//convert to probability
     		final_product= 1. / (1. + Math.exp(-final_product));
@@ -1017,7 +1017,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		//convert to probability
 		final_product= 1. / (1. + Math.exp(-final_product));
@@ -1079,7 +1079,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		//convert to probability
 		final_product= 1. / (1. + Math.exp(-final_product));
@@ -1138,7 +1138,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		//convert to probability
 		final_product= 1. / (1. + Math.exp(-final_product));
@@ -1194,7 +1194,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		//convert to probability
 		final_product= 1. / (1. + Math.exp(-final_product));
@@ -1387,7 +1387,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 	
 	    		//calculate the final product
 	    		// the final prediction
-	    		double final_product =(linear_pred+productf);
+	    		double final_product =(linear_pred+productf/2.0);
 	    		
 	    		//convert to probability
 	    		final_product= 1. / (1. + Math.exp(-Math.max(Math.min(final_product, 35.), -35.)));
@@ -1631,7 +1631,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 	
 	    		//calculate the final product
 	    		// the final prediction
-	    		double final_product =(linear_pred+productf);
+	    		double final_product =(linear_pred+productf/2.0);
 	    		
 	    		//convert to probability
 	    		final_product= 1. / (1. + Math.exp(-Math.max(Math.min(final_product, 35.), -35.)));
@@ -1884,7 +1884,7 @@ public class binaryLibFm implements estimator,classifier,Runnable {
 	
 	    		//calculate the final product
 	    		// the final prediction
-	    		double final_product =(linear_pred+productf);
+	    		double final_product =(linear_pred+productf/2.0);
 	    		
 	    		//convert to probability
 	    		final_product= 1. / (1. + Math.exp(-Math.max(Math.min(final_product, 35.), -35.)));

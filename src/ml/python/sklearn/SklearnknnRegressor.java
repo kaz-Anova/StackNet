@@ -1661,7 +1661,6 @@ public class SklearnknnRegressor implements estimator,regressor {
 	    System.out.println("use_scale =" + this.use_scale  ); 
 	    
 	    System.out.println("threads=" + this.threads );
-	    System.out.println("n_neighbors =" +  this.n_neighbors  );
 	    System.out.println("seed=" +  this.seed );		
 	   		    	
 

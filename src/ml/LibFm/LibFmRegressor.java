@@ -61,7 +61,7 @@ public class LibFmRegressor implements estimator,regressor {
 	  */
 	 public double smooth=1.0;	 
 	 /**
-	  * Number of latent features to use. Defaults to 10
+	  * Number of latent features to use. Defaults to 4
 	  */
 	 public int lfeatures=4;
 	/**
@@ -372,7 +372,7 @@ public class LibFmRegressor implements estimator,regressor {
 
 		    		//calculate the final product
 		    		// the final prediction
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    		
 		    	   predictions[i][k]= final_product;
 		    	  }
@@ -446,7 +446,7 @@ public class LibFmRegressor implements estimator,regressor {
 
 		    		//calculate the final product
 		    		// the final prediction
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    		
 
 		    		  predictions[i][k]=  final_product;
@@ -523,7 +523,7 @@ public class LibFmRegressor implements estimator,regressor {
 
 	    		//calculate the final product
 	    		// the final prediction
-	    		double final_product =(linear_pred+productf);
+	    		double final_product =(linear_pred+productf/2.0);
 	    		
 
 	    		  predictions[i][k]=  final_product;
@@ -598,7 +598,7 @@ public class LibFmRegressor implements estimator,regressor {
 
 		    		//calculate the final product
 		    		// the final prediction
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    		
 
 		    		  predictions[k]=  final_product;
@@ -668,7 +668,7 @@ public class LibFmRegressor implements estimator,regressor {
 
   		//calculate the final product
   		// the final prediction
-  		double final_product =(linear_pred+productf);
+  		double final_product =(linear_pred+productf/2.0);
   		
 
   		  predictions[k]= final_product;
@@ -735,7 +735,7 @@ public class LibFmRegressor implements estimator,regressor {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 
 		  predictions[k]= final_product;
@@ -806,7 +806,7 @@ return predictions;
 		    			productf+=((sumone[j]*sumone[j])-sumtwo[j]);
 		    		}
 		    		
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 
 	    		  predictions[i]=final_product;
 
@@ -884,7 +884,7 @@ return predictions;
 
 		    		//calculate the final product
 		    		// the final prediction
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    		
 	
 		    		  predictions[i]=final_product;
@@ -955,7 +955,7 @@ return predictions;
 			    			productf+=((sumone[j]*sumone[j])-sumtwo[j]);
 			    		}
 			    		
-			    		double final_product =(linear_pred+productf);
+			    		double final_product =(linear_pred+productf/2.0);
 	
 		    		  predictions[i]=final_product;
 		    	  
@@ -1020,7 +1020,7 @@ return predictions;
 			    			productf+=((sumone[j]*sumone[j])-sumtwo[j]);
 			    		}
 			    		
-			    		double final_product =(linear_pred+productf);
+			    		double final_product =(linear_pred+productf/2.0);
 
 		    	  	
 		return final_product;
@@ -1082,7 +1082,7 @@ return predictions;
 			    			productf+=((sumone[j]*sumone[j])-sumtwo[j]);
 			    		}
 			    		
-			    		double final_product =(linear_pred+productf);
+			    		double final_product =(linear_pred+productf/2.0);
 			    	
 		
 		return final_product;
@@ -1146,7 +1146,7 @@ return predictions;
 
 		    		//calculate the final product
 		    		// the final prediction
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    	
 		return final_product;
 	}

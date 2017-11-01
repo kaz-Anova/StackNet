@@ -425,7 +425,7 @@ coef | Independent term in kernel function.It is only significant in poly and si
 use_scale | true to use absmaxscaling.
 use_dense | True to Use dense data. If your data is in dense format, do select true as all files get loaded as sparse by default in python-based modules. 
 
-### SklearnsvmClassifier
+### KerasnnClassifier
 
 The original parameters can be found sparsely in [keras' documentation](https://keras.io/) 
 
@@ -578,17 +578,69 @@ bjective_epsilon | tolerance of the objective function
 balance_classes | true to Specify whether to oversample the minority classes to balance the class distribution.
 standardize | true to standardize input features or not
 
-### H2ONaiveBayesClassifier
+### OriginalLibFMClassifier
+
+Wraps the original implementation of [ibFM](http://libfm.org/), made from Steffen Rendle. The reason this implementation is made, is because internal results show that it has better performance (as in accuracy) than StackNet's internal implementation and has more training methods than just sgd. 
+This implementation may not include all libFM features plus it actually uses a version of it **that had a bug(!)** on purpose. You can find more information about why this was chosen in the following [python wrapper for libFM](https://github.com/jfloff/pywFM). It basically had this bug that was allowing you to get the parameters of the trained models for all training methods. These parameters are now extracted once a model has been trained and the scoring uses only these parameters (e.g. not the libFM executable). 
+Don't forget to acknowledge libFM if you publish results produced with this software. Also take note of its licence GNU (e.g you cannot use for commercial applications). More information can be found on [libFM's repo on github](https://github.com/srendle/libfm).
 
 ```
-H2ONaiveBayesClassifier alpha:0 lambda:0.00001 balance_classes:false standardize:false max_iterations:50 beta_epsilon:0.00001 bjective_epsilon:0.00001 seed:1 threads:1 bags:1 verbose:false
+OriginalLibFMClassifier type:als lfeatures:4 learn_rate:0.01 maxim_Iteration:10 init_values:0.01 c:1 c2:1 threads:1 usescale:false seed:1 verbose:true bags:1 
 ```
 
 Parameter | Explanation
 --- | ---
-eps_sdev | Specify the threshold for standard deviation.
-laplace | the Laplace smoothing parameter. **This is important**
-min_sdev | Specify the minimum standard deviation to use for observations without enough data.
+Type | Type of algorithm to use. It has to be  sgd, als, mcmc. Default is mcmc.
+C | Regularization value, the more, the stronger the regularization. **This is important**
+C2 | Regularization value for the latent features. **This is important**
+lfeatures | Number of latent features to use. **This is important**
+init_values | Initialise values of the latent features with values between[0,init_values). **This is important**
+maxim_Iteration | aximum number of iterations. **This is important**
+learn_rate | learn_rate for SGD; default=0.1. **This is important**
+
+### VowpaLWabbitClassifier
+
+Wrapper for [vowpal wabbit](https://github.com/JohnLangford/vowpal_wabbit/wiki). It does not contain all features, but a fraction.
+```
+VowpaLWabbitClassifier use_ftrl:True learning_rate:0.8 decay_learning_rate:0.97 nn:40 bit_precision:18 ftrl_alpha:0.1 ftrl_beta:0.1 power_t:0.9 initial_t:0.9 l1:0.01 l2:0.01 passes:10 threads:1 make2way:false make3way:false use_dropout:true use_meanfield:false seed:1 verbose:true bags:1  
+```
+
+Parameter | Explanation
+--- | ---
+passes | Number of training Passes. **This is important**
+bit_precision | number of bits in the feature table. 
+decay_learning_rate | Decay factor for learning_rate between passes. 
+nn | Number of hidden units to use in a sigmoidal feedforward network with nn hidden units
+initial_t | Initial t value. Affects learning rate's updates
+power_t | t power value. Affects learning rate's updates
+ftrl_alpha | ftrl alpha parameter when using ftrl **This is important**
+ftrl_beta | ftrl beta stability patameter when using ftrl **This is important**
+learning_rate | learning Rate for gradient-based updates
+l1 | L1 regularization 
+l2 | L2 regularization **This is important**
+use_ftrl | true to use the ftrl optimization option (instead of adaptive). It is on by default.
+make2way | if true it creates all possible 2-way interactions of all features
+make3way | if true it creates all possible 3-way interactions of all features
+use_dropout | when nn>0, train or test sigmoidal feedforward network using dropout.
+use_meanfield | when nn>0, train or test sigmoidal feedforward network using mean field.
+
+### libffmClassifier
+
+Wraps [Libffm](https://github.com/guestwalk/libffm). Note this method either requires the user to manually add comma separated indices that form a field or they need to use some self-made heuristics. This is controlled by parameter `opt`.
+
+```
+libffmClassifier factor:6 iteration:16 learn_rate:0.1 opt:order lambda:0.0001 threads:1 use_norm:false seed:1 verbose:true bags:1  
+```
+
+Parameter | Explanation
+--- | ---
+factor | number of latent factors. **This is important**
+iteration | number of iterations. **This is important** 
+learn_rate | learning rate. **This is important**  
+lambda |regularization parameter. **This is important**  
+use_norm | true to allow instance-wise normalization. **This is important**
+opt | method for determining the factors. The best way (but not the default) is to provide a list with comma separated indices. Consider this String '1,4,7,123,546'. This would mean that the 0 column is a field on its own, {1,2,3} form another field, {4,5,6} another. {7,8...122} form another field and so on. Another possible value is 'no_order' (default). This looks at the proportion of zeros in neighbouring columns to determine if they form a field. The last possible value is 'order'. This calculates frequencies of non-zero values for all columns and then orders them based on frequency. Columns that have a few missing values form their own fields. Weaker columns (frequency-wise) are joined together to form fields. 
+
 
 ## Regressors
 
@@ -1167,3 +1219,51 @@ min_bucket_weights | Minimum sum of data weights for each discretized value.
 dense_max_buckets | Maximum bins for dense data.
 sparse_max_features | You may try a different value in [1000,10000000] for fetaures allowed.
 dense_max_buckets | Maximum bins for dense data.
+
+### OriginalLibFMRegressor
+
+Wraps the original implementation of [ibFM](http://libfm.org/), made from Steffen Rendle. The reason this implementation is made, is because internal results show that it has better performance (as in accuracy) than StackNet's internal implementation and has more training methods than just sgd. 
+This implementation may not include all libFM features plus it actually uses a version of it **that had a bug(!)** on purpose. You can find more information about why this was chosen in the following [python wrapper for libFM](https://github.com/jfloff/pywFM). It basically had this bug that was allowing you to get the parameters of the trained models for all training methods. These parameters are now extracted once a model has been trained and the scoring uses only these parameters (e.g. not the libFM executable). 
+Don't forget to acknowledge libFM if you publish results produced with this software. Also take note of its licence GNU (e.g you cannot use for commercial applications). More information can be found on [libFM's repo on github](https://github.com/srendle/libfm).
+
+```
+OriginalLibFMRegressor type:als lfeatures:4 learn_rate:0.01 maxim_Iteration:10 init_values:0.01 c:1 c2:1 threads:1 usescale:false seed:1 verbose:true bags:1 
+```
+
+Parameter | Explanation
+--- | ---
+Type | Type of algorithm to use. It has to be  sgd, als, mcmc. Default is mcmc.
+C | Regularization value, the more, the stronger the regularization. **This is important**
+C2 | Regularization value for the latent features. **This is important**
+lfeatures | Number of latent features to use. **This is important**
+init_values | Initialise values of the latent features with values between[0,init_values). **This is important**
+maxim_Iteration | aximum number of iterations. **This is important**
+learn_rate | learn_rate for SGD; default=0.1. **This is important**
+
+### VowpaLWabbitRegressor
+
+Wrapper for [vowpal wabbit](https://github.com/JohnLangford/vowpal_wabbit/wiki). It does not contain all features, but a fraction.
+
+```
+VowpaLWabbitRegressor use_ftrl:True learning_rate:0.8 decay_learning_rate:0.97 nn:40 bit_precision:18 ftrl_alpha:0.1 ftrl_beta:0.1 power_t:0.9 initial_t:0.9 l1:0.01 l2:0.01 passes:10 threads:1 make2way:false make3way:false use_dropout:true use_meanfield:false seed:1 verbose:true bags:1  
+```
+
+Parameter | Explanation
+--- | ---
+passes | Number of training Passes. **This is important**
+bit_precision | number of bits in the feature table. 
+decay_learning_rate | Decay factor for learning_rate between passes. 
+nn | Number of hidden units to use in a sigmoidal feedforward network with nn hidden units
+initial_t | Initial t value. Affects learning rate's updates
+power_t | t power value. Affects learning rate's updates
+ftrl_alpha | ftrl alpha parameter when using ftrl **This is important**
+ftrl_beta | ftrl beta stability patameter when using ftrl **This is important**
+learning_rate | learning Rate for gradient-based updates
+l1 | L1 regularization 
+l2 | L2 regularization **This is important**
+use_ftrl | o use the ftrl optimization option (instead of adaptive). It is on by default.
+make2way | if true it creates all possible 2-way interactions of all features
+make3way | if true it creates all possible 3-way interactions of all features
+use_dropout | when nn>0, train or test sigmoidal feedforward network using dropout.
+use_meanfield | when nn>0, train or test sigmoidal feedforward network using mean field.
+

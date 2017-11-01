@@ -360,7 +360,7 @@ public class XgboostRegressor implements estimator,regressor {
 	
 	}	
 	/**
-	 * Default constructor for LinearRegression with double data
+	 * Default constructor with double data
 	 */
 	public XgboostRegressor(double data [][]){
 		
@@ -371,7 +371,7 @@ public class XgboostRegressor implements estimator,regressor {
 	}
 	
 	/**
-	 * Default constructor for LinearRegression with fsmatrix data
+	 * Default constructor with fsmatrix data
 	 */
 	public XgboostRegressor(fsmatrix data){
 		
@@ -381,7 +381,7 @@ public class XgboostRegressor implements estimator,regressor {
 		fsdataset=data;
 	}
 	/**
-	 * Default constructor for LinearRegression with smatrix data
+	 * Default constructor with smatrix data
 	 */
 	public XgboostRegressor(smatrix data){
 		

@@ -1268,7 +1268,7 @@ public class LogisticRegression implements estimator,classifier {
 			double label []= new double [data.length];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[1])){
+					if ( target[i]==Double.parseDouble(classes[1]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1314,7 +1314,7 @@ public class LogisticRegression implements estimator,classifier {
 			double label []= new double [data.length];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[n])){
+					if ( target[i]==Double.parseDouble(classes[n]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1482,7 +1482,7 @@ public class LogisticRegression implements estimator,classifier {
 			double label []= new double [data.GetRowDimension()];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[1])){
+					if ( target[i]==Double.parseDouble(classes[1]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1527,7 +1527,7 @@ public class LogisticRegression implements estimator,classifier {
 			double label []= new double [data.GetRowDimension()];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[n])){
+					if ( target[i]==Double.parseDouble(classes[n]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1710,7 +1710,7 @@ public class LogisticRegression implements estimator,classifier {
 			double label []= new double [data.GetRowDimension()];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[1])){
+					if ( target[i]==Double.parseDouble(classes[1]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1761,7 +1761,7 @@ public class LogisticRegression implements estimator,classifier {
 			double label []= new double [data.GetRowDimension()];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[n])){
+					if ( target[i]==Double.parseDouble(classes[n]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	

@@ -409,13 +409,13 @@ public class FRGFClassifier implements estimator,classifier {
 	 */
 	private smatrix sdataset;	
 	/**
-	 * Default constructor for LinearRegression with no data
+	 * Default constructor with no data
 	 */
 	public FRGFClassifier(){
 	
 	}	
 	/**
-	 * Default constructor for LinearRegression with double data
+	 * Default constructor with double data
 	 */
 	public FRGFClassifier(double data [][]){
 		
@@ -426,7 +426,7 @@ public class FRGFClassifier implements estimator,classifier {
 	}
 	
 	/**
-	 * Default constructor for LinearRegression with fsmatrix data
+	 * Default constructor with fsmatrix data
 	 */
 	public FRGFClassifier(fsmatrix data){
 		
@@ -436,7 +436,7 @@ public class FRGFClassifier implements estimator,classifier {
 		fsdataset=data;
 	}
 	/**
-	 * Default constructor for LinearRegression with smatrix data
+	 * Default constructor with smatrix data
 	 */
 	public FRGFClassifier(smatrix data){
 		
@@ -1471,7 +1471,7 @@ public class FRGFClassifier implements estimator,classifier {
 			for (int n=0; n <n_classes; n++ ){
 				double label []= new double [fstarget.length];
 				for (int i=0; i < label.length; i++){
-						if ( fstarget[i]==n){
+					if ( fstarget[i]==Double.parseDouble(classes[n]) ){
 							label[i]=1.0;
 						} else {
 							label[i]=0.0;	
@@ -1723,7 +1723,7 @@ public class FRGFClassifier implements estimator,classifier {
 			for (int n=0; n <n_classes; n++ ){
 				double label []= new double [fstarget.length];
 				for (int i=0; i < label.length; i++){
-						if ( fstarget[i]==n){
+					if ( fstarget[i]==Double.parseDouble(classes[n]) ){
 							label[i]=1.0;
 						} else {
 							label[i]=0.0;	
@@ -1973,7 +1973,7 @@ public class FRGFClassifier implements estimator,classifier {
 			for (int n=0; n <n_classes; n++ ){
 				double label []= new double [fstarget.length];
 				for (int i=0; i < label.length; i++){
-						if ( fstarget[i]==n){
+					if ( fstarget[i]==Double.parseDouble(classes[n]) ){
 							label[i]=1.0;
 						} else {
 							label[i]=0.0;	

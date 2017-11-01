@@ -100,7 +100,23 @@ public class JavaBasedSort {
 
 	}
 
+	/**
+	 * 
+	 * @param array : The int array to be sorted
+	 * @param x : The  column by which we do the sorting
+	 * <p> Sorts the same int 2d array that is provided in an descending manner based on one column.
+	 */
+	
+	public static void sort2dintledesc (int array [][], final int x){
+		 
+		Arrays.sort(array, new Comparator<int[]>() {
+		    @Override
+		    public int compare(int[] o1, int[] o2) {
+		        return Integer.compare(o2[x], o1[x]);
+		    }
+		});
 
+	}
 	/**
 	 * 
 	 * @param array : The double array to be sorted

@@ -428,6 +428,11 @@ public class fsmatrix implements matrix, Serializable  {
 		
 	}		
 
-
+	public void ToFileTarget(String file, double target[]) {
+		output out = new output();
+		out.target=target;
+		out.printfsmatrix(this, file);
+		
+	}
 
 }

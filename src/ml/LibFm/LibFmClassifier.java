@@ -66,7 +66,7 @@ public class LibFmClassifier implements estimator,classifier {
 	  */
 	 public double smooth=1.0;	 
 	 /**
-	  * Number of latent features to use. Defaults to 10
+	  * Number of latent features to use. Defaults to 4
 	  */
 	 public int lfeatures=4;
 	/**
@@ -82,9 +82,9 @@ public class LibFmClassifier implements estimator,classifier {
 	 */
 	public boolean UseConstant=true;
 	/**
-	 * Maximum number of iterations. -1 for "until convergence"
+	 * Maximum number of iterations
 	 */
-	public int maxim_Iteration=-1;
+	public int maxim_Iteration=1;
 	/**
 	 * scale the dataset before use
 	 */
@@ -386,7 +386,7 @@ public class LibFmClassifier implements estimator,classifier {
 
 		    		//calculate the final product
 		    		// the final prediction
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    		
 		    		//convert to probability
 		    		final_product= 1. / (1. + Math.exp(-final_product));
@@ -476,7 +476,7 @@ public class LibFmClassifier implements estimator,classifier {
 
 		    		//calculate the final product
 		    		// the final prediction
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    		
 		    		//convert to probability
 		    		final_product= 1. / (1. + Math.exp(-final_product));
@@ -567,7 +567,7 @@ public class LibFmClassifier implements estimator,classifier {
 
 	    		//calculate the final product
 	    		// the final prediction
-	    		double final_product =(linear_pred+productf);
+	    		double final_product =(linear_pred+productf/2.0);
 	    		
 	    		//convert to probability
 	    		final_product= 1. / (1. + Math.exp(-final_product));
@@ -655,7 +655,7 @@ public class LibFmClassifier implements estimator,classifier {
 
 		    		//calculate the final product
 		    		// the final prediction
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    		
 		    		//convert to probability
 		    		final_product= 1. / (1. + Math.exp(-final_product));
@@ -741,7 +741,7 @@ public class LibFmClassifier implements estimator,classifier {
 
   		//calculate the final product
   		// the final prediction
-  		double final_product =(linear_pred+productf);
+  		double final_product =(linear_pred+productf/2.0);
   		
   		//convert to probability
   		final_product= 1. / (1. + Math.exp(-final_product));
@@ -824,7 +824,7 @@ public class LibFmClassifier implements estimator,classifier {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		//convert to probability
 		final_product= 1. / (1. + Math.exp(-final_product));
@@ -911,7 +911,7 @@ return predictions;
 		    			productf+=((sumone[j]*sumone[j])-sumtwo[j]);
 		    		}
 		    		
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    		
 	    	  temp[k]=1/(1+Math.exp( -final_product) );
 	    	  sum=sum+ temp[k];
@@ -1008,7 +1008,7 @@ return predictions;
 
 		    		//calculate the final product
 		    		// the final prediction
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    		
 		    		//convert to probability
 		    		final_product= 1. / (1. + Math.exp(-final_product));
@@ -1103,7 +1103,7 @@ return predictions;
 			    			productf+=((sumone[j]*sumone[j])-sumtwo[j]);
 			    		}
 			    		
-			    		double final_product =(linear_pred+productf);
+			    		double final_product =(linear_pred+productf/2.0);
 			    		
 		    	  temp[k]=1/(1+Math.exp( -final_product) );
 		    	  sum=sum+ temp[k];
@@ -1192,7 +1192,7 @@ return predictions;
 			    			productf+=((sumone[j]*sumone[j])-sumtwo[j]);
 			    		}
 			    		
-			    		double final_product =(linear_pred+productf);
+			    		double final_product =(linear_pred+productf/2.0);
 			    		
 		    	  temp[k]=1/(1+Math.exp( -final_product) );
 		    	  sum=sum+ temp[k];
@@ -1282,7 +1282,7 @@ return predictions;
 			    			productf+=((sumone[j]*sumone[j])-sumtwo[j]);
 			    		}
 			    		
-			    		double final_product =(linear_pred+productf);
+			    		double final_product =(linear_pred+productf/2.0);
 			    		
 		    	  temp[k]=1/(1+Math.exp( -final_product) );
 		    	  sum=sum+ temp[k];
@@ -1375,7 +1375,7 @@ return predictions;
 
 		    		//calculate the final product
 		    		// the final prediction
-		    		double final_product =(linear_pred+productf);
+		    		double final_product =(linear_pred+productf/2.0);
 		    		
 		    		//convert to probability
 		    		final_product= 1. / (1. + Math.exp(-final_product));
@@ -1524,7 +1524,7 @@ return predictions;
 			double label []= new double [data.length];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[1])){
+					if ( target[i]==Double.parseDouble(classes[1]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1583,7 +1583,7 @@ return predictions;
 			double label []= new double [data.length];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[n])){
+					if ( target[i]==Double.parseDouble(classes[n]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1774,10 +1774,11 @@ return predictions;
 		int count_of_live_threads=0;
 		int class_passed=0;
 		if (n_classes==2){
+			
 			double label []= new double [data.GetRowDimension()];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[1])){
+					if ( target[i]==Double.parseDouble(classes[1]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1831,7 +1832,7 @@ return predictions;
 			double label []= new double [data.GetRowDimension()];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[n])){
+					if ( target[i]==Double.parseDouble(classes[n]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -2023,7 +2024,7 @@ return predictions;
 				double label []= new double [data.GetRowDimension()];
 				for (int i=0; i < label.length; i++){
 					if (target!=null){
-						if ( (target[i]+"").equals(classes[1])){
+						if ( target[i]==Double.parseDouble(classes[1]) ){
 							label[i]=1.0;
 						} else {
 							label[i]=-1.0;	
@@ -2078,7 +2079,7 @@ return predictions;
 				double label []= new double [data.GetRowDimension()];
 				for (int i=0; i < label.length; i++){
 					if (target!=null){
-						if ( (target[i]+"").equals(classes[n])){
+						if ( target[i]==Double.parseDouble(classes[n]) ){
 							label[i]=1.0;
 						} else {
 							label[i]=-1.0;	
@@ -2350,6 +2351,7 @@ return predictions;
 		if (data==null || data.length<=0){
 			throw new IllegalStateException(" There is nothing to train on" );
 		}
+
 		this.target=data;
 	}
 	@Override

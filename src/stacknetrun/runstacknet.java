@@ -41,6 +41,10 @@ public class runstacknet {
 	 */
 	private static String pred_file="stacknet_pred.csv";
 	/**
+	 * name of file to load in order to form the train and test indices. This overrides the internal process for generating K-folds and ignores the given folds. 
+	 */
+	private static  String input_index="";	
+	/**
 	 * prefix of the models to be printed per iteration. this is to allows the meta features of each iterations to be printed. defaults to nothing
 	 */
 	private static String output_name="";	
@@ -76,6 +80,10 @@ public class runstacknet {
 	 * To allow StackNet to print stuff
 	 */
 	private static boolean verbose=true;
+	/**
+	 * True to enable printing the target column in the output file for train holdout predictions (when output_name is not empty). 
+	 */
+	private static  boolean include_target=false;
 	/**
 	 * number of model to run in parallel
 	 */
@@ -116,13 +124,15 @@ public class runstacknet {
 	 * <li> 'model' : prefix of the models to be printed per iteration. this is to allows the meta features of each iterations to be printed. defaults to nothing' </li>
 	 * <li> 'output_name' : prefix of the models to be printed per iteration. this is to allows the meta features of each iterations to be printed. defaults to nothing </li>
 	 * <li> 'indices_name' : suffix for the names of kfold indices to be printed as .csvs . It will print as many files as the selected kfold with names [indices_name][fold_number].csv . It will have the format of 'index,[0 if training else 1]' </li>
+	 * <li> 'input_index' : name of file to load in order to form the train and cv indices during kfold cross validation. This overrides the internal process for generating kfolds and ignores the given folds.  </li>
 	 * <li> 'pred_file' : name of the output prediction file. defaults to 'stacknet_pred.csv' </li>
 	 * <li> 'data_prefix' : prefix to be used when the user supplies own pairs of [X_train,X_cv] datasets for each fold as well as a pair of whole [X,X_test] files. Each train/valid pair is identified by prefix_'train'[fold_index_starting_from_zero]'.txt'/prefix_'cv'[fold_index_starting_from_zero]'.txt' and prefix_'train.txt'/prefix_'test.txt' for the final sets. 
 	 * <li> 'train_file' : name of the training file. </li>
 	 * <li> 'test_file' : name of the test  file. </li>
 	 * <li> 'test_target' : true if the test file has a target variable in the beginning (left) else false (only predictors in the file). </li> 
 	 * <li> 'params' : parameter file where each line is a model. empty lines correspond to the creation of new levels </li>
-	 * <li> 'verbose' : true if we need StackNet to output its progress .defaults to true. </li>
+	 * <li> 'verbose' : True if we need StackNet to output its progress .defaults to true. </li>
+	 * <li> 'include_target' : True to enable printing the target column in the output file for train holdout predictions (when output_name is not empty). </li>
 	 * <li> 'threads' : number of models to run in parallel. This is independent of any extra threads allocated from the selected algorithms. e.g. it is possible to run 4 models in parallel where one is a randomforest that runs on 10 threads (it selected).   </li>
 	 * <li> 'metric' : Metric to output in cross validation for each model-neuron. can be logloss, accuracy or auc (for binary only) for classification and rmse ,rsquared or mae for regerssion .defaults to 'logloss' for classification and 'rmse' for regression </li>
 	 * <li> 'stackdata' :True for <em>restacking</em>. defaults to true </li>
@@ -143,6 +153,7 @@ public class runstacknet {
 	    "'model' : name of the output model file. \n"+
 	    "'output_name' : prefix of the models to be printed per iteration. this is to allows the meta features of each iterations to be printed. defaults to nothing. \n"+	    
 	    "'indices_name' : suffix for the names of kfold indices to be printed as .csvs . It will print as many files as the selected kfold with names [indices_name][fold_number].csv . It will have the format of 'index,[0 if training else 1]'\n"+	    
+	    "'input_index' : name of file to load in order to form the train and cv indices during kfold cross validation. This overrides the internal process for generating kfolds and ignores the given folds. It needs to have the same size as the training data.The smallest indice forms the first cv dataset. The second smallest forms the second cv dataset and so on. \n"+	    
 	    "'pred_file' : name of the output prediction file. \n"+
 	    "'data_prefix' : prefix to be used when the user supplies own pairs of [X_train,X_cv] datasets for each fold as well as an X file for the whole training data. Each train/valid pair is identified by prefix_'train'[fold_index_starting_from_zero]'.txt'/prefix_'cv'[fold_index_starting_from_zero]'.txt' and prefix_'train.txt' for the final set. For example if prefix='mystack' and folds=2 then stacknet is expecting 2 pairs of train/cv files. e.g [[mystack_train0.txt,mystack_cv0.txt],[mystack_train1.txt,mystack_cv1.txt]]. It also expects a [mystack_train.txt]  for the final train set \n"+	    
 	    "'train_file' : name of the training file. \n" +
@@ -150,7 +161,8 @@ public class runstacknet {
 	    "'test_target' : true if the test file has a target variable in the beginning (left) else false (only predictors in the file).\n" +
 	    "'params' : parameter file where each line is a model. empty lines correspond to the creation of new levels \n"+
 	    "'verbose' : true if we need StackNet to output its progress else false \n"+
-	    "'threads' : number of models to run in parallel. This is independent of any extra threads allocated from the selected algorithms. e.g. it is possible to run 4 models in parallel where one is a randomforest that runs on 10 threads (it selected). \n"+
+	    "'include_target' : True to enable printing the target column in the output file for train holdout predictions (when output_name is not empty).\n"+	    
+	    "'threads' : number of models to run in parallel. This is independent of any extra threads allocated from the selected algorithms. e.g. it is possible to run 4 models in parallel where one is a randomforest that runs on 10 threads (it selected) \n"+
 	    "'metric' : Metric to output in cross validation for each model-neuron. can be logloss, accuracy or auc (for binary only) for classification and rmse ,rsquared or mae for regerssion .defaults to 'logloss' for classification and 'rmse' for regression \n"+
 	    "'stackdata' :true for restacking else false\n"+
 	    "'seed' : integer for randomised procedures \n"+
@@ -243,7 +255,9 @@ public class runstacknet {
 	    }else if (parameter_name.equals("indices_name")){
 	    	indices_name=parameter_value_upper;	
 	    }else if (parameter_name.equals("data_prefix")){
-	    	data_prefix=parameter_value_upper;	    	
+	    	data_prefix=parameter_value_upper;	    
+	    }else if (parameter_name.equals("input_index")){
+	    	input_index=parameter_value_upper;	
 	    }else if (parameter_name.equals("test_target")){   
     		if (parameter_value.indexOf("false")!=-1  ){ 
     			test_file_has_target=false; 
@@ -253,7 +267,16 @@ public class runstacknet {
 	    		System.out.println("the 'test_target' parameters needs to be either 'true' or 'false' ");
 			    System.exit(-1); // exiting the system
 	    	}
-	    		
+	    }else if (parameter_name.equals("include_target")){   
+    		if (parameter_value.indexOf("false")!=-1  ){ 
+    			include_target=false; 
+    		} else if (parameter_value.indexOf("true")!=-1  ){ 
+    			include_target=true; 
+    		}else {
+	    		System.out.println("the'include_target' parameters needs to be either 'true' or 'false' ");
+			    System.exit(-1); // exiting the system
+	    	}	   
+    		
 	    }else if (parameter_name.equals("params")){
 	    	params_file=parameter_value_upper;	
 	    }else if (parameter_name.equals("verbose")){
@@ -385,7 +408,13 @@ public class runstacknet {
 	
 	//do train if "is train" command is activated
 	if (is_train){
-		
+		if (!input_index.equals("")){
+			File indexTrain = new File(input_index);
+			if (!indexTrain.exists()){
+				System.err.println(indexTrain +" does not exist. since 'input_index' is given, StackNet expects a file with indices.");
+				System.exit(-1); // exiting the system	
+			}			
+		}
 		if (task.equals("regression") && !metric.equals("rmse") && !metric.equals("mae") && !metric.equals("rsquared") ){
 			System.out.println(" metric will be set to rmse");
 			metric="rmse";
@@ -408,7 +437,6 @@ public class runstacknet {
 				System.out.println(" Data files are expected at the " + data_prefix + " location ");
 			}
 		}
-		
 		else if (is_sparse==false){	
 			 io.input in = new io.input();
 			 in.delimeter=",";
@@ -444,6 +472,8 @@ public class runstacknet {
 				stacknet.threads=threads;
 				stacknet.metric=metric;
 				stacknet.folds=folds;
+				stacknet.input_index=input_index;
+				stacknet.include_target=include_target;
 				stacknet.stackdata=restacking;
 				stacknet.seed=seed;
 				if (!output_name.equals("")){
@@ -496,6 +526,8 @@ public class runstacknet {
 					stacknetreg.threads=threads;
 					stacknetreg.metric=metric;
 					stacknetreg.folds=folds;
+					stacknetreg.input_index=input_index;
+					stacknetreg.include_target=include_target;
 					stacknetreg.bins=bins;
 					stacknetreg.stackdata=restacking;
 					stacknetreg.seed=seed;
@@ -737,12 +769,18 @@ public class runstacknet {
 							} else if (metric.equals("rmse")){
 								
 								double acc=stacknetreg.rmse (predictions,y); // the accuracy for the current fold	
-								System.out.println("Test accuracy : " + acc);	
+								System.out.println("Test " + metric+ " : " + acc);	
 							} else if (metric.equals("mae")){
 								
 								double acc=stacknetreg.mae (predictions,y); // the accuracy for the current fold	
-								System.out.println("Test accuracy : " + acc);									
+								System.out.println("Test " + metric+ " : " + acc);	
+								
+							} else if (metric.equals("rsquared")){
+								
+								double acc=stacknetreg.rsquared (predictions,y); // the accuracy for the current fold	
+								System.out.println("Test " + metric+ " : " + acc);									
 							}
+						
 					} catch (Exception e){
 						System.out.println("Metric could not be calculated on the test ");
 					}
@@ -970,22 +1008,27 @@ public class runstacknet {
 						} else if (metric.equals("logloss")){
 							
 							double log=stacknet.logloss (predictions,y); // the logloss for the current fold	
-							System.out.println("Test logloss : " + log);
+							System.out.println("Test " + metric+ " : " + log);
 							
 							
 						} else if (metric.equals("accuracy")){
 							
 							double acc=stacknet.accuracy (predictions,y); // the accuracy for the current fold	
-							System.out.println("Test accuracy : " + acc);
+							System.out.println("Test " + metric+ " : " + acc);
 							
 						} else if (metric.equals("rmse")){
 							
 							double acc=stacknetreg.rmse (predictions,y); // the accuracy for the current fold	
-							System.out.println("Test accuracy : " + acc);	
+							System.out.println("Test " + metric+ " : " + acc);	
 						} else if (metric.equals("mae")){
 							
 							double acc=stacknetreg.mae (predictions,y); // the accuracy for the current fold	
-							System.out.println("Test accuracy : " + acc);									
+							System.out.println("Test " + metric+ " : " + acc);	
+							
+						} else if (metric.equals("rsquared")){
+							
+							double acc=stacknetreg.rsquared (predictions,y); // the accuracy for the current fold	
+							System.out.println("Test " + metric+ " : " + acc);									
 						}
 				} catch (Exception e){
 					System.out.println("Metric could not be calculated on the test ");

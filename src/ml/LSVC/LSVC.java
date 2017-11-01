@@ -32,6 +32,7 @@ import exceptions.DimensionMismatchException;
 import exceptions.LessThanMinimum;
 import matrix.fsmatrix;
 import matrix.smatrix;
+import misc.print;
 import ml.classifier;
 import ml.estimator;
 /**
@@ -1176,7 +1177,7 @@ public class LSVC implements estimator,classifier {
 			double label []= new double [data.length];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[1])){
+					if ( target[i]==Double.parseDouble(classes[1]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1225,7 +1226,7 @@ public class LSVC implements estimator,classifier {
 			double label []= new double [data.length];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[n])){
+					if ( target[i]==Double.parseDouble(classes[n]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1392,7 +1393,7 @@ public class LSVC implements estimator,classifier {
 			double label []= new double [data.GetRowDimension()];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[1])){
+					if ( target[i]==Double.parseDouble(classes[1]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1434,13 +1435,15 @@ public class LSVC implements estimator,classifier {
 			constant[1]= constants[1][0];
 			constant[0]= -constant[1];
 		}else {
+			
 		int count_of_live_threads=0;
 		int class_passed=0;
 		for (int n=0; n <n_classes; n++ ){
 			double label []= new double [data.GetRowDimension()];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[n])){
+					
+					if ( target[i]==Double.parseDouble(classes[n]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1453,7 +1456,7 @@ public class LSVC implements estimator,classifier {
 					}
 				}
 			}
-
+			
 			binaryLSVC svc = new binaryLSVC(data);
 			svc.Type=this.Type;
 			svc.maxim_Iteration=this.maxim_Iteration;
@@ -1620,7 +1623,7 @@ public class LSVC implements estimator,classifier {
 			double label []= new double [data.GetRowDimension()];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[1])){
+					if ( target[i]==Double.parseDouble(classes[1]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1669,7 +1672,7 @@ public class LSVC implements estimator,classifier {
 			double label []= new double [data.GetRowDimension()];
 			for (int i=0; i < label.length; i++){
 				if (target!=null){
-					if ( (target[i]+"").equals(classes[n])){
+					if ( target[i]==Double.parseDouble(classes[n]) ){
 						label[i]=1.0;
 					} else {
 						label[i]=-1.0;	
@@ -1682,7 +1685,6 @@ public class LSVC implements estimator,classifier {
 					}
 				}
 			}
-
 			binaryLSVC svc = new binaryLSVC(data);
 			svc.set_sparse_indicator(true);
 			svc.Type=this.Type;
@@ -1921,6 +1923,7 @@ public class LSVC implements estimator,classifier {
 		if (data==null || data.length<=0){
 			throw new IllegalStateException(" There is nothing to train on" );
 		}
+
 		this.target=data;
 	}
 	@Override

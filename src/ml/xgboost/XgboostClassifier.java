@@ -410,13 +410,13 @@ public class XgboostClassifier implements estimator,classifier {
 	 */
 	private smatrix sdataset;	
 	/**
-	 * Default constructor for LinearRegression with no data
+	 * Default constructor with no data
 	 */
 	public XgboostClassifier(){
 	
 	}	
 	/**
-	 * Default constructor for LinearRegression with double data
+	 * Default constructor with double data
 	 */
 	public XgboostClassifier(double data [][]){
 		
@@ -427,7 +427,7 @@ public class XgboostClassifier implements estimator,classifier {
 	}
 	
 	/**
-	 * Default constructor for LinearRegression with fsmatrix data
+	 * Default constructor with fsmatrix data
 	 */
 	public XgboostClassifier(fsmatrix data){
 		
@@ -437,7 +437,7 @@ public class XgboostClassifier implements estimator,classifier {
 		fsdataset=data;
 	}
 	/**
-	 * Default constructor for LinearRegression with smatrix data
+	 * Default constructor with smatrix data
 	 */
 	public XgboostClassifier(smatrix data){
 		

@@ -1409,9 +1409,6 @@ public class SklearnknnClassifier implements estimator,classifier {
 		if (! directory.exists()){
 			directory.mkdir();
 		}
-		if ( !metric.equals("rbf")  && !metric.equals("poly")&& !metric.equals("sigmoid") && !metric.equals("linear") ){
-			throw new IllegalStateException(" metric has to be between 'rbf', 'poly', 'sigmoid' or 'linear'" );	
-		}
 
 		if ( !metric.equals("uniform")  && !metric.equals("distance") ){
 			throw new IllegalStateException(" metric has to be between 'uniform' or 'distance'" );	

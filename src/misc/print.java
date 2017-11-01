@@ -84,8 +84,8 @@ public class print {
 			if (cases <=0){
 				cases=array.length;
 			}
-			if (cases >100){
-				cases=100;
+			if (cases >1000){
+				cases=1000;
 			}
 			if (cases >array.length){
 				cases=array.length;

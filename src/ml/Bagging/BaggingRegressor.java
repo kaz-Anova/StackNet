@@ -33,6 +33,7 @@ import ml.regressor;
 import ml.Kernel.copy.KernelmodelRegressor;
 import ml.LSVR.LSVR;
 import ml.LibFm.LibFmRegressor;
+import ml.LibFm.OriginalLibFMRegressor;
 import ml.LinearRegression.LinearRegression;
 import ml.Tree.AdaboostForestRegressor;
 import ml.Tree.DecisionTreeRegressor;
@@ -58,6 +59,7 @@ import ml.python.sklearn.SklearnSGDRegressor;
 import ml.python.sklearn.SklearnknnRegressor;
 import ml.python.sklearn.SklearnsvmRegressor;
 import ml.stacknet.StackNetClassifier;
+import ml.vowpalwabbit.VowpaLWabbitRegressor;
 import ml.xgboost.XgboostRegressor;
 
 /**
@@ -1287,6 +1289,8 @@ public class BaggingRegressor implements estimator,regressor {
 			regressor model =null;
 			if (model_parameters.contains("AdaboostForestRegressor")) {
 				model= new AdaboostForestRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnRandomForestRegressor")) {
+			model= new SklearnRandomForestRegressor(fsdataset);					
 			}else if (model_parameters.contains("DecisionTreeRegressor")) {
 				model= new DecisionTreeRegressor(fsdataset);
 			}else if (model_parameters.contains("GradientBoostingForestRegressor")) {
@@ -1301,6 +1305,8 @@ public class BaggingRegressor implements estimator,regressor {
 				model= new LSVR(fsdataset);
 			}else if (model_parameters.contains("LinearRegression")) {
 				model= new LinearRegression(fsdataset);
+			}else if (model_parameters.contains("OriginalLibFMRegressor")) {
+				model= new OriginalLibFMRegressor(fsdataset);						
 			}else if (model_parameters.contains("LibFmRegressor")) {
 				model= new LibFmRegressor(fsdataset);
 			}else if (model_parameters.contains("knnRegressor")) {
@@ -1330,9 +1336,7 @@ public class BaggingRegressor implements estimator,regressor {
 			}else if (model_parameters.contains("SklearnknnRegressor")) {
 				model= new SklearnknnRegressor(fsdataset);
 			}else if (model_parameters.contains("SklearnMLPRegressor")) {
-				model= new SklearnMLPRegressor(fsdataset);								
-			}else if (model_parameters.contains("SklearnRandomForestRegressor")) {
-			model= new SklearnRandomForestRegressor(fsdataset);							
+				model= new SklearnMLPRegressor(fsdataset);														
 			}else if (model_parameters.contains("SklearnSGDRegressor")) {
 			model= new SklearnSGDRegressor(fsdataset);									
 			}else if (model_parameters.contains("SklearnsvmRegressor")) {
@@ -1341,7 +1345,8 @@ public class BaggingRegressor implements estimator,regressor {
 			model= new KerasnnRegressor(fsdataset);									
 			}else if (model_parameters.contains("PythonGenericRegressor")) {
 			model= new PythonGenericRegressor(fsdataset);				
-
+			}else if (model_parameters.contains("VowpaLWabbitRegressor")) {
+			model= new VowpaLWabbitRegressor(fsdataset);
 			
 			
 			
@@ -1489,6 +1494,8 @@ public class BaggingRegressor implements estimator,regressor {
 			regressor model =null;
 			if (model_parameters.contains("AdaboostForestRegressor")) {
 				model= new AdaboostForestRegressor(fsdataset);
+			}else if (model_parameters.contains("SklearnRandomForestRegressor")) {
+			model= new SklearnRandomForestRegressor(fsdataset);					
 			}else if (model_parameters.contains("DecisionTreeRegressor")) {
 				model= new DecisionTreeRegressor(fsdataset);
 			}else if (model_parameters.contains("GradientBoostingForestRegressor")) {
@@ -1503,6 +1510,8 @@ public class BaggingRegressor implements estimator,regressor {
 				model= new LSVR(fsdataset);
 			}else if (model_parameters.contains("LinearRegression")) {
 				model= new LinearRegression(fsdataset);
+			}else if (model_parameters.contains("OriginalLibFMRegressor")) {
+				model= new OriginalLibFMRegressor(fsdataset);					
 			}else if (model_parameters.contains("LibFmRegressor")) {
 				model= new LibFmRegressor(fsdataset);
 			}else if (model_parameters.contains("knnRegressor")) {
@@ -1533,8 +1542,7 @@ public class BaggingRegressor implements estimator,regressor {
 				model= new SklearnknnRegressor(fsdataset);
 			}else if (model_parameters.contains("SklearnMLPRegressor")) {
 				model= new SklearnMLPRegressor(fsdataset);								
-			}else if (model_parameters.contains("SklearnRandomForestRegressor")) {
-			model= new SklearnRandomForestRegressor(fsdataset);							
+						
 			}else if (model_parameters.contains("SklearnSGDRegressor")) {
 			model= new SklearnSGDRegressor(fsdataset);									
 			}else if (model_parameters.contains("SklearnsvmRegressor")) {
@@ -1543,7 +1551,8 @@ public class BaggingRegressor implements estimator,regressor {
 			model= new KerasnnRegressor(fsdataset);									
 			}else if (model_parameters.contains("PythonGenericRegressor")) {
 			model= new PythonGenericRegressor(fsdataset);				
-			
+			}else if (model_parameters.contains("VowpaLWabbitRegressor")) {
+			model= new VowpaLWabbitRegressor(fsdataset);			
 			} else {
 				throw new IllegalStateException(" The selected model '" + model_parameters + " is not recognizable as valid classifier" );
 			}
@@ -1685,6 +1694,8 @@ public class BaggingRegressor implements estimator,regressor {
 			regressor model =null;
 			if (model_parameters.contains("AdaboostForestRegressor")) {
 				model= new AdaboostForestRegressor(sdataset);
+			}else if (model_parameters.contains("SklearnRandomForestRegressor")) {
+			model= new SklearnRandomForestRegressor(sdataset);					
 			}else if (model_parameters.contains("DecisionTreeRegressor")) {
 				model= new DecisionTreeRegressor(sdataset);
 			}else if (model_parameters.contains("GradientBoostingForestRegressor")) {
@@ -1699,6 +1710,9 @@ public class BaggingRegressor implements estimator,regressor {
 				model= new LSVR(sdataset);
 			}else if (model_parameters.contains("LinearRegression")) {
 				model= new LinearRegression(sdataset);
+			}else if (model_parameters.contains("OriginalLibFMRegressor")) {
+				model= new OriginalLibFMRegressor(sdataset);				
+				
 			}else if (model_parameters.contains("LibFmRegressor")) {
 				model= new LibFmRegressor(sdataset);
 			}else if (model_parameters.contains("knnRegressor")) {
@@ -1728,9 +1742,7 @@ public class BaggingRegressor implements estimator,regressor {
 			}else if (model_parameters.contains("SklearnknnRegressor")) {
 				model= new SklearnknnRegressor(sdataset);
 			}else if (model_parameters.contains("SklearnMLPRegressor")) {
-				model= new SklearnMLPRegressor(sdataset);								
-			}else if (model_parameters.contains("SklearnRandomForestRegressor")) {
-			model= new SklearnRandomForestRegressor(sdataset);							
+				model= new SklearnMLPRegressor(sdataset);														
 			}else if (model_parameters.contains("SklearnSGDRegressor")) {
 			model= new SklearnSGDRegressor(sdataset);									
 			}else if (model_parameters.contains("SklearnsvmRegressor")) {
@@ -1739,7 +1751,8 @@ public class BaggingRegressor implements estimator,regressor {
 			model= new KerasnnRegressor(sdataset);									
 			}else if (model_parameters.contains("PythonGenericRegressor")) {
 			model= new PythonGenericRegressor(sdataset);				
-			
+			}else if (model_parameters.contains("VowpaLWabbitRegressor")) {
+			model= new VowpaLWabbitRegressor(sdataset);			
 			
 			} else {
 				throw new IllegalStateException(" The selected model '" + model_parameters + " is not recognizable as valid classifier" );

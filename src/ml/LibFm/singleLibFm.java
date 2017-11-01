@@ -333,7 +333,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
 
     		predictions[s][0]=final_product;    
     		
@@ -397,7 +397,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
 
     		predictions[s]=final_product;
     		
@@ -459,7 +459,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		predictions[s][0]=final_product;
     		
@@ -524,7 +524,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		//convert to probability
     		predictions[s]=final_product;
@@ -586,7 +586,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
 
     		predictions[s][0]=final_product;
@@ -647,7 +647,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		//convert to probability
     		predictions[s]=final_product;
@@ -711,7 +711,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 
 		predictions[0]=final_product;
 		return predictions;
@@ -768,7 +768,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 
 		predictions[0]=final_product;
@@ -820,7 +820,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		predictions[0]=final_product;
 		
@@ -878,7 +878,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		predictions[s]=final_product;
     		
@@ -937,7 +937,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
     		//calculate the final product
     		// the final prediction
-    		double final_product =(linear_pred+productf);
+    		double final_product =(linear_pred+productf/2.0);
     		
     		predictions[s]=final_product ;
 
@@ -1000,7 +1000,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		//convert to probability
 		predictions[s]=final_product;
@@ -1058,7 +1058,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 		//convert to probability
 
@@ -1113,7 +1113,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 
 		return final_product;
@@ -1162,7 +1162,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 
 		//calculate the final product
 		// the final prediction
-		double final_product =(linear_pred+productf);
+		double final_product =(linear_pred+productf/2.0);
 		
 
 		return final_product;
@@ -1342,7 +1342,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 	
 	    		//calculate the final product
 	    		// the final prediction
-	    		double final_product =(linear_pred+productf);
+	    		double final_product =(linear_pred+productf/2.0);
 	    		
 	    		
 	    		// compute the residual
@@ -1631,7 +1631,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 	
 	    		//calculate the final product
 	    		// the final prediction
-	    		double final_product =(linear_pred+productf);
+	    		double final_product =(linear_pred+productf/2.0);
 	    		
 	    		//convert to probability
 	    		//final_product= 1. / (1. + Math.exp(-Math.max(Math.min(final_product, 35.), -35.)));
@@ -1926,7 +1926,7 @@ public class singleLibFm implements estimator,regressor,Runnable {
 	
 	    		//calculate the final product
 	    		// the final prediction
-	    		double final_product =(linear_pred+productf);
+	    		double final_product =(linear_pred+productf/2.0);
 	    		
 	    		
 	    		// compute the residual
