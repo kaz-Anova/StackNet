@@ -703,8 +703,8 @@ double preds [][]=StackNet.predict_proba(X_test);
 ## Potential Next Steps
 
 - ~~Add StackNetRegressor~~ Done. 
-- Add [H<sub>2</sub>O](http://h2o-release.s3.amazonaws.com/h2o/master/3908/index.html)
-- increase coverage in general with well-known and well-performing ml tools (original libfm, libffm, vowpal wabbit)
+- ~Add [H<sub>2</sub>O](http://h2o-release.s3.amazonaws.com/h2o/master/3908/index.html)~
+- ~increase coverage in general with well-known and well-performing ml tools (original libfm, libffm, vowpal wabbit)~
 - Add data pre-processing steps
 - Make a python wrapper
 
