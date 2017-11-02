@@ -3,11 +3,12 @@
 ## V0.4 version 31/10/2017
 
 1.	Added [original libfm](http://www.libfm.org/), [libffm classification](https://github.com/guestwalk/libffm) and [vowpal wabbit](https://github.com/JohnLangford/vowpal_wabbit) wrappers. 5 algorithms in total.
-2.	Added 'input_index' command. This allows StackNet to be run with user-provided indices as a separate file.
-3.	Added 'include_target' command. It appends the target variable in the beginning of the file when `output_name` is used.
+2.	Added `input_index` command. This allows StackNet to be run with user-provided indices as a separate file.
+3.	Added `include_target` command. It appends the target variable in the beginning of the file when `output_name` is used.
 4.	Added the ability to make comments in the `params` files using *#*. Anything on the right of this symbol is regarded as comment. 
 5.	Fixed an assertion error in `SklearnknnClassifier`.   
-6.	Fixed other minor errors.
+6.	Fixed bug in scoring for (StackNet's implementation of) libfm.   
+7.	Fixed other minor errors.
 
 
 ## V0.3 version 06/08/2017
