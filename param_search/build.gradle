@@ -1,0 +1,20 @@
+group 'stacknet'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+
+}
+
+dependencies {
+    compile name: 'picocli-2.0.1'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
