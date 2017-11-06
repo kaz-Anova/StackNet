@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compile name: 'picocli-2.0.1'
-
+    compile 'info.picocli:picocli:2.0.2'
+    compile name: 'stacknet'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
