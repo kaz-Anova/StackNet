@@ -1,4 +1,4 @@
-package stacknetrun;
+package com.stacknet.paramsearch;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Option;

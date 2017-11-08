@@ -1,9 +1,7 @@
-package stacknetrun;
+package com.stacknet.paramsearch;
 
 import org.junit.Assert;
 import org.junit.Test;
-import picocli.CommandLine;
-import stacknetrun.Config;
 
 public class ConfigTest {
 
@@ -12,7 +10,7 @@ public class ConfigTest {
         String[] args = {"","train","task","tt"};
         Config config = Config.getConfig(args);
 
-        Assert.assertEquals(config.is_train, false);
+        Assert.assertEquals(config.isTrain, false);
         Assert.assertEquals(config.task, "tt");
     }
 }
