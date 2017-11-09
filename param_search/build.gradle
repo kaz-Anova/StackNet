@@ -1,3 +1,12 @@
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.11'
+    id 'java'
+}
+lombok {
+    version = "1.16.18"
+    sha256 = ""
+}
+
 group 'stacknet'
 version '1.0-SNAPSHOT'
 
@@ -7,17 +16,16 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url 'http://projectlombok.org/mavenrepo' }
     flatDir {
         dirs 'libs'
     }
-
 }
 
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'info.picocli:picocli:2.0.2'
     compile name: 'stacknet'
-    compile 'org.projectlombok:lombok:1.14.8'
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile 'org.slf4j:slf4j-log4j12:1.7.21'
 }
