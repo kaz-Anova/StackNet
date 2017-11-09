@@ -1,6 +1,6 @@
 package com.stacknet.paramsearch;
 
-import com.stacknet.paramsearch.utils.ModelUtils;
+import com.stacknet.paramsearch.utils.IOUtils;
 import matrix.fsmatrix;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,11 +22,11 @@ public class TestUtils {
     }
 
     public static io.input getIOWithTarget() {
-        return ModelUtils.getIOWithTarget(",", true, new int[] {0}, 1, 5000);
+        return IOUtils.getIOWithTarget(",", true, new int[] {0}, 1, 5000);
     }
 
     public static io.input getIOWithID() {
-        return ModelUtils.getIOWithID(",", true, 0, 1, 5000);
+        return IOUtils.getIOWithID(",", true, 0, 1, 5000);
 
     }
 
@@ -35,7 +35,7 @@ public class TestUtils {
         String path = TestUtils.getResourceFileAbsolutePath(file);
         log.info(String.format("load %s", file));
 
-        fsmatrix matrix = ModelUtils.getMatrixFromFile(
+        fsmatrix matrix = IOUtils.getMatrixFromFile(
                 path, in);
         log.info("Loaded train data with " + matrix.GetRowDimension() + " and columns " + matrix.GetColumnDimension() );
         return matrix;
