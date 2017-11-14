@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class TestUtils {
     private static final Logger log = LoggerFactory.getLogger(TestUtils.class);
@@ -51,6 +52,10 @@ public class TestUtils {
             e.printStackTrace();
             return "";
         }
+    }
+
+    public static double[] toArray(List<Double> list) {
+        return list.stream().mapToDouble(Number::doubleValue).toArray();
     }
 
     @Test
