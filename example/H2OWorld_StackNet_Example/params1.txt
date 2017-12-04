@@ -1,0 +1,6 @@
+LinearRegression Type:Routine C:0.00000001 verbose:false
+GradientBoostingForestRegressor estimators:100 estimators:1000 shrinkage:0.05 max_depth:3 max_features:0.3 min_leaf:2.0 row_subsample:0.65 verbose:false
+
+LinearRegression Type:Routine C:0.00000001 verbose:True
+
+

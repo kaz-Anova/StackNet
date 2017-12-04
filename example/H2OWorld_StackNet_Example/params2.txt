@@ -1,0 +1,7 @@
+LinearRegression Type:Routine C:0.00000001 verbose:false
+GradientBoostingForestRegressor estimators:1000 shrinkage:0.05 max_depth:3 max_features:0.3 min_leaf:2.0 row_subsample:0.65 verbose:false
+multinnregressor maxim_Iteration:150 C:0.0001 shuffle:true learn_rate:0.01 smooth:0.1 h1:20 h2:20 connection_nonlinearity:Relu init_values:0.02 verbose:false
+
+LinearRegression Type:Routine C:0.00000001 verbose:True
+
+

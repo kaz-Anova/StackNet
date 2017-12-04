@@ -1,0 +1,12 @@
+##########################command#########################
+java -jar StackNet.jar train task=regression train_file=train.csv test_file=test.csv params=params.txt pred_file=pred.csv test_target=true has_head=true verbose=true Threads=3 folds=4 metric=rmse
+##########################command 0#########################
+java -jar StackNet.jar train task=regression train_file=train.csv test_file=test.csv params=params0.txt pred_file=pred0.csv test_target=true has_head=true verbose=true Threads=3 folds=4 metric=rmse
+##########################command 1#########################
+java -jar StackNet.jar train task=regression train_file=train.csv test_file=test.csv params=params1.txt pred_file=pred1.csv test_target=true has_head=true verbose=true Threads=3 folds=4 metric=rmse
+##########################command 2#########################
+java -jar StackNet.jar train task=regression train_file=train.csv test_file=test.csv params=params2.txt pred_file=pred2.csv test_target=true has_head=true verbose=true Threads=3 folds=4 metric=rmse
+##########################command 3#########################
+java -jar StackNet.jar train task=regression train_file=train.csv test_file=test.csv params=params3.txt pred_file=pred3.csv test_target=true has_head=true verbose=true Threads=3 folds=4 metric=rmse
+##########################command 4#########################
+java -jar StackNet.jar train task=regression train_file=train.csv test_file=test.csv params=params4.txt pred_file=pred4.csv test_target=true has_head=true verbose=true Threads=3 folds=4 metric=rmse
