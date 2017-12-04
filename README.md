@@ -625,7 +625,7 @@ Java -jar stacknet.jar **_predict_** **sparse**=false **has_head**=true **model*
 - [Kaggle-Amazon Classification challenge and use of data_prefix](/example/example_amazon/EXAMPLE.MD)
 - [Kaggle-Zillow regerssion example](/example/zillow_regression_sparse/README.MD)
 - [Example_with_index](/example/manual_index/EXAMPLE.MD)
-
+- [Example_H2OWorld](/example/H2OWorld_StackNet_Example/EXAMPLE.MD)
 
 
 
