@@ -40,33 +40,15 @@ The Sofware is made available under MIT licence.
 
 ## How does it work
 
-Given some input data, a neural network normally applies a perceptron along with a transformation function like relu, sigmoid, tanh or others. The equation is often expressed as:
+Given some input data, a neural network normally applies a perceptron along with a transformation function like relu, sigmoid, tanh or others. 
 
-![Alt text](/images/perceptron.png?raw=true "perceptron input to hidden")
+The StackNet model assumes that this function can take the form of any supervised machine learning algorithm: 
 
-The StackNet model assumes that this function can take the form of any supervised machine learning algorithm - or in other words: 
+Logically the outputs of each neuron, can be fed onto next layers.
 
-![Alt text](/images/generic_connection.png?raw=true "Generic input to hidden") 
+The algorithms can be classifiers or regressors or any estimator that produces an output.. 
 
-where *s* expresses that machine learning model and *g* (normally) a linear activation function or identity
-
-Logically the outputs of each neuron, can be fed onto next layers. For instance in the second layer the equation will be : 
-
-![Alt text](/images/second_layer_inputs.png?raw=true "second layer example") 
-
-Where a is one of the H<sub>2</sub> algorithms included in the second layer and can be any estimator, classifier or regressor.
-
-The aforementioned formula could be generalised as follows for any layer: 
-
-![Alt text](/images/normal_stacking.png?raw=true "Generic layer example") 
-
-Where a is the h<sub>th</sub> algorithm out of H in the <sub>n</sub>th hidden (models') layer and f<sub>n-1</sub> the previous models raw score prediction in respect to the target variable. 
-
-To create an output prediction score for any number of unique categories of the response variable, all selected algorithms in the last layer need to have outputs dimensionality equal to the number those unique classes In case where there are many such classifiers, the results is the scaled average of all these output predictions and can be written as: 
-
-![Alt text](/images/generic_output.png?raw=true "Hidden-to-output with many classifiers") 
-
-Where C is the number of unique classifiers in the last layer. In the case of just one classifier in the output layer, this would resemble the softmax activation function of a typical neural network used for classification. 
+For classification problems, to create an output prediction score for any number of unique categories of the response variable, all selected algorithms in the last layer need to have outputs dimensionality equal to the number those unique classes. In case where there are many such classifiers, the results is the scaled average of all these output predictions and can be written as: 
 
 ## The Modes
 
@@ -75,16 +57,12 @@ The stacking element of the StackNet model could be run with two different modes
 ### Normal stacking mode
 
  The first mode (e.g. the default) is the one already mentioned and assumes that in each layer uses the predictions (or output scores) of the direct previous one similar with a typical feedforward neural network or equivalently: 
- 
-![Alt text](/images/normal_stacking.png?raw=true "Normal Stacking") 
 
 ### Restacking mode 
  
 The second mode (also called restacking) assumes that each layer uses previous neurons activations as well as all previous layers neurons (including the input layer). Therefore the previous formula can be re-written as:  
 
-![Alt text](/images/restacking.png?raw=true "Restacking Mode")
-
-Assuming the algorithm is located in layer n>1, to activate each neuron h in that layer, all outputs from all neurons from the previous n-1 (or k) layers need to be accumulated (or stacked). The intuition behind this mode is derived from the fact that the higher level algorithm has extracted information from the input data, but rescanning the input space may yield new information not obvious from the first passes. This is also driven from the forward training methodology discussed below and assumes that convergence needs to happen within one model iteration.
+ The intuition behind this mode is derived from the fact that the higher level algorithm has extracted information from the input data, but rescanning the input space may yield new information not obvious from the first passes. This is also driven from the forward training methodology discussed below and assumes that convergence needs to happen within one model iteration.
 
 The modes may also be viewed bellow: 
 
