@@ -42,7 +42,7 @@ The Sofware is made available under MIT licence.
 
 Given some input data, a neural network normally applies a perceptron along with a transformation function like relu, sigmoid, tanh or others. 
 
-The StackNet model assumes that this function can take the form of any supervised machine learning algorithm: 
+The StackNet model assumes that this function can take the form of any supervised machine learning algorithm
 
 Logically the outputs of each neuron, can be fed onto next layers.
 
@@ -70,9 +70,9 @@ The modes may also be viewed bellow:
 
 ## K-fold Training
 
-The typical neural networks are most commonly trained with a form of backpropagation, however, stacked generalization requires a forward training methodology that splits the data into two parts – one of which is used for training and the other for predictions. The reason this split is necessary is to avoid the overfitting that could be a factor of the kind of algorithms being used as inputs as well as the absolute count of them. 
+The typical neural networks are most commonly trained with a form of backpropagation, however, stacked generalization requires a forward training methodology that splits the data into two parts – one of which is used for training and the other for predictions. The reason this split is necessary is to avoid  overfitting . 
 
-However splitting the data into just two parts would mean that in each new layer the second part needs to be further dichotomized increasing the bias of overfitting even more as each algorithm will have to be trained and validated on increasingly fewer data. To overcome this drawback, the algorithm utilises a k-fold cross validation (where k is a hyperparameter) so that all the original training data is scored in different k batches thereby outputting n shape training predictions where n is the size of the samples in the training data. Therefore the training process consists of two parts: 
+However splitting the data into just two parts would mean that in each new layer the second part needs to be further dichotomized increasing the bias as each algorithm will have to be trained and validated on increasingly fewer data. To overcome this drawback, the algorithm utilises a k-fold cross validation (where k is a hyperparameter) so that all the original training data is scored in different k batches thereby outputting n shape training predictions where n is the size of the samples in the training data. Therefore the training process consists of two parts: 
 
 1. Split the data k times and run k models to output predictions for each k part and then bring the k parts back together to the original order so that the output predictions can be used in later stages of the model.
 
