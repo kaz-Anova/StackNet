@@ -4,6 +4,8 @@ This repository contains StackNet Meta modelling methodology (and software) whic
 
 StackNet is empowered by [H2O](https://github.com/h2oai/h2o-3)'s [agorithms](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science.html)
 
+(**NEW**) There is a [Python implementation of StackNet](https://github.com/h2oai/pystacknet)
+
 StackNet and other topics can now  be discussed on [FaceBook](https://www.facebook.com/StackNet/) too :
 
 ## Contents
